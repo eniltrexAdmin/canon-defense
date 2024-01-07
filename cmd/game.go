@@ -1,15 +1,24 @@
 package main
 
 import (
+	"canon-tower-defense/pkg"
+	"canon-tower-defense/states"
 	"errors"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"log"
 )
 
 type Game struct {
-	keys []ebiten.Key
+	keys       []ebiten.Key
+	stateStack pkg.StateStack
+}
+
+func NewGame() Game {
+	return Game{
+		keys:       make([]ebiten.Key, 0),
+		stateStack: pkg.NewStateStack(states.NewPresentationState()),
+	}
 }
 
 func (g *Game) Update() error {
@@ -17,11 +26,11 @@ func (g *Game) Update() error {
 	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
 		return errors.New("exiting")
 	}
-	return nil
+	return g.stateStack.Update()
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	ebitenutil.DebugPrint(screen, "Hello, World!")
+	g.stateStack.Draw(screen)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
@@ -31,7 +40,8 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 func main() {
 	ebiten.SetWindowSize(640, 480)
 	ebiten.SetWindowTitle("Canon defense")
-	if err := ebiten.RunGame(&Game{}); err != nil {
+	game := NewGame()
+	if err := ebiten.RunGame(&game); err != nil {
 		log.Fatal(err)
 	}
 }

@@ -1,8 +1,11 @@
 package pkg
 
+import "github.com/hajimehoshi/ebiten/v2"
+
+// State is coupled to Ebiten. TODO decouple it, if possible
 type State interface {
 	Update() error
-	Draw()
+	Draw(screen *ebiten.Image)
 	// TODO we can add init/enter/and exit or others.
 }
 
@@ -19,9 +22,9 @@ func (s *StateStack) Update() error {
 	return lastState.Update()
 }
 
-func (s *StateStack) Draw() {
+func (s *StateStack) Draw(screen *ebiten.Image) {
 	for _, state := range s.states {
-		state.Draw()
+		state.Draw(screen)
 	}
 }
 
