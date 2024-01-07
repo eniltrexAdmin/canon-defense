@@ -1,14 +1,22 @@
 package main
 
 import (
+	"errors"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"log"
 )
 
-type Game struct{}
+type Game struct {
+	keys []ebiten.Key
+}
 
 func (g *Game) Update() error {
+	g.keys = inpututil.AppendPressedKeys(g.keys[:0])
+	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
+		return errors.New("exiting")
+	}
 	return nil
 }
 
@@ -22,7 +30,7 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 
 func main() {
 	ebiten.SetWindowSize(640, 480)
-	ebiten.SetWindowTitle("Hello, World!")
+	ebiten.SetWindowTitle("Canon defense")
 	if err := ebiten.RunGame(&Game{}); err != nil {
 		log.Fatal(err)
 	}
