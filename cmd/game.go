@@ -26,7 +26,7 @@ func (g *Game) Update() error {
 	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
 		return errors.New("exiting")
 	}
-	return g.stateStack.Update()
+	return g.stateStack.Update(&g.stateStack, g.keys)
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
@@ -34,11 +34,13 @@ func (g *Game) Draw(screen *ebiten.Image) {
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return 320, 240
+	return 640, 480
 }
 
 func main() {
 	ebiten.SetWindowSize(640, 480)
+	ebiten.SetVsyncEnabled(true)
+	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
 	ebiten.SetWindowTitle("Canon defense")
 	game := NewGame()
 	if err := ebiten.RunGame(&game); err != nil {
