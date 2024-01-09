@@ -2,65 +2,70 @@ package states
 
 import (
 	"canon-tower-defense/pkg"
+	"canon-tower-defense/ui"
 	"fmt"
+	"github.com/ebitenui/ebitenui"
+	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
-	"github.com/hajimehoshi/ebiten/v2/vector"
-	"image/color"
 )
 
 type LevelSelection struct {
 	scrollOffset int
+	ui           *ebitenui.UI
 }
 
 func NewLevelSelection() *LevelSelection {
-	return &LevelSelection{scrollOffset: 0}
+	eui := &ebitenui.UI{
+		Container: layout(),
+	}
+
+	return &LevelSelection{
+		scrollOffset: 0,
+		ui:           eui,
+	}
 }
 
 func (p *LevelSelection) Update(stack *pkg.StateStack, keys []ebiten.Key) error {
+	p.ui.Update()
 	return nil
 }
 
 func (p *LevelSelection) Draw(screen *ebiten.Image) {
-	ebitenutil.DebugPrint(screen, "LEVEL SELECTION SCREEN")
-	levelSquareSize := 30
-	screenHeight := screen.Bounds().Dy()
+	p.ui.Draw(screen)
+}
 
-	screen.Fill(color.RGBA{R: 0xff, G: 0xff, B: 0xff, A: 0xff})
+func layout() *widget.Container {
+	buttonRes, _ := ui.NewButtonResources()
+	c := widget.NewContainer(
+		widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
+			StretchHorizontal: true,
+		})),
+		widget.ContainerOpts.Layout(widget.NewRowLayout(
+			widget.RowLayoutOpts.Direction(widget.DirectionVertical),
+			widget.RowLayoutOpts.Spacing(10),
+		)))
 
-	// Draw level indicators
-	for i := 0; i < 10; i++ {
-		y := (i * levelSquareSize) - p.scrollOffset
-		if y < screenHeight && y > -levelSquareSize {
-			// Draw square for each level
-			vector.DrawFilledRect(
-				screen,
-				float32(10),
-				float32(y),
-				float32(levelSquareSize),
-				float32(levelSquareSize),
-				color.RGBA{R: 0xcc, G: 0xcc, B: 0xcc, A: 0xff},
-				false,
-			)
+	bc := widget.NewContainer(
+		widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.LayoutData(widget.RowLayoutData{
+			Stretch: true,
+		})),
+		widget.ContainerOpts.Layout(widget.NewGridLayout(
+			widget.GridLayoutOpts.Columns(4),
+			widget.GridLayoutOpts.Stretch([]bool{true, true, true, true}, nil),
+			widget.GridLayoutOpts.Spacing(10, 10))))
+	c.AddChild(bc)
 
-			// Draw level number in the center of the square
-			textX := 10 + levelSquareSize/2 - 10
-			textY := y + levelSquareSize/2 + 5
-			ebitenutil.DebugPrintAt(screen, fmt.Sprintf("%d", i+1), textX, textY)
+	i := 0
+	for row := 0; row < 3; row++ {
+		for col := 0; col < 4; col++ {
+			b := widget.NewButton(
+				widget.ButtonOpts.Image(buttonRes.Image),
+				widget.ButtonOpts.Text(fmt.Sprintf("%s %d", string(rune('A'+i)), i+1), buttonRes.Face, buttonRes.Text))
+			bc.AddChild(b)
+
+			i++
 		}
 	}
 
-	// Draw dots or circles for each level (you can customize the style)
-	for i := 0; i < 10; i++ {
-		y := (i * levelSquareSize) - p.scrollOffset
-		if y < screenHeight && y > -levelSquareSize {
-			// Draw dots/circles below each level square
-			dotX := 30
-			dotY := y + levelSquareSize + 10
-
-			// You can customize the style of the dots/circles
-			vector.DrawFilledRect(screen, float32(dotX), float32(dotY), 10, 10, color.RGBA{A: 0xff}, false)
-			// Or draw circles using ebitenutil.DrawArc
-		}
-	}
+	return c
 }
