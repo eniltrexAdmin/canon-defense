@@ -1,8 +1,8 @@
 package main
 
 import (
+	"canon-tower-defense/ebiten/states"
 	"canon-tower-defense/pkg"
-	"canon-tower-defense/states"
 	"errors"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"

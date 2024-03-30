@@ -20,4 +20,4 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
 
-RUN GOOS=linux go build -a -installsuffix cgo -o tower-defense ./cmd/
+RUN GOOS=linux go build -a -installsuffix cgo -o tower-defense ./ebiten/

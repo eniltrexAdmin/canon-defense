@@ -1,4 +1,4 @@
-package internal
+package game
 
 type battlegroundMovement uint8
 

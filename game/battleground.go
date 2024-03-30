@@ -1,4 +1,4 @@
-package internal
+package game
 
 const defaultBattleGroundSize BattleGroundColumn = 5
 

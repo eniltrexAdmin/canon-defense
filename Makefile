@@ -6,7 +6,7 @@ target:
 	$(MAKE) -C target
 
 local-start:
-	go run cmd/game.go
+	go run ebiten/main.go
 
 local-build:
 	docker build -t game-builder -f cicd/Dockerfile .
