@@ -23,7 +23,7 @@ func (p *PresentationState) Update(stack *pkg.StateStack, keys []ebiten.Key) err
 	p.fadeIn += 0.01
 	if p.fadeIn > 1 {
 		p.fadeIn = 1
-		stack.Switch(NewLevelSelection())
+		stack.Pop()
 	}
 	return nil
 }

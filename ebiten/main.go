@@ -2,6 +2,8 @@ package main
 
 import (
 	"canon-tower-defense/ebiten/states"
+	"canon-tower-defense/game"
+	"canon-tower-defense/game/player"
 	"canon-tower-defense/pkg"
 	"errors"
 	"github.com/hajimehoshi/ebiten/v2"
@@ -9,19 +11,24 @@ import (
 	"log"
 )
 
-type Game struct {
+type EbitenGameInterface struct {
 	keys       []ebiten.Key
 	stateStack pkg.StateStack
 }
 
-func NewGame() Game {
-	return Game{
+func NewGame() EbitenGameInterface {
+	pl := player.NewPlayer()
+	levelSelection := states.NewLevelSelection(pl, game.LevelSelector{})
+	// first stack the level selector
+	stateStack := pkg.NewStateStack(levelSelection)
+	stateStack.Push(states.NewPresentationState())
+	return EbitenGameInterface{
 		keys:       make([]ebiten.Key, 0),
-		stateStack: pkg.NewStateStack(states.NewPresentationState()),
+		stateStack: stateStack,
 	}
 }
 
-func (g *Game) Update() error {
+func (g *EbitenGameInterface) Update() error {
 	g.keys = inpututil.AppendPressedKeys(g.keys[:0])
 	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
 		return errors.New("exiting")
@@ -29,11 +36,11 @@ func (g *Game) Update() error {
 	return g.stateStack.Update(&g.stateStack, g.keys)
 }
 
-func (g *Game) Draw(screen *ebiten.Image) {
+func (g *EbitenGameInterface) Draw(screen *ebiten.Image) {
 	g.stateStack.Draw(screen)
 }
 
-func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
+func (g *EbitenGameInterface) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
 	return 640, 480
 }
 

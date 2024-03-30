@@ -1,6 +1,8 @@
 package states
 
 import (
+	"canon-tower-defense/game"
+	"canon-tower-defense/game/player"
 	"canon-tower-defense/pkg"
 	"canon-tower-defense/ui"
 	"fmt"
@@ -10,13 +12,16 @@ import (
 )
 
 type LevelSelection struct {
-	scrollOffset int
-	ui           *ebitenui.UI
+	scrollOffset  int
+	ui            *ebitenui.UI
+	LevelSelector game.LevelSelector
 }
 
-func NewLevelSelection() *LevelSelection {
+func NewLevelSelection(pl player.Player, LevelSelector game.LevelSelector) *LevelSelection {
+	l := LevelSelector.LevelSelection(pl)
+
 	eui := &ebitenui.UI{
-		Container: layout(),
+		Container: layout(l),
 	}
 
 	return &LevelSelection{
@@ -34,37 +39,48 @@ func (p *LevelSelection) Draw(screen *ebiten.Image) {
 	p.ui.Draw(screen)
 }
 
-func layout() *widget.Container {
-	buttonRes, _ := ui.NewButtonResources()
+func layout(levels game.Levels) *widget.Container {
+
 	c := widget.NewContainer(
 		widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
 			StretchHorizontal: true,
 		})),
 		widget.ContainerOpts.Layout(widget.NewRowLayout(
 			widget.RowLayoutOpts.Direction(widget.DirectionVertical),
+			widget.RowLayoutOpts.Padding(widget.Insets{
+				Top:    10,
+				Left:   10,
+				Right:  10,
+				Bottom: 0,
+			}),
 			widget.RowLayoutOpts.Spacing(10),
 		)))
 
-	bc := widget.NewContainer(
-		widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.LayoutData(widget.RowLayoutData{
-			Stretch: true,
-		})),
-		widget.ContainerOpts.Layout(widget.NewGridLayout(
-			widget.GridLayoutOpts.Columns(4),
-			widget.GridLayoutOpts.Stretch([]bool{true, true, true, true}, nil),
-			widget.GridLayoutOpts.Spacing(10, 10))))
-	c.AddChild(bc)
+	buttonRes, _ := ui.NewButtonResources()
+	for row := 0; row < len(levels); row++ {
 
-	i := 0
-	for row := 0; row < 3; row++ {
-		for col := 0; col < 4; col++ {
-			b := widget.NewButton(
-				widget.ButtonOpts.Image(buttonRes.Image),
-				widget.ButtonOpts.Text(fmt.Sprintf("%s %d", string(rune('A'+i)), i+1), buttonRes.Face, buttonRes.Text))
-			bc.AddChild(b)
+		b := widget.NewButton(
+			widget.ButtonOpts.WidgetOpts(widget.WidgetOpts.LayoutData(widget.RowLayoutData{
+				Stretch: true,
+			})),
+			widget.ButtonOpts.Image(buttonRes.Image),
+			widget.ButtonOpts.Text(fmt.Sprintf("%s %d", "Level", row+1), buttonRes.Face, buttonRes.Text),
+			// specify that the button's text needs some padding for correct display
+			widget.ButtonOpts.TextPadding(widget.Insets{
+				Left:   30,
+				Right:  30,
+				Top:    5,
+				Bottom: 5,
+			}),
 
-			i++
-		}
+			// add a handler that reacts to clicking the button
+			widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
+				println(fmt.Sprintf("Button %d clicked", row+1))
+			}),
+		)
+		b.GetWidget().Disabled = !levels[row]
+
+		c.AddChild(b)
 	}
 
 	return c
