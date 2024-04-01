@@ -1,11 +1,15 @@
-package pkg
+package states
 
-import "github.com/hajimehoshi/ebiten/v2"
+import (
+	"fmt"
+	"github.com/hajimehoshi/ebiten/v2"
+)
 
 // State is coupled to Ebiten. TODO decouple it, if possible
 type State interface {
 	Update(stack *StateStack, keys []ebiten.Key) error
 	Draw(screen *ebiten.Image)
+	Debug() string
 	// TODO we can add init/enter/and exit or others.
 }
 
@@ -13,8 +17,8 @@ type StateStack struct {
 	states []State
 }
 
-func NewStateStack(initState State) StateStack {
-	return StateStack{states: []State{initState}}
+func NewStateStack() StateStack {
+	return StateStack{states: []State{}}
 }
 
 func (s *StateStack) Update(stack *StateStack, keys []ebiten.Key) error {
@@ -24,12 +28,14 @@ func (s *StateStack) Update(stack *StateStack, keys []ebiten.Key) error {
 
 func (s *StateStack) Draw(screen *ebiten.Image) {
 	for _, state := range s.states {
+		//fmt.Printf("Drawing: %s\n", state.Debug())
 		state.Draw(screen)
 	}
 }
 
 func (s *StateStack) Push(state State) {
 	s.states = append(s.states, state)
+	s.Debug()
 }
 
 func (s *StateStack) Pop() {
@@ -38,12 +44,22 @@ func (s *StateStack) Pop() {
 		return
 	}
 	s.states = s.states[:len(s.states)-1]
+	s.Debug()
 }
 
 func (s *StateStack) Switch(state State) {
 	s.states[len(s.states)-1] = state
+	s.Debug()
 }
 
 func (s *StateStack) Clear() {
 	s.states = []State{}
+}
+
+func (s *StateStack) Debug() {
+	println("Debug:---")
+	for position, state := range s.states {
+		fmt.Printf("Pos: %d: %s\n", position, state.Debug())
+	}
+	println("====")
 }

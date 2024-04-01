@@ -17,7 +17,7 @@ type canonDeck struct {
 	canons []*Canon
 }
 
-func NewCanonDeck(b battleground) canonDeck {
+func NewCanonDeck(b Battleground) canonDeck {
 	canons := make([]*Canon, b.columns)
 	return canonDeck{canons: canons}
 }

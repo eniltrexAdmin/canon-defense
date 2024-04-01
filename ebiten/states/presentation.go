@@ -3,7 +3,6 @@ package states
 import (
 	"bytes"
 	"canon-tower-defense/assets"
-	"canon-tower-defense/pkg"
 	_ "embed"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -19,7 +18,11 @@ func NewPresentationState() *PresentationState {
 	return &PresentationState{fadeIn: 0}
 }
 
-func (p *PresentationState) Update(stack *pkg.StateStack, keys []ebiten.Key) error {
+func (p *PresentationState) Debug() string {
+	return "Presentation State"
+}
+
+func (p *PresentationState) Update(stack *StateStack, keys []ebiten.Key) error {
 	p.fadeIn += 0.01
 	if p.fadeIn > 1 {
 		p.fadeIn = 1

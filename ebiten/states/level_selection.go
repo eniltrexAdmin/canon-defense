@@ -3,44 +3,53 @@ package states
 import (
 	"canon-tower-defense/game"
 	"canon-tower-defense/game/player"
-	"canon-tower-defense/pkg"
 	"canon-tower-defense/ui"
 	"fmt"
 	"github.com/ebitenui/ebitenui"
 	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
+	"log"
 )
 
 type LevelSelection struct {
-	scrollOffset  int
-	ui            *ebitenui.UI
-	LevelSelector game.LevelSelector
+	scrollOffset int
+	ui           *ebitenui.UI
+	levels       game.Levels
+	stack        *StateStack
 }
 
-func NewLevelSelection(pl player.Player, LevelSelector game.LevelSelector) *LevelSelection {
-	l := LevelSelector.LevelSelection(pl)
-
-	eui := &ebitenui.UI{
-		Container: layout(l),
-	}
-
-	return &LevelSelection{
+func NewLevelSelection(pl player.Player, LevelSelector game.LevelSelector, stack *StateStack) LevelSelection {
+	state := LevelSelection{
 		scrollOffset: 0,
-		ui:           eui,
+		stack:        stack,
+		levels:       LevelSelector.LevelSelection(pl),
 	}
+
+	state.ui = &ebitenui.UI{
+		Container: state.layout(),
+	}
+
+	return state
 }
 
-func (p *LevelSelection) Update(stack *pkg.StateStack, keys []ebiten.Key) error {
+func (p LevelSelection) Debug() string {
+	return "LevelSelection State"
+}
+
+func (p LevelSelection) Update(stack *StateStack, keys []ebiten.Key) error {
 	p.ui.Update()
 	return nil
 }
 
-func (p *LevelSelection) Draw(screen *ebiten.Image) {
+func (p LevelSelection) Draw(screen *ebiten.Image) {
 	p.ui.Draw(screen)
 }
 
-func layout(levels game.Levels) *widget.Container {
+func (p LevelSelection) startBattle(level int) {
+	p.stack.Switch(NewBattleState(level))
+}
 
+func (p LevelSelection) layout() *widget.Container {
 	c := widget.NewContainer(
 		widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
 			StretchHorizontal: true,
@@ -57,8 +66,7 @@ func layout(levels game.Levels) *widget.Container {
 		)))
 
 	buttonRes, _ := ui.NewButtonResources()
-	for row := 0; row < len(levels); row++ {
-
+	for row := 0; row < len(p.levels); row++ {
 		b := widget.NewButton(
 			widget.ButtonOpts.WidgetOpts(widget.WidgetOpts.LayoutData(widget.RowLayoutData{
 				Stretch: true,
@@ -72,13 +80,19 @@ func layout(levels game.Levels) *widget.Container {
 				Top:    5,
 				Bottom: 5,
 			}),
-
 			// add a handler that reacts to clicking the button
 			widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
-				println(fmt.Sprintf("Button %d clicked", row+1))
+				level := args.Button.GetWidget().CustomData
+				if le, ok := level.(int); ok {
+					p.startBattle(le)
+				} else {
+					log.Fatal("Could not convert level to integer")
+				}
 			}),
 		)
-		b.GetWidget().Disabled = !levels[row]
+		b.GetWidget().CustomData = row
+
+		b.GetWidget().Disabled = !p.levels[row]
 
 		c.AddChild(b)
 	}

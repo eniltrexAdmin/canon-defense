@@ -1,8 +1,8 @@
 package game
 
-type LevelGenerator struct{}
+type HardcodedLevelGenerator struct{}
 
-func (lg LevelGenerator) Generate() battleground {
+func (lg HardcodedLevelGenerator) Generate(level int) Battleground {
 
 	var monsterFormation [][]*Monster
 
@@ -12,9 +12,9 @@ func (lg LevelGenerator) Generate() battleground {
 	}
 
 	skeleton := Skeleton()
-	monsterFormation[10][3] = &skeleton
+	monsterFormation[9][3] = &skeleton
 
-	return battleground{
+	return Battleground{
 		columns:  defaultBattleGroundSize,
 		rows:     BattleGroundLength(len(monsterFormation)),
 		monsters: monsterFormation,

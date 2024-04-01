@@ -9,7 +9,7 @@ type Monster struct {
 	columnMovement battlegroundMovement
 }
 
-func (m Monster) move(b battleground) {
+func (m Monster) move(b Battleground) {
 
 }
 
