@@ -6,6 +6,7 @@ import (
 	_ "embed"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"image/color"
 	_ "image/png"
 	"log"
 )
@@ -50,6 +51,6 @@ func (p *PresentationState) Draw(screen *ebiten.Image) {
 	options.GeoM.Scale(scaleX, scaleY)
 
 	options.ColorScale.ScaleAlpha(p.fadeIn)
-
+	screen.Fill(color.Black)
 	screen.DrawImage(bgImage, options)
 }
