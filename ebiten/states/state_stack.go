@@ -10,7 +10,7 @@ type State interface {
 	Update(stack *StateStack, keys []ebiten.Key) error
 	Draw(screen *ebiten.Image)
 	Debug() string
-	// TODO we can add init/enter/and exit or others.
+	//Init()// TODO we can add init/enter/and exit or others.
 }
 
 type StateStack struct {
@@ -48,6 +48,11 @@ func (s *StateStack) Pop() {
 }
 
 func (s *StateStack) Switch(state State) {
+	// This function should take care of init(). It should call the init() function in a go subroutine
+	// and draw the loading screen until it's not finished. (or create a loading state that does all the
+	// img, _, err := image.Decode(bytes.NewReader(images.Tiles_png))
+	//
+
 	s.states[len(s.states)-1] = state
 	s.Debug()
 }

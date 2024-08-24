@@ -1,6 +1,7 @@
 package main
 
 import (
+	"canon-tower-defense/ebiten/constants"
 	"canon-tower-defense/ebiten/states"
 	"canon-tower-defense/game"
 	"canon-tower-defense/game/player"
@@ -41,12 +42,14 @@ func (g *EbitenGame) Draw(screen *ebiten.Image) {
 	g.stateStack.Draw(screen)
 }
 
-func (g *EbitenGame) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return 640, 480
+func (g *EbitenGame) Layout(outsideWidth, outsideHeight int) (int, int) {
+	return outsideWidth, outsideHeight // the contents inside the window, if it doesn't match the "set window size"
+	// if its bigger, the window will actually crop, since the ocntents are bigger
+	// if its smaller, there will be some black padding.
 }
 
 func main() {
-	ebiten.SetWindowSize(640, 480)
+	ebiten.SetWindowSize(constants.ScreenWidth, constants.ScreenHeight) // the window that opens when you execute
 	ebiten.SetVsyncEnabled(true)
 	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
 	ebiten.SetWindowTitle("Canon defense")

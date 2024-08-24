@@ -8,35 +8,42 @@ type Canon struct {
 	Damage canonDamage
 }
 
+func BuildCanon(damage canonDamage) Canon {
+	return Canon{
+		damage,
+	}
+}
+
 func (c1 *Canon) merge(c2 *Canon) {
 	c1.Damage += c2.Damage
 	c2 = nil
 }
 
-type canonDeck struct {
-	canons []*Canon
+type CanonDeck struct {
+	Canons []*Canon
 }
 
-func NewCanonDeck(b Battleground) canonDeck {
-	canons := make([]*Canon, b.columns)
-	return canonDeck{canons: canons}
+func NewCanonDeck(b Battleground) CanonDeck {
+	canons := make([]*Canon, b.Columns)
+	return CanonDeck{Canons: canons}
 }
 
-func (cd *canonDeck) placeCanon(position BattleGroundColumn, canon *Canon) error {
-	cd.canons[position] = canon
+func (cd *CanonDeck) placeCanon(position BattleGroundColumn, canon *Canon) error {
+	// TODO what happens if position is already filled? errors!!!
+	cd.Canons[position] = canon
 	return nil
 }
 
-func (cd *canonDeck) moveCanon(origin, destination BattleGroundColumn) error {
-	canon := cd.canons[origin]
+func (cd *CanonDeck) moveCanon(origin, destination BattleGroundColumn) error {
+	canon := cd.Canons[origin]
 	if canon == nil {
 		return errors.New("no canon to move here")
 	}
 
-	if cd.canons[destination] == nil {
-		cd.canons[destination] = canon
+	if cd.Canons[destination] == nil {
+		cd.Canons[destination] = canon
 	} else {
-		cd.canons[destination].merge(canon)
+		cd.Canons[destination].merge(canon)
 	}
 	return nil
 }

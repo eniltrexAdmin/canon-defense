@@ -3,6 +3,7 @@ package states
 import (
 	"bytes"
 	"canon-tower-defense/assets"
+	"canon-tower-defense/ebiten/constants"
 	_ "embed"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -12,11 +13,17 @@ import (
 )
 
 type PresentationState struct {
-	fadeIn float32
+	fadeIn    float32
+	logoImage *ebiten.Image
 }
 
 func NewPresentationState() *PresentationState {
-	return &PresentationState{fadeIn: 0}
+	img, _, err := ebitenutil.NewImageFromReader(bytes.NewReader(assets.LogoPng))
+	if err != nil {
+		log.Fatal(err)
+	}
+	bgImage := ebiten.NewImageFromImage(img)
+	return &PresentationState{fadeIn: 0, logoImage: bgImage}
 }
 
 func (p *PresentationState) Debug() string {
@@ -33,19 +40,17 @@ func (p *PresentationState) Update(stack *StateStack, keys []ebiten.Key) error {
 }
 
 func (p *PresentationState) Draw(screen *ebiten.Image) {
+	// TODO this should be loaded once not on every draw tick
 	img, _, err := ebitenutil.NewImageFromReader(bytes.NewReader(assets.LogoPng))
 	if err != nil {
 		log.Fatal(err)
 	}
 	bgImage := ebiten.NewImageFromImage(img)
 
-	// Calculate scaling factors to fit the window
-	screenWidth := screen.Bounds().Dx()
-	screenHeight := screen.Bounds().Dy()
 	imgWidth := img.Bounds().Dx()
 	imgHeight := img.Bounds().Dy()
-	scaleX := float64(screenWidth) / float64(imgWidth)
-	scaleY := float64(screenHeight) / float64(imgHeight)
+	scaleX := float64(constants.ScreenWidth) / float64(imgWidth)
+	scaleY := float64(constants.ScreenHeight) / float64(imgHeight)
 
 	options := &ebiten.DrawImageOptions{}
 	options.GeoM.Scale(scaleX, scaleY)

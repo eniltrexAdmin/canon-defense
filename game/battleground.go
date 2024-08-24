@@ -6,8 +6,8 @@ type BattleGroundColumn int8
 type BattleGroundLength uint64
 
 type Battleground struct {
-	columns  BattleGroundColumn
-	rows     BattleGroundLength
+	Columns  BattleGroundColumn
+	Rows     BattleGroundLength
 	monsters [][]*Monster
 }
 
@@ -15,6 +15,10 @@ type LevelGenerator interface {
 	Generate(level int) Battleground
 }
 
-func (bg Battleground) fire(deck canonDeck) {
-
+func ToBattleGroundColumn(input int, bg Battleground) BattleGroundColumn {
+	// TODO encapsulate panics in probably all in game, and return errors here instead.
+	if input < 0 || input > int(bg.Columns) {
+		panic("value cannot be converted to column")
+	}
+	return BattleGroundColumn(input)
 }
