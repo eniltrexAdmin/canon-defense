@@ -1,6 +1,8 @@
-package states
+package level_selection_state
 
 import (
+	"canon-tower-defense/ebiten/states"
+	"canon-tower-defense/ebiten/states/battle_state"
 	"canon-tower-defense/game"
 	"canon-tower-defense/game/player"
 	"canon-tower-defense/ui"
@@ -15,10 +17,10 @@ type LevelSelection struct {
 	scrollOffset int
 	ui           *ebitenui.UI
 	levels       game.Levels
-	stack        *StateStack
+	stack        *states.StateStack
 }
 
-func NewLevelSelection(pl player.Player, LevelSelector game.LevelSelector, stack *StateStack) LevelSelection {
+func NewLevelSelection(pl player.Player, LevelSelector game.LevelSelector, stack *states.StateStack) LevelSelection {
 	state := LevelSelection{
 		scrollOffset: 0,
 		stack:        stack,
@@ -36,7 +38,7 @@ func (p LevelSelection) Debug() string {
 	return "LevelSelection State"
 }
 
-func (p LevelSelection) Update(stack *StateStack, keys []ebiten.Key) error {
+func (p LevelSelection) Update(stack *states.StateStack, keys []ebiten.Key) error {
 	p.ui.Update()
 	return nil
 }
@@ -46,7 +48,7 @@ func (p LevelSelection) Draw(screen *ebiten.Image) {
 }
 
 func (p LevelSelection) startBattle(level int) {
-	p.stack.Switch(NewBattleState(level))
+	p.stack.Switch(battle_state.NewBattleState(level))
 }
 
 func (p LevelSelection) layout() *widget.Container {

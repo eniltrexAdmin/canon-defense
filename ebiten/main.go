@@ -3,6 +3,8 @@ package main
 import (
 	"canon-tower-defense/ebiten/constants"
 	"canon-tower-defense/ebiten/states"
+	"canon-tower-defense/ebiten/states/level_selection_state"
+	"canon-tower-defense/ebiten/states/presentation_state"
 	"canon-tower-defense/game"
 	"canon-tower-defense/game/player"
 	"errors"
@@ -21,9 +23,9 @@ func NewGame() EbitenGame {
 
 	// first stack the level selector
 	stateStack := states.NewStateStack()
-	levelSelection := states.NewLevelSelection(pl, game.LevelSelector{}, &stateStack)
+	levelSelection := level_selection_state.NewLevelSelection(pl, game.LevelSelector{}, &stateStack)
 	stateStack.Push(levelSelection)
-	stateStack.Push(states.NewPresentationState())
+	stateStack.Push(presentation_state.NewPresentationState())
 	return EbitenGame{
 		keys:       make([]ebiten.Key, 0),
 		stateStack: &stateStack,

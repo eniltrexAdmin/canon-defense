@@ -1,6 +1,6 @@
 package constants
 
 const (
-	ScreenWidth  = 640
-	ScreenHeight = 480
+	ScreenWidth  = 450
+	ScreenHeight = 800
 )

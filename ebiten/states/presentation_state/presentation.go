@@ -1,9 +1,10 @@
-package states
+package presentation_state
 
 import (
 	"bytes"
 	"canon-tower-defense/assets"
 	"canon-tower-defense/ebiten/constants"
+	"canon-tower-defense/ebiten/states"
 	_ "embed"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -30,7 +31,7 @@ func (p *PresentationState) Debug() string {
 	return "Presentation State"
 }
 
-func (p *PresentationState) Update(stack *StateStack, keys []ebiten.Key) error {
+func (p *PresentationState) Update(stack *states.StateStack, keys []ebiten.Key) error {
 	p.fadeIn += 0.01
 	if p.fadeIn > 1 {
 		p.fadeIn = 1
@@ -48,12 +49,22 @@ func (p *PresentationState) Draw(screen *ebiten.Image) {
 	bgImage := ebiten.NewImageFromImage(img)
 
 	imgWidth := img.Bounds().Dx()
-	imgHeight := img.Bounds().Dy()
+	// Calculate the scale factor based on width only
 	scaleX := float64(constants.ScreenWidth) / float64(imgWidth)
-	scaleY := float64(constants.ScreenHeight) / float64(imgHeight)
 
+	// Scale the Y-axis to maintain the aspect ratio
+	scaleY := scaleX
+
+	imgHeight := img.Bounds().Dy()
+	newHeight := scaleY * float64(imgHeight)
+
+	// Calculate the offset to center the image vertically
+	offsetY := (float64(constants.ScreenHeight) - newHeight) / 2
+
+	// Set up the transformation options
 	options := &ebiten.DrawImageOptions{}
 	options.GeoM.Scale(scaleX, scaleY)
+	options.GeoM.Translate(0, offsetY)
 
 	options.ColorScale.ScaleAlpha(p.fadeIn)
 	screen.Fill(color.Black)
