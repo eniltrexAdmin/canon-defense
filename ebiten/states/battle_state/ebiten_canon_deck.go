@@ -12,6 +12,7 @@ import (
 
 type ebitenCanonDeck struct {
 	ebitenCanons []ebitenCanon
+	actionButton ebitenActionButton
 }
 
 func newEbitenCanonDeck(cd game.CanonDeck) ebitenCanonDeck {
@@ -20,6 +21,13 @@ func newEbitenCanonDeck(cd game.CanonDeck) ebitenCanonDeck {
 		log.Fatal(err)
 	}
 	canonImage := ebiten.NewImageFromImage(img)
+
+	img2, _, err := image.Decode(bytes.NewReader(assets.CanonPedestal))
+	if err != nil {
+		log.Fatal(err)
+	}
+	pedestalImage := ebiten.NewImageFromImage(img2)
+
 	availableWidth := constants.ScreenWidth / len(cd.Canons)
 
 	var cs []ebitenCanon
@@ -27,13 +35,20 @@ func newEbitenCanonDeck(cd game.CanonDeck) ebitenCanonDeck {
 		ec := newEbitenCanon(canon, canonImage, j, availableWidth)
 		cs = append(cs, ec)
 	}
-	return ebitenCanonDeck{ebitenCanons: cs}
+
+	ab := newEbitenActionButton(canonImage, pedestalImage, constants.ScreenWidth)
+
+	return ebitenCanonDeck{
+		ebitenCanons: cs,
+		actionButton: ab,
+	}
 }
 
 func (ecd ebitenCanonDeck) draw(screen *ebiten.Image) {
 	for _, canon := range ecd.ebitenCanons {
 		canon.draw(screen)
 	}
+	ecd.actionButton.draw(screen)
 }
 
 func (ecd ebitenCanonDeck) click(x, y int) *ebitenCanon {

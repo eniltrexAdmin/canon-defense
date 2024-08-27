@@ -53,7 +53,7 @@ func (g *EbitenGame) Layout(outsideWidth, outsideHeight int) (int, int) {
 func main() {
 	ebiten.SetWindowSize(constants.ScreenWidth, constants.ScreenHeight) // the window that opens when you execute
 	ebiten.SetVsyncEnabled(true)
-	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
+	//ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
 	ebiten.SetWindowTitle("Canon defense")
 	g := NewGame()
 	if err := ebiten.RunGame(&g); err != nil {
