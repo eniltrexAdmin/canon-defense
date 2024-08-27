@@ -15,8 +15,9 @@ func (lg HardcodedLevelGenerator) Generate(level int) Battleground {
 	monsterFormation[9][3] = &skeleton
 
 	return Battleground{
-		Columns:  defaultBattleGroundSize,
-		Rows:     BattleGroundLength(len(monsterFormation)),
-		monsters: monsterFormation,
+		Columns:     defaultBattleGroundSize,
+		Rows:        BattleGroundLength(len(monsterFormation)),
+		VisibleRows: BattleGroundVisibleRows(5),
+		Monsters:    monsterFormation,
 	}
 }

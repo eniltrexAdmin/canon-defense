@@ -14,7 +14,7 @@ type ebitenCanonDeck struct {
 	ebitenCanons []ebitenCanon
 }
 
-func newEbitenCanonDeck(cd game.CanonDeck, xPadding float32) ebitenCanonDeck {
+func newEbitenCanonDeck(cd game.CanonDeck) ebitenCanonDeck {
 	img, _, err := image.Decode(bytes.NewReader(assets.RegularCanon))
 	if err != nil {
 		log.Fatal(err)

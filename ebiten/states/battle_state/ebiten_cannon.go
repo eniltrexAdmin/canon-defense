@@ -7,7 +7,6 @@ import (
 )
 
 const canonYPlacement float32 = 500
-const canonTileSize float32 = 24
 
 type ebitenCanon struct {
 	screenBlock

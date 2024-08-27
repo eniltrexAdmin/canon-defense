@@ -4,11 +4,13 @@ const defaultBattleGroundSize BattleGroundColumn = 5
 
 type BattleGroundColumn int8
 type BattleGroundLength uint64
+type BattleGroundVisibleRows int8
 
 type Battleground struct {
-	Columns  BattleGroundColumn
-	Rows     BattleGroundLength
-	monsters [][]*Monster
+	Columns     BattleGroundColumn
+	Rows        BattleGroundLength
+	VisibleRows BattleGroundVisibleRows
+	Monsters    [][]*Monster
 }
 
 type LevelGenerator interface {
