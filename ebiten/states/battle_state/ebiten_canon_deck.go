@@ -2,7 +2,7 @@ package battle_state
 
 import (
 	"bytes"
-	"canon-tower-defense/assets"
+	"canon-tower-defense/ebiten/assets"
 	"canon-tower-defense/ebiten/constants"
 	"canon-tower-defense/game"
 	"github.com/hajimehoshi/ebiten/v2"

@@ -2,7 +2,7 @@ package presentation_state
 
 import (
 	"bytes"
-	"canon-tower-defense/assets"
+	"canon-tower-defense/ebiten/assets"
 	"canon-tower-defense/ebiten/constants"
 	"canon-tower-defense/ebiten/states"
 	_ "embed"
