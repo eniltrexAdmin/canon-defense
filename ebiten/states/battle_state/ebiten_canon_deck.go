@@ -53,7 +53,7 @@ func (ecd ebitenCanonDeck) draw(screen *ebiten.Image) {
 
 func (ecd ebitenCanonDeck) click(x, y int) *ebitenCanon {
 	for _, ec := range ecd.ebitenCanons {
-		if ec.inBounds(float32(x), float32(y)) {
+		if ec.InBounds(x, y) {
 			return &ec
 		}
 	}

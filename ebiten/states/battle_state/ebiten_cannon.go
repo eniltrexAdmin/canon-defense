@@ -1,22 +1,23 @@
 package battle_state
 
 import (
+	"canon-tower-defense/ebiten/ebiten_sprite"
 	"canon-tower-defense/game"
 	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-const canonYPlacement float32 = 500
+const canonYPlacement float64 = 500
 
 type ebitenCanon struct {
-	screenBlock
-	placement          int
+	ebiten_sprite.EbitenSprite
+	formationPlacement int
 	canon              *game.Canon
 	canonPlacedImage   *ebiten.Image
 	canonPedestalImage *ebiten.Image
 }
 
-func newEbitenCanon(canon *game.Canon, cImage *ebiten.Image, placement int, availableWidth int) ebitenCanon {
+func newEbitenCanon(canon *game.Canon, cImage *ebiten.Image, formationPlacement int, availableWidth int) ebitenCanon {
 
 	imgHeight := cImage.Bounds().Dy()
 	imgWidth := cImage.Bounds().Dx()
@@ -25,17 +26,21 @@ func newEbitenCanon(canon *game.Canon, cImage *ebiten.Image, placement int, avai
 	imgStartingXPoint := centerSpace - imgWidth/2
 
 	fmt.Println(fmt.Sprintf("placing canon in: %.2f",
-		float32((availableWidth*placement)+imgStartingXPoint)),
+		float32((availableWidth*formationPlacement)+imgStartingXPoint)),
+	)
+
+	sprite := ebiten_sprite.NewEbitenSprite(
+		float64((availableWidth*formationPlacement)+imgStartingXPoint),
+		canonYPlacement,
+		float64(imgWidth),
+		float64(imgHeight),
+		nil,
+		1,
 	)
 
 	return ebitenCanon{
-		screenBlock: screenBlock{
-			posX:   float32((availableWidth * placement) + imgStartingXPoint),
-			posY:   canonYPlacement,
-			width:  float32(imgWidth),
-			height: float32(imgHeight),
-		},
-		placement:          placement,
+		EbitenSprite:       sprite,
+		formationPlacement: formationPlacement,
 		canon:              canon,
 		canonPlacedImage:   cImage,
 		canonPedestalImage: nil,
@@ -50,7 +55,7 @@ func (ec ebitenCanon) draw(screen *ebiten.Image) {
 		fill = 1
 	}
 	op.ColorScale.ScaleAlpha(fill)
-	op.GeoM.Translate(float64(ec.posX), float64(ec.posY))
+	op.GeoM.Translate(ec.PosX, ec.PosY)
 	screen.DrawImage(ec.canonPlacedImage, op)
 	//ec.screenBlock.draw(screen)
 }
