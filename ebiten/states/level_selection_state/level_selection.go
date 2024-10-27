@@ -48,8 +48,7 @@ func (p LevelSelection) Draw(screen *ebiten.Image) {
 }
 
 func (p LevelSelection) startBattle(level int) {
-	bs := battle_state.NewBattleState(level)
-	p.stack.Switch(&bs)
+	p.stack.Switch(battle_state.NewBattleState(level))
 }
 
 func (p LevelSelection) layout() *widget.Container {

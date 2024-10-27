@@ -12,3 +12,9 @@ var RegularCanon []byte
 
 //go:embed canon_deck/canon_placement.png
 var CanonPedestal []byte
+
+//go:embed "background/moving_platform_H.png"
+var Highland []byte
+
+//go:embed "monsters/Orc-Idle.png"
+var Skeleton []byte

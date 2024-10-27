@@ -14,6 +14,7 @@ type ebitenActionButton struct {
 	canonSprite                          ebiten_sprite.EbitenSprite
 	pedestalSprite                       ebiten_sprite.EbitenSprite
 	initialPlacementX, initialPlacementY float64
+	dragIniX, dragIniY                   float64
 	dragged                              bool
 }
 
@@ -44,6 +45,8 @@ func newEbitenActionButton(cImage *ebiten.Image, cpImage *ebiten.Image, availabl
 func (ec *ebitenActionButton) click(x, y int) {
 	if ec.canonSprite.InBounds(x, y) {
 		println("canon being dragged")
+		ec.dragIniX = float64(x)
+		ec.dragIniY = float64(y)
 		ec.dragged = true
 	}
 	fmt.Printf("coordinates %f, %f ", ec.canonSprite.PosX, ec.canonSprite.PosY)
@@ -67,10 +70,11 @@ func (ec *ebitenActionButton) update() {
 	// that means here it's still being dragged.
 	x, y := ebiten.CursorPosition()
 
-	ec.canonSprite.PosX = float64(x)
-	ec.canonSprite.PosY = float64(y)
+	dragDeltaX := float64(x) - ec.dragIniX + ec.initialPlacementX
+	dragDeltaY := float64(y) - ec.dragIniY + ec.initialPlacementY
 
-	fmt.Printf("Screen Block coordinates %f, %f \n", ec.canonSprite.PosX, ec.canonSprite.PosY)
+	ec.canonSprite.PosX = dragDeltaX
+	ec.canonSprite.PosY = dragDeltaY
 }
 
 func (ec *ebitenActionButton) draw(screen *ebiten.Image) {

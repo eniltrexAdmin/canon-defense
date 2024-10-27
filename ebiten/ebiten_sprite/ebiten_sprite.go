@@ -11,7 +11,7 @@ type EbitenSprite struct {
 	PosY       float64
 	width      float64
 	height     float64
-	image      *ebiten.Image
+	Image      *ebiten.Image
 	imageScale float64
 }
 
@@ -28,7 +28,7 @@ func NewEbitenSprite(
 		PosY:       posY,
 		width:      width,
 		height:     height,
-		image:      image,
+		Image:      image,
 		imageScale: imageScale,
 	}
 }
@@ -54,7 +54,7 @@ func NewFromCentralPointImageAndScaleToExpected(
 		PosY:       posY,
 		width:      newWidth,
 		height:     newHeight,
-		image:      image,
+		Image:      image,
 		imageScale: imageScale,
 	}
 }
@@ -66,7 +66,7 @@ func (b EbitenSprite) InBounds(xInt, yInt int) bool {
 }
 
 func (b EbitenSprite) Draw(screen *ebiten.Image) {
-	if b.image == nil {
+	if b.Image == nil {
 		vector.DrawFilledRect(screen,
 			float32(b.PosX),
 			float32(b.PosY),
@@ -78,8 +78,25 @@ func (b EbitenSprite) Draw(screen *ebiten.Image) {
 		op := ebiten.DrawImageOptions{}
 		op.GeoM.Scale(b.imageScale, b.imageScale)
 		op.GeoM.Translate(b.PosX, b.PosY)
-		screen.DrawImage(b.image, &op)
+		screen.DrawImage(b.Image, &op)
 	}
+}
+
+func (b EbitenSprite) DrawDebug(screen *ebiten.Image) {
+	if b.Image != nil {
+		op := ebiten.DrawImageOptions{}
+		op.GeoM.Scale(b.imageScale, b.imageScale)
+		op.GeoM.Translate(b.PosX, b.PosY)
+		screen.DrawImage(b.Image, &op)
+	}
+
+	vector.DrawFilledRect(screen,
+		float32(b.PosX),
+		float32(b.PosY),
+		float32(b.width),
+		float32(b.height),
+		color.White,
+		false)
 }
 
 type highland struct {
