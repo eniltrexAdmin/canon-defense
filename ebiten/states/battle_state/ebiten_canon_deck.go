@@ -11,8 +11,9 @@ import (
 )
 
 type ebitenCanonDeck struct {
-	ebitenCanons []ebitenCanon
-	actionButton ebitenActionButton
+	ebitenCanons  []*ebitenCanon
+	actionButton  ebitenActionButton
+	gameCanonDeck *game.CanonDeck
 }
 
 func newEbitenCanonDeck(cd game.CanonDeck) ebitenCanonDeck {
@@ -30,32 +31,43 @@ func newEbitenCanonDeck(cd game.CanonDeck) ebitenCanonDeck {
 
 	availableWidth := constants.ScreenWidth / len(cd.Canons)
 
-	var cs []ebitenCanon
+	var cs []*ebitenCanon
 	for j, canon := range cd.Canons {
 		ec := newEbitenCanon(canon, canonImage, j, availableWidth)
-		cs = append(cs, ec)
+		cs = append(cs, &ec)
 	}
 
 	ab := newEbitenActionButton(canonImage, pedestalImage, constants.ScreenWidth)
 
 	return ebitenCanonDeck{
-		ebitenCanons: cs,
-		actionButton: ab,
+		ebitenCanons:  cs,
+		actionButton:  ab,
+		gameCanonDeck: &cd,
 	}
 }
 
-func (ecd ebitenCanonDeck) draw(screen *ebiten.Image) {
+func (ecd *ebitenCanonDeck) draw(screen *ebiten.Image) {
 	for _, canon := range ecd.ebitenCanons {
 		canon.draw(screen)
 	}
 	ecd.actionButton.draw(screen)
 }
 
-func (ecd ebitenCanonDeck) click(x, y int) *ebitenCanon {
+func (ecd *ebitenCanonDeck) click(x, y int) *ebitenCanon {
 	for _, ec := range ecd.ebitenCanons {
 		if ec.InBounds(x, y) {
-			return &ec
+			return ec
 		}
 	}
 	return nil
+}
+
+func (ecd *ebitenCanonDeck) deploy(x, y int) {
+	for position, ec := range ecd.ebitenCanons {
+		if ec.InBounds(x, y) {
+			canon := game.BuildCanon(1) // TODO get it from "action button"
+			ecd.gameCanonDeck.PlaceCanon(game.BattleGroundColumn(position), &canon)
+			ecd.ebitenCanons[position].canon = &canon
+		}
+	}
 }

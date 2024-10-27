@@ -29,10 +29,9 @@ func (m *ebitenMonster) draw(screen *ebiten.Image) {
 	op.GeoM.Translate(m.sprite.PosX, m.sprite.PosY)
 	i := int(math.Floor(m.frame))
 	sx, sy := i*100, 0
+
 	screen.DrawImage(m.sprite.Image.SubImage(
 		image.Rect(i*100, sy, sx+100, sy+100)).(*ebiten.Image), op)
-
-	//m.sprite.Draw(screen)
 }
 
 func (m *ebitenMonster) update() {

@@ -58,11 +58,12 @@ func (ec *ebitenActionButton) JustRelease() {
 	ec.dragged = false
 }
 
-func (ec *ebitenActionButton) update() {
+func (ec *ebitenActionButton) update(deck *ebitenCanonDeck) {
 	if ec.dragged == false {
 		return
 	}
 	if inpututil.IsMouseButtonJustReleased(ebiten.MouseButtonLeft) {
+		deck.deploy(ebiten.CursorPosition())
 		ec.JustRelease()
 		return
 	}

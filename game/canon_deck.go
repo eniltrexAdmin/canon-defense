@@ -28,10 +28,12 @@ func NewCanonDeck(b Battleground) CanonDeck {
 	return CanonDeck{Canons: canons}
 }
 
-func (cd *CanonDeck) placeCanon(position BattleGroundColumn, canon *Canon) error {
-	// TODO what happens if position is already filled? errors!!!
-	cd.Canons[position] = canon
-	return nil
+func (cd *CanonDeck) PlaceCanon(position BattleGroundColumn, canon *Canon) {
+	if cd.Canons[position] != nil {
+		cd.Canons[position].merge(canon)
+	} else {
+		cd.Canons[position] = canon
+	}
 }
 
 func (cd *CanonDeck) moveCanon(origin, destination BattleGroundColumn) error {

@@ -15,13 +15,3 @@ func Start(level int) CanonTDGame {
 		CanonDeck:    canonDeck,
 	}
 }
-
-func (g CanonTDGame) PlaceCannon(position int) {
-	column := ToBattleGroundColumn(position, g.Battleground)
-	c := BuildCanon(canonDamage(1))
-	err := g.CanonDeck.placeCanon(column, &c)
-	if err != nil {
-		panic(err.Error())
-	}
-	// plus do FIRE!!
-}
