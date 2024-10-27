@@ -24,8 +24,8 @@ type ebitenMonster struct {
 func (m *ebitenMonster) draw(screen *ebiten.Image) {
 
 	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Scale(2, 2)
-	op.GeoM.Translate(-float64(200)/2, -float64(200)/2-10)
+	op.GeoM.Scale(2.5, 2.5)
+	op.GeoM.Translate(-float64(250)/2, -float64(250)/2-10)
 	op.GeoM.Translate(m.sprite.PosX, m.sprite.PosY)
 	i := int(math.Floor(m.frame))
 	sx, sy := i*100, 0

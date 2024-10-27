@@ -31,9 +31,15 @@ func newEbitenCanonDeck(cd game.CanonDeck) ebitenCanonDeck {
 
 	availableWidth := constants.ScreenWidth / len(cd.Canons)
 
+	img3, _, err := image.Decode(bytes.NewReader(assets.Bullet))
+	if err != nil {
+		log.Fatal(err)
+	}
+	bulletImage := ebiten.NewImageFromImage(img3)
+
 	var cs []*ebitenCanon
 	for j, canon := range cd.Canons {
-		ec := newEbitenCanon(canon, canonImage, j, availableWidth)
+		ec := newEbitenCanon(canon, canonImage, bulletImage, j, availableWidth)
 		cs = append(cs, &ec)
 	}
 
@@ -53,6 +59,12 @@ func (ecd *ebitenCanonDeck) draw(screen *ebiten.Image) {
 	ecd.actionButton.draw(screen)
 }
 
+func (ecd *ebitenCanonDeck) update() {
+	for _, canon := range ecd.ebitenCanons {
+		canon.update()
+	}
+}
+
 func (ecd *ebitenCanonDeck) click(x, y int) *ebitenCanon {
 	for _, ec := range ecd.ebitenCanons {
 		if ec.InBounds(x, y) {
@@ -67,7 +79,7 @@ func (ecd *ebitenCanonDeck) deploy(x, y int) {
 		if ec.InBounds(x, y) {
 			canon := game.BuildCanon(1) // TODO get it from "action button"
 			ecd.gameCanonDeck.PlaceCanon(game.BattleGroundColumn(position), &canon)
-			ecd.ebitenCanons[position].canon = &canon
+			ecd.ebitenCanons[position].placeCannon(ecd.gameCanonDeck.Canons[position])
 		}
 	}
 }

@@ -2,7 +2,6 @@ package battle_state
 
 import (
 	"canon-tower-defense/ebiten/ebiten_sprite"
-	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
@@ -49,7 +48,6 @@ func (ec *ebitenActionButton) click(x, y int) {
 		ec.dragIniY = float64(y)
 		ec.dragged = true
 	}
-	fmt.Printf("coordinates %f, %f ", ec.canonSprite.PosX, ec.canonSprite.PosY)
 }
 
 func (ec *ebitenActionButton) JustRelease() {

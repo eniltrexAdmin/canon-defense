@@ -7,7 +7,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
-	"strconv"
 )
 
 type BattleState struct {
@@ -43,18 +42,13 @@ func (s BattleState) Debug() string {
 }
 
 func (s BattleState) Update(stack *states.StateStack, keys []ebiten.Key) error {
-	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
-		ec := s.ebitenCanonDeck.click(ebiten.CursorPosition())
-		if ec != nil {
-			println("pressed cannon: " + strconv.Itoa(ec.formationPlacement))
-		}
-	}
-
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
 		s.ebitenCanonDeck.actionButton.click(ebiten.CursorPosition())
 	}
 
+	// TODO refactor separate or call one.
 	s.ebitenCanonDeck.actionButton.update(s.ebitenCanonDeck)
+	s.ebitenCanonDeck.update()
 
 	s.ebitenBattleGround.update()
 	return nil
