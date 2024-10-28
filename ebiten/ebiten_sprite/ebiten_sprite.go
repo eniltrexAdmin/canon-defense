@@ -65,6 +65,22 @@ func (b EbitenSprite) InBounds(xInt, yInt int) bool {
 	return x >= b.PosX && x <= b.PosX+b.width && y >= b.PosY && y <= b.PosY+b.height
 }
 
+func (b EbitenSprite) Collision(c EbitenSprite) bool {
+	if b.PosX+b.width <= c.PosX {
+		return false
+	}
+	if b.PosX >= c.PosX+c.width {
+		return false
+	}
+	if b.PosY+b.height <= c.PosY {
+		return false
+	}
+	if b.PosY >= c.PosY+c.height {
+		return false
+	}
+	return true
+}
+
 func (b EbitenSprite) Draw(screen *ebiten.Image) {
 	if b.Image == nil {
 		vector.DrawFilledRect(screen,
@@ -97,8 +113,4 @@ func (b EbitenSprite) DrawDebug(screen *ebiten.Image) {
 		float32(b.height),
 		color.White,
 		false)
-}
-
-type highland struct {
-	EbitenSprite
 }

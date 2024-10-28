@@ -5,7 +5,6 @@ import (
 	"canon-tower-defense/game"
 	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
-	"math"
 )
 
 const canonYPlacement float64 = 500
@@ -17,12 +16,11 @@ const BulletSpeed float64 = 2
 
 type ebitenCanon struct {
 	ebiten_sprite.EbitenSprite
-	formationPlacement     int
-	canon                  *game.Canon
-	canonPlacedImage       *ebiten.Image
-	bulletImage            *ebiten.Image
-	firing                 bool
-	bulletPosX, bulletPosY float64
+	formationPlacement int
+	canon              *game.Canon
+	canonPlacedImage   *ebiten.Image
+	bulletImage        *ebiten.Image
+	bullet             *ebitenCanonBullet
 }
 
 func newEbitenCanon(canon *game.Canon, cImage *ebiten.Image, bulletImage *ebiten.Image, formationPlacement int, availableWidth int) ebitenCanon {
@@ -52,23 +50,21 @@ func newEbitenCanon(canon *game.Canon, cImage *ebiten.Image, bulletImage *ebiten
 		canon:              canon,
 		canonPlacedImage:   cImage,
 		bulletImage:        bulletImage,
-		firing:             false,
-		bulletPosX:         sprite.PosX,
-		bulletPosY:         canonYPlacement,
+		bullet:             nil,
 	}
 }
 
 func (ec *ebitenCanon) placeCannon(cannon *game.Canon) {
 	ec.canon = cannon
-	ec.firing = true
+	bullet := NewBullet(ec.bulletImage, BulletSpeed, ec.EbitenSprite.PosX, canonYPlacement)
+	ec.bullet = &bullet
 }
 
 func (ec *ebitenCanon) update() {
-	if ec.firing {
-		ec.bulletPosY -= BulletSpeed
-		if ec.bulletPosY < 0 {
-			ec.firing = false
-			ec.bulletPosY = canonYPlacement
+	if ec.bullet != nil {
+		ec.bullet.update()
+		if ec.bullet.bulletSprite.PosY < 0 {
+			ec.bullet = nil
 		}
 	}
 }
@@ -84,11 +80,7 @@ func (ec *ebitenCanon) draw(screen *ebiten.Image) {
 	op.GeoM.Translate(ec.PosX, ec.PosY)
 	screen.DrawImage(ec.canonPlacedImage, op)
 
-	if ec.firing {
-		op := &ebiten.DrawImageOptions{}
-		op.GeoM.Rotate(90 * math.Pi / 180)
-		op.GeoM.Translate(ec.bulletPosX+24, ec.bulletPosY-20)
-
-		screen.DrawImage(ec.bulletImage, op)
+	if ec.bullet != nil {
+		ec.bullet.draw(screen)
 	}
 }

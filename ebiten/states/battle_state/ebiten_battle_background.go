@@ -29,9 +29,9 @@ func (ecd ebitenBattleGround) draw(screen *ebiten.Image) {
 	}
 }
 
-func (ecd ebitenBattleGround) update() {
+func (ecd ebitenBattleGround) update(bullets []*ebitenCanonBullet) {
 	for _, visibleMonsters := range ecd.visibleMonsters {
-		visibleMonsters.update()
+		visibleMonsters.update(bullets)
 	}
 }
 

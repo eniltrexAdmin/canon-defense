@@ -21,3 +21,6 @@ var Highland []byte
 
 //go:embed "monsters/Orc-Idle.png"
 var Skeleton []byte
+
+//go:embed "monsters/Orc-Hurt.png"
+var SkeletonHurt []byte

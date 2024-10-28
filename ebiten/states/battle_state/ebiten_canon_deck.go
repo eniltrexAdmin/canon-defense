@@ -74,3 +74,13 @@ func (ecd *ebitenCanonDeck) deploy(x, y int) { // TODO we pass the "cannon" here
 		}
 	}
 }
+
+func (ecd *ebitenCanonDeck) currentBullets() []*ebitenCanonBullet {
+	bullets := make([]*ebitenCanonBullet, 0, len(ecd.ebitenCanons))
+	for _, ec := range ecd.ebitenCanons {
+		if ec.bullet != nil {
+			bullets = append(bullets, ec.bullet)
+		}
+	}
+	return bullets
+}

@@ -50,7 +50,7 @@ func (s BattleState) Update(stack *states.StateStack, keys []ebiten.Key) error {
 	s.ebitenCanonDeck.actionButton.update(s.ebitenCanonDeck)
 	s.ebitenCanonDeck.update()
 
-	s.ebitenBattleGround.update()
+	s.ebitenBattleGround.update(s.ebitenCanonDeck.currentBullets())
 	return nil
 }
 
