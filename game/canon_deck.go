@@ -28,7 +28,7 @@ func NewCanonDeck(b Battleground) CanonDeck {
 	return CanonDeck{Canons: canons}
 }
 
-func (cd *CanonDeck) PlaceCanon(position BattleGroundColumn, canon *Canon) {
+func (cd *CanonDeck) DeployCannon(position BattleGroundColumn, canon *Canon) {
 	if cd.Canons[position] != nil {
 		cd.Canons[position].merge(canon)
 	} else {

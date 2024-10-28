@@ -65,20 +65,11 @@ func (ecd *ebitenCanonDeck) update() {
 	}
 }
 
-func (ecd *ebitenCanonDeck) click(x, y int) *ebitenCanon {
-	for _, ec := range ecd.ebitenCanons {
-		if ec.InBounds(x, y) {
-			return ec
-		}
-	}
-	return nil
-}
-
-func (ecd *ebitenCanonDeck) deploy(x, y int) {
+func (ecd *ebitenCanonDeck) deploy(x, y int) { // TODO we pass the "cannon" here, we deploy a cannon.)
 	for position, ec := range ecd.ebitenCanons {
 		if ec.InBounds(x, y) {
-			canon := game.BuildCanon(1) // TODO get it from "action button"
-			ecd.gameCanonDeck.PlaceCanon(game.BattleGroundColumn(position), &canon)
+			canon := game.BuildCanon(1)
+			ecd.gameCanonDeck.DeployCannon(game.BattleGroundColumn(position), &canon)
 			ecd.ebitenCanons[position].placeCannon(ecd.gameCanonDeck.Canons[position])
 		}
 	}
