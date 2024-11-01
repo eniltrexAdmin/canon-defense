@@ -19,8 +19,8 @@ var Bullet []byte
 //go:embed "background/moving_platform_H.png"
 var Highland []byte
 
-//go:embed "monsters/Orc-Idle.png"
-var Skeleton []byte
+//go:embed "monsters/Beholder_idle.png"
+var Beholder []byte
 
-//go:embed "monsters/Orc-Hurt.png"
-var SkeletonHurt []byte
+//go:embed "monsters/Beholder_hit.png"
+var BeholderHit []byte

@@ -3,6 +3,7 @@ package ebiten_sprite
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"image"
 	"image/color"
 )
 
@@ -33,7 +34,7 @@ func NewEbitenSprite(
 	}
 }
 
-func NewFromCentralPointImageAndScaleToExpected(
+func NewFromCentralPointScaleImage(
 	centralX, centralY float64,
 	image *ebiten.Image,
 	expectedWidth float64,
@@ -65,20 +66,12 @@ func (b EbitenSprite) InBounds(xInt, yInt int) bool {
 	return x >= b.PosX && x <= b.PosX+b.width && y >= b.PosY && y <= b.PosY+b.height
 }
 
-func (b EbitenSprite) Collision(c EbitenSprite) bool {
-	if b.PosX+b.width <= c.PosX {
-		return false
-	}
-	if b.PosX >= c.PosX+c.width {
-		return false
-	}
-	if b.PosY+b.height <= c.PosY {
-		return false
-	}
-	if b.PosY >= c.PosY+c.height {
-		return false
-	}
-	return true
+func (b EbitenSprite) getRectangle() image.Rectangle {
+	x := int(b.PosX)
+	y := int(b.PosY)
+	width := int(b.width)
+	height := int(b.height)
+	return image.Rect(x, y, x+width, y+height)
 }
 
 func (b EbitenSprite) Draw(screen *ebiten.Image) {

@@ -9,7 +9,7 @@ import (
 
 const canonYPlacement float64 = 500
 
-const BulletSpeed float64 = 2
+const BulletSpeed float64 = 1
 
 // TODO this is not good. Bullet and Cannon are probably independent.
 // as well as "DeployArea".

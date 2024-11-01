@@ -61,7 +61,7 @@ func newEbitenBattleGround(bg game.Battleground) ebitenBattleGround {
 			posX := float64(availableWidth*j) + tileCenterPointX
 			posY := float64(availableHeight*i) + tileSCenterPointY
 
-			tile := ebiten_sprite.NewFromCentralPointImageAndScaleToExpected(
+			tile := ebiten_sprite.NewFromCentralPointScaleImage(
 				posX,
 				posY+PlatformYPadding,
 				platformImage,

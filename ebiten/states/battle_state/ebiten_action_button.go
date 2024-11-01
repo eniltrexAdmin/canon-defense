@@ -18,14 +18,14 @@ type ebitenActionButton struct {
 }
 
 func newEbitenActionButton(cImage *ebiten.Image, cpImage *ebiten.Image, availableWidth int) ebitenActionButton {
-	canonSprite := ebiten_sprite.NewFromCentralPointImageAndScaleToExpected(
+	canonSprite := ebiten_sprite.NewFromCentralPointScaleImage(
 		float64(availableWidth/2),
 		actionButtonYPlacement,
 		cImage,
 		actionButtonTileSize,
 	)
 
-	pedestalSprite := ebiten_sprite.NewFromCentralPointImageAndScaleToExpected(
+	pedestalSprite := ebiten_sprite.NewFromCentralPointScaleImage(
 		float64(availableWidth/2),
 		actionButtonYPlacement+36,
 		cpImage,
