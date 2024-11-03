@@ -99,16 +99,16 @@ func (ecd *ebitenCanonDeck) update() {
 func (ecd *ebitenCanonDeck) deploy(canonSprite ebiten_sprite.EbitenSprite) {
 	for position, da := range ecd.deployAreas {
 		if ebiten_sprite.Collision(da, canonSprite) {
+			// TODO this build of cannon will definitely have more domain.
+			// probably both this and the "ebiten" version.
+
 			canon := game.BuildCanon(1)
 			ecd.gameCanonDeck.DeployCannon(game.BattleGroundColumn(position), &canon)
 
-			availableWidth := float64(constants.ScreenWidth / len(ecd.deployAreas))
-			centerX := availableWidth*float64(position) + availableWidth/2
-
 			ec := newEbitenCanon(
-				canon,
+				*ecd.gameCanonDeck.Canons[position],
 				canonSprite.Image,
-				centerX,
+				getCanonCenterX(position, len(ecd.gameCanonDeck.Canons)),
 				canonYPlacement,
 			)
 			ecd.ebitenCanons[position] = &ec

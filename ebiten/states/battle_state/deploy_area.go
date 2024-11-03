@@ -18,14 +18,13 @@ type deployArea struct {
 }
 
 func NewDeployAreaFromCentralPoint(posX, posY, width, height float64, color color.Color) deployArea {
-
 	return deployArea{
 		PosX:        posX - width/2,
 		PosY:        posY - height/2,
 		width:       width,
 		height:      height,
 		color:       color,
-		strokeWidth: 1,
+		strokeWidth: 0,
 	}
 }
 
@@ -44,12 +43,11 @@ func (d *deployArea) update(dragged bool, draggedSprite ebiten_sprite.EbitenSpri
 			d.strokeWidth = 4
 		}
 	} else {
-		d.strokeWidth = 1
+		d.strokeWidth = 0
 	}
 }
 
 func (d *deployArea) draw(screen *ebiten.Image) {
-
 	vector.StrokeRect(screen,
 		float32(d.PosX),
 		float32(d.PosY),
@@ -57,5 +55,6 @@ func (d *deployArea) draw(screen *ebiten.Image) {
 		float32(d.height),
 		d.strokeWidth,
 		d.color,
-		false)
+		false,
+	)
 }
