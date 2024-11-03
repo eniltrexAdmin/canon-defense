@@ -1,62 +1,56 @@
 package battle_state
 
 import (
+	"bytes"
+	"canon-tower-defense/ebiten/assets"
 	"canon-tower-defense/ebiten/ebiten_sprite"
 	"canon-tower-defense/game"
-	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
+	"image"
+	"log"
 )
 
-const canonYPlacement float64 = 500
-
-const BulletSpeed float64 = 1
-
-// TODO this is not good. Bullet and Cannon are probably independent.
-// as well as "DeployArea".
+const BulletSpeed float64 = 2.5
 
 type ebitenCanon struct {
-	ebiten_sprite.EbitenSprite
-	formationPlacement int
-	canon              *game.Canon
-	canonPlacedImage   *ebiten.Image
-	bulletImage        *ebiten.Image
-	bullet             *ebitenCanonBullet
+	sprite           *ebiten_sprite.EbitenSprite
+	canon            game.Canon
+	canonPlacedImage *ebiten.Image
+	bulletImage      *ebiten.Image
+	bullet           *ebitenCanonBullet
 }
 
-func newEbitenCanon(canon *game.Canon, cImage *ebiten.Image, bulletImage *ebiten.Image, formationPlacement int, availableWidth int) ebitenCanon {
+func newEbitenCanon(
+	canon game.Canon,
+	cImage *ebiten.Image,
+	centerX float64,
+	centerY float64,
+) ebitenCanon {
 
-	imgHeight := cImage.Bounds().Dy()
-	imgWidth := cImage.Bounds().Dx()
-
-	centerSpace := availableWidth / 2
-	imgStartingXPoint := centerSpace - imgWidth/2
-
-	fmt.Println(fmt.Sprintf("placing canon in: %.2f",
-		float32((availableWidth*formationPlacement)+imgStartingXPoint)),
-	)
-
-	sprite := ebiten_sprite.NewEbitenSprite(
-		float64((availableWidth*formationPlacement)+imgStartingXPoint),
-		canonYPlacement,
-		float64(imgWidth),
-		float64(imgHeight),
+	sprite := ebiten_sprite.NewStaticFromCentralPoint(
+		centerX,
+		centerY,
 		cImage,
-		1,
 	)
+
+	// TODO assets management should eventually be centralized.
+	img3, _, err := image.Decode(bytes.NewReader(assets.Bullet))
+	if err != nil {
+		log.Fatal(err)
+	}
+	bulletImage := ebiten.NewImageFromImage(img3)
 
 	return ebitenCanon{
-		EbitenSprite:       sprite,
-		formationPlacement: formationPlacement,
-		canon:              canon,
-		canonPlacedImage:   cImage,
-		bulletImage:        bulletImage,
-		bullet:             nil,
+		sprite:           &sprite,
+		canon:            canon,
+		canonPlacedImage: cImage,
+		bulletImage:      bulletImage,
+		bullet:           nil,
 	}
 }
 
-func (ec *ebitenCanon) placeCannon(cannon *game.Canon) {
-	ec.canon = cannon
-	bullet := NewBullet(ec.bulletImage, BulletSpeed, ec.EbitenSprite.PosX, canonYPlacement)
+func (ec *ebitenCanon) fire() {
+	bullet := NewBullet(ec.bulletImage, BulletSpeed, ec.sprite.PosX, canonYPlacement)
 	ec.bullet = &bullet
 }
 
@@ -70,14 +64,9 @@ func (ec *ebitenCanon) update() {
 }
 
 func (ec *ebitenCanon) draw(screen *ebiten.Image) {
-	op := &ebiten.DrawImageOptions{}
 
-	var fill float32 = 0.5
-	if ec.canon != nil {
-		fill = 1
-	}
-	op.ColorScale.ScaleAlpha(fill)
-	op.GeoM.Translate(ec.PosX, ec.PosY)
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(ec.sprite.PosX, ec.sprite.PosY)
 	screen.DrawImage(ec.canonPlacedImage, op)
 
 	if ec.bullet != nil {

@@ -6,7 +6,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
-const actionButtonYPlacement float64 = 600
+const actionButtonYPlacement float64 = 650
 const actionButtonTileSize float64 = 50
 
 type ebitenActionButton struct {
@@ -61,7 +61,7 @@ func (ec *ebitenActionButton) update(deck *ebitenCanonDeck) {
 		return
 	}
 	if inpututil.IsMouseButtonJustReleased(ebiten.MouseButtonLeft) {
-		deck.deploy(ebiten.CursorPosition())
+		deck.deploy(ec.canonSprite)
 		ec.JustRelease()
 		return
 	}

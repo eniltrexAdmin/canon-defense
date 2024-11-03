@@ -7,12 +7,14 @@ import (
 )
 
 type Rectangle interface {
-	getRectangle() image.Rectangle
+	GetRectangle() image.Rectangle
 }
 
 func Collision(sprite1, sprite2 Rectangle) bool {
-	return sprite1.getRectangle().Overlaps(sprite2.getRectangle())
+	return sprite1.GetRectangle().Overlaps(sprite2.GetRectangle())
 }
+
+// About colors
 
 func RandomColor() color.Color {
 	// Generate random RGB values
@@ -21,5 +23,5 @@ func RandomColor() color.Color {
 	b := uint8(rand.Intn(256))
 
 	// Create a random color
-	return color.RGBA{R: r, G: g, B: b, A: 255}
+	return color.RGBA{R: r, G: g, B: b, A: 0}
 }

@@ -15,6 +15,8 @@ const TileSize float64 = 50
 
 const PlatformYPadding float64 = 20
 
+const BattleGroundHeight float64 = 500
+
 type ebitenBattleGround struct {
 	tiles           []ebiten_sprite.EbitenSprite
 	visibleMonsters []*ebitenMonster
@@ -37,7 +39,7 @@ func (ecd ebitenBattleGround) update(bullets []*ebitenCanonBullet) {
 
 func newEbitenBattleGround(bg game.Battleground) ebitenBattleGround {
 	availableWidth := constants.ScreenWidth / int(bg.Columns)
-	availableHeight := int(canonYPlacement) / int(bg.VisibleRows)
+	availableHeight := int(BattleGroundHeight) / int(bg.VisibleRows)
 
 	img, _, err := image.Decode(bytes.NewReader(assets.Highland))
 	if err != nil {

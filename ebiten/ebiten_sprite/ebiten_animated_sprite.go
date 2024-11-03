@@ -68,7 +68,7 @@ func getTotalFrames(image *ebiten.Image, subImageWidth int) int {
 	return imgWidth / subImageWidth
 }
 
-func (e *EbitenAnimatedSprite) getRectangle() image.Rectangle {
+func (e *EbitenAnimatedSprite) GetRectangle() image.Rectangle {
 	x := int(e.PosX)
 	y := int(e.PosY)
 	width := int(e.width)

@@ -60,13 +60,33 @@ func NewFromCentralPointScaleImage(
 	}
 }
 
+func NewStaticFromCentralPoint(
+	centralX, centralY float64,
+	image *ebiten.Image,
+) EbitenSprite {
+	imgWidth := float64(image.Bounds().Dx())
+	imgHeight := float64(image.Bounds().Dy())
+
+	posX := centralX - imgWidth/2
+	posY := centralY - imgHeight/2
+
+	return EbitenSprite{
+		PosX:       posX,
+		PosY:       posY,
+		width:      imgWidth,
+		height:     imgHeight,
+		Image:      image,
+		imageScale: 1,
+	}
+}
+
 func (b EbitenSprite) InBounds(xInt, yInt int) bool {
 	x := float64(xInt)
 	y := float64(yInt)
 	return x >= b.PosX && x <= b.PosX+b.width && y >= b.PosY && y <= b.PosY+b.height
 }
 
-func (b EbitenSprite) getRectangle() image.Rectangle {
+func (b EbitenSprite) GetRectangle() image.Rectangle {
 	x := int(b.PosX)
 	y := int(b.PosY)
 	width := int(b.width)

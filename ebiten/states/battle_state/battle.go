@@ -46,10 +46,7 @@ func (s BattleState) Update(stack *states.StateStack, keys []ebiten.Key) error {
 		s.ebitenCanonDeck.actionButton.click(ebiten.CursorPosition())
 	}
 
-	// TODO refactor separate or call one.
-	s.ebitenCanonDeck.actionButton.update(s.ebitenCanonDeck)
 	s.ebitenCanonDeck.update()
-
 	s.ebitenBattleGround.update(s.ebitenCanonDeck.currentBullets())
 	return nil
 }
