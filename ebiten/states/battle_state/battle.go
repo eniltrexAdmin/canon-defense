@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
-	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
 type BattleState struct {
@@ -42,10 +41,6 @@ func (s BattleState) Debug() string {
 }
 
 func (s BattleState) Update(stack *states.StateStack, keys []ebiten.Key) error {
-	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
-		s.ebitenCanonDeck.actionButton.click(ebiten.CursorPosition())
-	}
-
 	s.ebitenCanonDeck.update()
 	s.ebitenBattleGround.update(s.ebitenCanonDeck.currentBullets())
 	return nil

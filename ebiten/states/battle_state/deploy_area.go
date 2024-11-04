@@ -36,14 +36,14 @@ func (d *deployArea) GetRectangle() image.Rectangle {
 	return image.Rect(x, y, x+width, y+height)
 }
 
-func (d *deployArea) update(dragged bool, draggedSprite ebiten_sprite.EbitenSprite) {
-	if dragged {
-		d.strokeWidth = 2
-		if ebiten_sprite.Collision(d, draggedSprite) {
-			d.strokeWidth = 4
-		}
-	} else {
+func (d *deployArea) update(draggedSprite *ebiten_sprite.EbitenSprite) {
+	if draggedSprite == nil {
 		d.strokeWidth = 0
+		return
+	}
+	d.strokeWidth = 2
+	if ebiten_sprite.Collision(d, draggedSprite) {
+		d.strokeWidth = 4
 	}
 }
 

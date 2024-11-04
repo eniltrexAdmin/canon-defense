@@ -7,6 +7,7 @@ import (
 	"canon-tower-defense/ebiten/ebiten_sprite"
 	"canon-tower-defense/game"
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"image"
 	"log"
 )
@@ -85,15 +86,36 @@ func (ecd *ebitenCanonDeck) draw(screen *ebiten.Image) {
 }
 
 func (ecd *ebitenCanonDeck) update() {
+	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
+		ecd.initDrag()
+	}
 	ecd.actionButton.update(ecd)
 	for _, canon := range ecd.ebitenCanons {
 		canon.update()
 	}
 	for _, deployArea := range ecd.deployAreas {
-		dragged := ecd.actionButton.dragged
-		draggedSprite := ecd.actionButton.canonSprite
-		deployArea.update(dragged, draggedSprite)
+		deployArea.update(ecd.draggedSprite())
 	}
+}
+
+func (ecd *ebitenCanonDeck) initDrag() {
+	x, y := ebiten.CursorPosition()
+	ecd.actionButton.initDrag(x, y)
+	for _, canon := range ecd.ebitenCanons {
+		canon.initDrag(x, y)
+	}
+}
+
+func (ecd *ebitenCanonDeck) draggedSprite() *ebiten_sprite.EbitenSprite {
+	if ecd.actionButton.dragged {
+		return &ecd.actionButton.canonSprite
+	}
+	for _, canon := range ecd.ebitenCanons {
+		if canon.dragged {
+			return canon.sprite
+		}
+	}
+	return nil
 }
 
 func (ecd *ebitenCanonDeck) deploy(canonSprite ebiten_sprite.EbitenSprite) {
@@ -101,7 +123,6 @@ func (ecd *ebitenCanonDeck) deploy(canonSprite ebiten_sprite.EbitenSprite) {
 		if ebiten_sprite.Collision(da, canonSprite) {
 			// TODO this build of cannon will definitely have more domain.
 			// probably both this and the "ebiten" version.
-
 			canon := game.BuildCanon(1)
 			ecd.gameCanonDeck.DeployCannon(game.BattleGroundColumn(position), &canon)
 

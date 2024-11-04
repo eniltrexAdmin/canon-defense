@@ -41,9 +41,8 @@ func newEbitenActionButton(cImage *ebiten.Image, cpImage *ebiten.Image, availabl
 	}
 }
 
-func (ec *ebitenActionButton) click(x, y int) {
+func (ec *ebitenActionButton) initDrag(x, y int) {
 	if ec.canonSprite.InBounds(x, y) {
-		println("canon being dragged")
 		ec.dragIniX = float64(x)
 		ec.dragIniY = float64(y)
 		ec.dragged = true
