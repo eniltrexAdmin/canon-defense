@@ -1,6 +1,9 @@
 package game
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 type canonDamage int64
 
@@ -20,12 +23,20 @@ func (c1 *Canon) merge(c2 *Canon) {
 }
 
 type CanonDeck struct {
-	Canons []*Canon
+	Canons        map[BattleGroundColumn]*Canon
+	canonCapacity int
+}
+
+func (cd *CanonDeck) CanonCapacity() int {
+	return cd.canonCapacity
 }
 
 func NewCanonDeck(b Battleground) CanonDeck {
-	canons := make([]*Canon, b.Columns)
-	return CanonDeck{Canons: canons}
+	canons := make(map[BattleGroundColumn]*Canon, b.Columns)
+	return CanonDeck{
+		Canons:        canons,
+		canonCapacity: int(b.Columns),
+	}
 }
 
 func (cd *CanonDeck) DeployCannon(position BattleGroundColumn, canon *Canon) {
@@ -36,7 +47,13 @@ func (cd *CanonDeck) DeployCannon(position BattleGroundColumn, canon *Canon) {
 	}
 }
 
-func (cd *CanonDeck) moveCanon(origin, destination BattleGroundColumn) error {
+// TODO review this function, it's weird, probably needs different API taking into account the FE
+
+func (cd *CanonDeck) MoveCanon(origin, destination BattleGroundColumn) error {
+	println(fmt.Sprintf("Moving cannon from %d to %d", origin, destination))
+	if origin == destination {
+		return nil
+	}
 	canon := cd.Canons[origin]
 	if canon == nil {
 		return errors.New("no canon to move here")
@@ -47,5 +64,6 @@ func (cd *CanonDeck) moveCanon(origin, destination BattleGroundColumn) error {
 	} else {
 		cd.Canons[destination].merge(canon)
 	}
+	delete(cd.Canons, origin)
 	return nil
 }

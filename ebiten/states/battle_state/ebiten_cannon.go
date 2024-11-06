@@ -21,6 +21,7 @@ const BulletSpeed float64 = 2.5
 type ebitenCanon struct {
 	sprite                               *ebiten_sprite.EbitenSprite
 	canon                                game.Canon
+	formationPlacement                   int
 	canonPlacedImage                     *ebiten.Image
 	bulletImage                          *ebiten.Image
 	bullet                               *ebitenCanonBullet
@@ -31,6 +32,7 @@ type ebitenCanon struct {
 
 func newEbitenCanon(
 	canon game.Canon,
+	formationPlacement int,
 	cImage *ebiten.Image,
 	centerX float64,
 	centerY float64,
@@ -49,14 +51,15 @@ func newEbitenCanon(
 	bulletImage := ebiten.NewImageFromImage(img3)
 
 	return ebitenCanon{
-		sprite:            &sprite,
-		canon:             canon,
-		canonPlacedImage:  cImage,
-		bulletImage:       bulletImage,
-		bullet:            nil,
-		initialPlacementX: sprite.PosX,
-		initialPlacementY: sprite.PosY,
-		dragged:           false,
+		sprite:             &sprite,
+		canon:              canon,
+		formationPlacement: formationPlacement,
+		canonPlacedImage:   cImage,
+		bulletImage:        bulletImage,
+		bullet:             nil,
+		initialPlacementX:  sprite.PosX,
+		initialPlacementY:  sprite.PosY,
+		dragged:            false,
 	}
 }
 
@@ -81,7 +84,7 @@ func (ec *ebitenCanon) JustRelease() {
 	ec.dragged = false
 }
 
-func (ec *ebitenCanon) update() {
+func (ec *ebitenCanon) update(deck *ebitenCanonDeck) {
 	// draw bullet first, even though it should be separated
 	if ec.bullet != nil {
 		ec.bullet.update()
@@ -93,6 +96,7 @@ func (ec *ebitenCanon) update() {
 		return
 	}
 	if inpututil.IsMouseButtonJustReleased(ebiten.MouseButtonLeft) {
+		deck.moveCanon(ec)
 		ec.JustRelease()
 		return
 	}

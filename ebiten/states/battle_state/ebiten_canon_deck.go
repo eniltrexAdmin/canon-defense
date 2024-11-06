@@ -6,6 +6,7 @@ import (
 	"canon-tower-defense/ebiten/constants"
 	"canon-tower-defense/ebiten/ebiten_sprite"
 	"canon-tower-defense/game"
+	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"image"
@@ -34,17 +35,19 @@ func newEbitenCanonDeck(cd game.CanonDeck) ebitenCanonDeck {
 	}
 	pedestalImage := ebiten.NewImageFromImage(img2)
 
-	availableWidth := float64(constants.ScreenWidth / len(cd.Canons))
+	availableWidth := float64(constants.ScreenWidth / cd.CanonCapacity())
 
-	cs := make(map[int]*ebitenCanon, len(cd.Canons))
-	das := make(map[int]*deployArea, len(cd.Canons))
+	cs := make(map[int]*ebitenCanon, cd.CanonCapacity())
+	das := make(map[int]*deployArea, cd.CanonCapacity())
 
 	color := ebiten_sprite.RandomColor()
-	for formationPlacement, canon := range cd.Canons {
-		centerX := getCanonCenterX(formationPlacement, len(cd.Canons))
+	for formationPlacement := 0; formationPlacement < cd.CanonCapacity(); formationPlacement++ {
+		centerX := getCanonCenterX(formationPlacement, cd.CanonCapacity())
+		canon := cd.Canons[game.BattleGroundColumn(formationPlacement)]
 		if canon != nil {
 			ec := newEbitenCanon(
 				*canon,
+				formationPlacement,
 				canonImage,
 				centerX,
 				canonYPlacement,
@@ -89,10 +92,11 @@ func (ecd *ebitenCanonDeck) update() {
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
 		ecd.initDrag()
 	}
-	ecd.actionButton.update(ecd)
 	for _, canon := range ecd.ebitenCanons {
-		canon.update()
+		canon.update(ecd)
 	}
+
+	ecd.actionButton.update(ecd)
 	for _, deployArea := range ecd.deployAreas {
 		deployArea.update(ecd.draggedSprite())
 	}
@@ -118,24 +122,62 @@ func (ecd *ebitenCanonDeck) draggedSprite() *ebiten_sprite.EbitenSprite {
 	return nil
 }
 
-func (ecd *ebitenCanonDeck) deploy(canonSprite ebiten_sprite.EbitenSprite) {
-	for position, da := range ecd.deployAreas {
-		if ebiten_sprite.Collision(da, canonSprite) {
-			// TODO this build of cannon will definitely have more domain.
-			// probably both this and the "ebiten" version.
-			canon := game.BuildCanon(1)
-			ecd.gameCanonDeck.DeployCannon(game.BattleGroundColumn(position), &canon)
+func (ecd *ebitenCanonDeck) moveCanon(canon *ebitenCanon) {
+	deployedArea := ecd.getDeployedAreaPosition(*canon.sprite)
+	if deployedArea != nil {
+		formationPlacement := *deployedArea
+		ecd.gameCanonDeck.MoveCanon(
+			game.BattleGroundColumn(canon.formationPlacement),
+			game.BattleGroundColumn(formationPlacement))
 
+		ecd.finishTurn(canon.sprite)
+	}
+}
+
+func (ecd *ebitenCanonDeck) deploy(canonSprite ebiten_sprite.EbitenSprite) {
+	deployedArea := ecd.getDeployedAreaPosition(canonSprite)
+	if deployedArea != nil {
+		formationPlacement := *deployedArea
+		// TODO this build of cannon will definitely have more domain.
+		// probably both this and the "ebiten" version.
+
+		// This is a very crucial part, actually. The backend game knows whether to merge
+		// or create a canon
+		canon := game.BuildCanon(1)
+		ecd.gameCanonDeck.DeployCannon(game.BattleGroundColumn(formationPlacement), &canon)
+
+		ecd.finishTurn(&canonSprite)
+	}
+}
+
+func (ecd *ebitenCanonDeck) finishTurn(draggedSprite *ebiten_sprite.EbitenSprite) {
+	for formationPlacement := 0; formationPlacement < ecd.gameCanonDeck.CanonCapacity(); formationPlacement++ {
+		canon := ecd.gameCanonDeck.Canons[game.BattleGroundColumn(formationPlacement)]
+		if canon != nil {
+			println(fmt.Sprintf("Setting cannon to position %d", formationPlacement))
 			ec := newEbitenCanon(
-				*ecd.gameCanonDeck.Canons[position],
-				canonSprite.Image,
-				getCanonCenterX(position, len(ecd.gameCanonDeck.Canons)),
+				*canon,
+				formationPlacement,
+				draggedSprite.Image,
+				getCanonCenterX(formationPlacement, ecd.gameCanonDeck.CanonCapacity()),
 				canonYPlacement,
 			)
-			ecd.ebitenCanons[position] = &ec
+			ecd.ebitenCanons[formationPlacement] = &ec
 			ec.fire()
+		} else {
+			println(fmt.Sprintf("Deleting cannon to position %d", formationPlacement))
+			delete(ecd.ebitenCanons, formationPlacement)
 		}
 	}
+}
+
+func (ecd *ebitenCanonDeck) getDeployedAreaPosition(canonSprite ebiten_sprite.EbitenSprite) *int {
+	for position, da := range ecd.deployAreas {
+		if ebiten_sprite.Collision(da, canonSprite) {
+			return &position
+		}
+	}
+	return nil
 }
 
 func (ecd *ebitenCanonDeck) currentBullets() []*ebitenCanonBullet {
