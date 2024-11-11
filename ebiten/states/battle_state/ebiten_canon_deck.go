@@ -20,6 +20,7 @@ type ebitenCanonDeck struct {
 	deployAreas   map[int]*deployArea
 	actionButton  ebitenActionButton
 	gameCanonDeck *game.CanonDeck
+	Firing        bool
 }
 
 func newEbitenCanonDeck(cd game.CanonDeck) ebitenCanonDeck {
@@ -70,6 +71,7 @@ func newEbitenCanonDeck(cd game.CanonDeck) ebitenCanonDeck {
 		deployAreas:   das,
 		actionButton:  ab,
 		gameCanonDeck: &cd,
+		Firing:        false,
 	}
 }
 
@@ -102,6 +104,19 @@ func (ecd *ebitenCanonDeck) update() {
 	}
 }
 
+func (ecd *ebitenCanonDeck) firingUpdate() {
+	bulletsInField := false
+	for _, canon := range ecd.ebitenCanons {
+		canon.firingUpdate()
+		if canon.bullet != nil {
+			bulletsInField = true
+		}
+	}
+	if bulletsInField == false {
+		ecd.Firing = false
+	}
+}
+
 func (ecd *ebitenCanonDeck) initDrag() {
 	x, y := ebiten.CursorPosition()
 	ecd.actionButton.initDrag(x, y)
@@ -126,6 +141,9 @@ func (ecd *ebitenCanonDeck) moveCanon(canon *ebitenCanon) {
 	deployedArea := ecd.getDeployedAreaPosition(*canon.sprite)
 	if deployedArea != nil {
 		formationPlacement := *deployedArea
+		if canon.formationPlacement == formationPlacement {
+			return
+		}
 		ecd.gameCanonDeck.MoveCanon(
 			game.BattleGroundColumn(canon.formationPlacement),
 			game.BattleGroundColumn(formationPlacement))
@@ -169,6 +187,7 @@ func (ecd *ebitenCanonDeck) finishTurn(draggedSprite *ebiten_sprite.EbitenSprite
 			delete(ecd.ebitenCanons, formationPlacement)
 		}
 	}
+	ecd.Firing = true
 }
 
 func (ecd *ebitenCanonDeck) getDeployedAreaPosition(canonSprite ebiten_sprite.EbitenSprite) *int {

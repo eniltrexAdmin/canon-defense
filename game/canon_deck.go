@@ -48,6 +48,10 @@ func (cd *CanonDeck) DeployCannon(position BattleGroundColumn, canon *Canon) {
 }
 
 // TODO review this function, it's weird, probably needs different API taking into account the FE
+// also the return could be something else. To discover later. (for example,
+// if origin == destination, return "no moves" or similar.
+// so a move would be something, a domain event probably.
+// the battleground would be updated by applying those.
 
 func (cd *CanonDeck) MoveCanon(origin, destination BattleGroundColumn) error {
 	println(fmt.Sprintf("Moving cannon from %d to %d", origin, destination))
@@ -66,4 +70,10 @@ func (cd *CanonDeck) MoveCanon(origin, destination BattleGroundColumn) error {
 	}
 	delete(cd.Canons, origin)
 	return nil
+}
+
+type CanonMoved struct {
+	Canon       Canon
+	Origin      BattleGroundColumn
+	Destination BattleGroundColumn
 }

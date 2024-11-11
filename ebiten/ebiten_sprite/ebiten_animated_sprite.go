@@ -9,6 +9,8 @@ import (
 	"math"
 )
 
+// TODO change ebiten Animated sprite to accept a pointer to "rectangle" instead.
+
 type EbitenAnimatedSprite struct {
 	PosX           float64
 	PosY           float64

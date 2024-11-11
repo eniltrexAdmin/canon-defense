@@ -8,10 +8,8 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text"
-	"github.com/hajimehoshi/ebiten/v2/vector"
 	"golang.org/x/image/font/basicfont"
 	"image"
-	"image/color"
 	"log"
 	"strconv"
 )
@@ -84,14 +82,16 @@ func (ec *ebitenCanon) JustRelease() {
 	ec.dragged = false
 }
 
-func (ec *ebitenCanon) update(deck *ebitenCanonDeck) {
-	// draw bullet first, even though it should be separated
+func (ec *ebitenCanon) firingUpdate() {
 	if ec.bullet != nil {
 		ec.bullet.update()
-		if ec.bullet.bulletSprite.PosY < 0 {
+		if ec.bullet.bulletSprite.PosY < -10 {
 			ec.bullet = nil
 		}
 	}
+}
+
+func (ec *ebitenCanon) update(deck *ebitenCanonDeck) {
 	if ec.dragged == false {
 		return
 	}
@@ -115,7 +115,7 @@ func (ec *ebitenCanon) update(deck *ebitenCanonDeck) {
 func (ec *ebitenCanon) draw(screen *ebiten.Image) {
 	ec.sprite.Draw(screen)
 	if ec.bullet != nil {
-		ec.bullet.draw(screen)
+		ec.bullet.draw(screen, int(ec.canon.Damage))
 	}
 	ec.drawDamage(screen)
 }
@@ -137,8 +137,4 @@ func (ec *ebitenCanon) drawDamage(screen *ebiten.Image) {
 		basicFont,
 		op,
 	)
-	gray := color.RGBA{R: 0x80, G: 0x80, B: 0x80, A: 0xff}
-	// TODO get size of text for better centering of circle
-	vector.StrokeCircle(screen, float32(posX)+4, float32(posY)-6,
-		13, float32(1), gray, true)
 }

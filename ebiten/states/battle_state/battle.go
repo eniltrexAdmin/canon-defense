@@ -41,8 +41,16 @@ func (s BattleState) Debug() string {
 }
 
 func (s BattleState) Update(stack *states.StateStack, keys []ebiten.Key) error {
-	s.ebitenCanonDeck.update()
+
 	s.ebitenBattleGround.update(s.ebitenCanonDeck.currentBullets())
+	s.ebitenCanonDeck.update()
+	if s.ebitenCanonDeck.Firing {
+		stack.Push(FireCannonsState{
+			ebitenCanonDeck:    s.ebitenCanonDeck,
+			ebitenBattleGround: s.ebitenBattleGround,
+		})
+	}
+
 	return nil
 }
 

@@ -18,11 +18,13 @@ const PlatformYPadding float64 = 20
 const BattleGroundHeight float64 = 500
 
 type ebitenBattleGround struct {
-	tiles           []ebiten_sprite.EbitenSprite
-	visibleMonsters []*ebitenMonster
+	tiles            []ebiten_sprite.EbitenSprite
+	visibleMonsters  []*ebitenMonster
+	rowDistance      float64
+	monsterAttacking bool
 }
 
-func (ecd ebitenBattleGround) draw(screen *ebiten.Image) {
+func (ecd *ebitenBattleGround) draw(screen *ebiten.Image) {
 	for _, tile := range ecd.tiles {
 		tile.Draw(screen)
 	}
@@ -31,9 +33,29 @@ func (ecd ebitenBattleGround) draw(screen *ebiten.Image) {
 	}
 }
 
-func (ecd ebitenBattleGround) update(bullets []*ebitenCanonBullet) {
+func (ecd *ebitenBattleGround) update(bullets []*ebitenCanonBullet) {
 	for _, visibleMonsters := range ecd.visibleMonsters {
 		visibleMonsters.update(bullets)
+	}
+}
+
+func (ecd *ebitenBattleGround) monsterAdvancePositions(numPositions int) {
+	ecd.monsterAttacking = true
+	for _, visibleMonsters := range ecd.visibleMonsters {
+		visibleMonsters.advance(ecd.rowDistance * float64(numPositions))
+	}
+}
+
+func (ecd *ebitenBattleGround) updateAttack() {
+	monsterMoving := false
+	for _, visibleMonsters := range ecd.visibleMonsters {
+		visibleMonsters.updateAttack()
+		if visibleMonsters.isMoving {
+			monsterMoving = true
+		}
+	}
+	if !monsterMoving {
+		ecd.monsterAttacking = false
 	}
 }
 
@@ -80,8 +102,10 @@ func newEbitenBattleGround(bg game.Battleground) ebitenBattleGround {
 		}
 	}
 	return ebitenBattleGround{
-		tiles:           tiles,
-		visibleMonsters: visibleMonsters,
+		tiles:            tiles,
+		visibleMonsters:  visibleMonsters,
+		rowDistance:      float64(availableHeight),
+		monsterAttacking: false,
 	}
 }
 
