@@ -6,8 +6,8 @@ import (
 )
 
 type FireCannonsState struct {
-	ebitenCanonDeck    *ebitenCanonDeck
-	ebitenBattleGround *ebitenBattleGround
+	ebitenCanonDeck   *ebitenCanonDeck
+	ebitenMonsterTeam *ebitenMonsterTeam
 }
 
 func (s FireCannonsState) Debug() string {
@@ -15,11 +15,11 @@ func (s FireCannonsState) Debug() string {
 }
 
 func (s FireCannonsState) Update(stack *states.StateStack, keys []ebiten.Key) error {
-	s.ebitenBattleGround.update(s.ebitenCanonDeck.currentBullets())
+	s.ebitenMonsterTeam.update(s.ebitenCanonDeck.currentBullets())
 	s.ebitenCanonDeck.firingUpdate()
 
 	if !s.ebitenCanonDeck.Firing {
-		monsterAdvanceState := newMonsterAttackState(1, s.ebitenBattleGround)
+		monsterAdvanceState := newMonsterAttackState(1, s.ebitenMonsterTeam)
 		stack.Switch(monsterAdvanceState)
 	}
 

@@ -9,11 +9,17 @@ import (
 	"math"
 )
 
-// TODO change ebiten Animated sprite to accept a pointer to "rectangle" instead.
+type ScreenCoordinate struct {
+	X float64
+	Y float64
+}
+
+func (sc ScreenCoordinate) Equals(sc2 ScreenCoordinate) bool {
+	return sc.X == sc2.X && sc.Y == sc2.Y
+}
 
 type EbitenAnimatedSprite struct {
-	PosX           float64
-	PosY           float64
+	position       *ScreenCoordinate
 	width          float64
 	height         float64
 	Image          *ebiten.Image
@@ -34,15 +40,16 @@ func NewFromCentralPoint(
 	scaleFactor float64,
 	animationSpeed float64,
 ) EbitenAnimatedSprite {
+	cp := ScreenCoordinate{
+		X: centralX,
+		Y: centralY,
+	}
+
 	intendedWidth := float64(subImageWidth) * scaleFactor
 	intendedHeight := float64(subImageHeight) * scaleFactor
 
-	posX := centralX - intendedWidth/2
-	posY := centralY - intendedHeight/2
-
 	return EbitenAnimatedSprite{
-		PosX:           posX,
-		PosY:           posY,
+		position:       &cp,
 		width:          intendedWidth,
 		height:         intendedHeight,
 		Image:          image,
@@ -70,12 +77,39 @@ func getTotalFrames(image *ebiten.Image, subImageWidth int) int {
 	return imgWidth / subImageWidth
 }
 
+func (e *EbitenAnimatedSprite) Position() ScreenCoordinate {
+	return *e.position
+}
+
+func (e *EbitenAnimatedSprite) topLeftCorner() (float64, float64) {
+	posX := e.position.X - e.width/2
+	posY := e.position.Y - e.height/2
+	return posX, posY
+}
+
+func (e *EbitenAnimatedSprite) LinkSprite(e2 *EbitenAnimatedSprite) {
+	e.position = e2.position
+}
+
 func (e *EbitenAnimatedSprite) GetRectangle() image.Rectangle {
-	x := int(e.PosX)
-	y := int(e.PosY)
+	floatX, floatY := e.topLeftCorner()
+	x := int(floatX)
+	y := int(floatY)
 	width := int(e.width)
 	height := int(e.height)
 	return image.Rect(x, y, x+width, y+height)
+}
+
+func (e *EbitenAnimatedSprite) Move(destination ScreenCoordinate, movementSpeed float64) {
+	dx := destination.X - e.position.X
+	dy := destination.Y - e.position.Y
+
+	// Limit the movement to the remaining distance
+	xMovement := math.Min(math.Abs(dx), movementSpeed) * math.Copysign(1, dx)
+	yMovement := math.Min(math.Abs(dy), movementSpeed) * math.Copysign(1, dy)
+
+	e.position.X += xMovement
+	e.position.Y += yMovement
 }
 
 func (e *EbitenAnimatedSprite) Update() {
@@ -88,7 +122,7 @@ func (e *EbitenAnimatedSprite) Update() {
 func (e *EbitenAnimatedSprite) Draw(screen *ebiten.Image) {
 	op := ebiten.DrawImageOptions{}
 	op.GeoM.Scale(e.imageScale, e.imageScale)
-	op.GeoM.Translate(e.PosX, e.PosY)
+	op.GeoM.Translate(e.topLeftCorner())
 	screen.DrawImage(e.Image.SubImage(e.getCurrentSubImage()).(*ebiten.Image), &op)
 }
 
@@ -99,9 +133,10 @@ func (e *EbitenAnimatedSprite) getCurrentSubImage() image.Rectangle {
 }
 
 func (e *EbitenAnimatedSprite) DrawDebug(screen *ebiten.Image) {
+	x, y := e.topLeftCorner()
 	vector.DrawFilledRect(screen,
-		float32(e.PosX),
-		float32(e.PosY),
+		float32(x),
+		float32(y),
 		float32(e.width),
 		float32(e.height),
 		e.debugColor,

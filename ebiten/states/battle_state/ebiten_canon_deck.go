@@ -16,14 +16,14 @@ import (
 const canonYPlacement float64 = 550
 
 type ebitenCanonDeck struct {
-	ebitenCanons  map[int]*ebitenCanon
-	deployAreas   map[int]*deployArea
-	actionButton  ebitenActionButton
-	gameCanonDeck *game.CanonDeck
-	Firing        bool
+	ebitenCanons map[int]*ebitenCanon
+	deployAreas  map[int]*deployArea
+	actionButton ebitenActionButton
+	game         *game.CanonTDGame
+	Firing       bool
 }
 
-func newEbitenCanonDeck(cd game.CanonDeck) ebitenCanonDeck {
+func newEbitenCanonDeck(g game.CanonTDGame) ebitenCanonDeck {
 	img, _, err := image.Decode(bytes.NewReader(assets.RegularCanon))
 	if err != nil {
 		log.Fatal(err)
@@ -36,15 +36,15 @@ func newEbitenCanonDeck(cd game.CanonDeck) ebitenCanonDeck {
 	}
 	pedestalImage := ebiten.NewImageFromImage(img2)
 
-	availableWidth := float64(constants.ScreenWidth / cd.CanonCapacity())
+	availableWidth := float64(constants.ScreenWidth / g.CanonDeck.CanonCapacity())
 
-	cs := make(map[int]*ebitenCanon, cd.CanonCapacity())
-	das := make(map[int]*deployArea, cd.CanonCapacity())
+	cs := make(map[int]*ebitenCanon, g.CanonDeck.CanonCapacity())
+	das := make(map[int]*deployArea, g.CanonDeck.CanonCapacity())
 
 	color := ebiten_sprite.RandomColor()
-	for formationPlacement := 0; formationPlacement < cd.CanonCapacity(); formationPlacement++ {
-		centerX := getCanonCenterX(formationPlacement, cd.CanonCapacity())
-		canon := cd.Canons[game.BattleGroundColumn(formationPlacement)]
+	for formationPlacement := 0; formationPlacement < g.CanonDeck.CanonCapacity(); formationPlacement++ {
+		centerX := getCanonCenterX(formationPlacement, g.CanonDeck.CanonCapacity())
+		canon := g.CanonDeck.Canons[game.BattleGroundColumn(formationPlacement)]
 		if canon != nil {
 			ec := newEbitenCanon(
 				*canon,
@@ -67,11 +67,11 @@ func newEbitenCanonDeck(cd game.CanonDeck) ebitenCanonDeck {
 	ab := newEbitenActionButton(canonImage, pedestalImage, constants.ScreenWidth)
 
 	return ebitenCanonDeck{
-		ebitenCanons:  cs,
-		deployAreas:   das,
-		actionButton:  ab,
-		gameCanonDeck: &cd,
-		Firing:        false,
+		ebitenCanons: cs,
+		deployAreas:  das,
+		actionButton: ab,
+		game:         &g,
+		Firing:       false,
 	}
 }
 
@@ -144,10 +144,7 @@ func (ecd *ebitenCanonDeck) moveCanon(canon *ebitenCanon) {
 		if canon.formationPlacement == formationPlacement {
 			return
 		}
-		ecd.gameCanonDeck.MoveCanon(
-			game.BattleGroundColumn(canon.formationPlacement),
-			game.BattleGroundColumn(formationPlacement))
-
+		ecd.game.MoveCannon(canon.formationPlacement, formationPlacement)
 		ecd.finishTurn(canon.sprite)
 	}
 }
@@ -156,28 +153,21 @@ func (ecd *ebitenCanonDeck) deploy(canonSprite ebiten_sprite.EbitenSprite) {
 	deployedArea := ecd.getDeployedAreaPosition(canonSprite)
 	if deployedArea != nil {
 		formationPlacement := *deployedArea
-		// TODO this build of cannon will definitely have more domain.
-		// probably both this and the "ebiten" version.
-
-		// This is a very crucial part, actually. The backend game knows whether to merge
-		// or create a canon
-		canon := game.BuildCanon(1)
-		ecd.gameCanonDeck.DeployCannon(game.BattleGroundColumn(formationPlacement), &canon)
-
+		ecd.game.DeployCannon(formationPlacement)
 		ecd.finishTurn(&canonSprite)
 	}
 }
 
 func (ecd *ebitenCanonDeck) finishTurn(draggedSprite *ebiten_sprite.EbitenSprite) {
-	for formationPlacement := 0; formationPlacement < ecd.gameCanonDeck.CanonCapacity(); formationPlacement++ {
-		canon := ecd.gameCanonDeck.Canons[game.BattleGroundColumn(formationPlacement)]
+	for formationPlacement := 0; formationPlacement < ecd.game.CanonDeck.CanonCapacity(); formationPlacement++ {
+		canon := ecd.game.CanonDeck.Canons[game.BattleGroundColumn(formationPlacement)]
 		if canon != nil {
 			println(fmt.Sprintf("Setting cannon to position %d", formationPlacement))
 			ec := newEbitenCanon(
 				*canon,
 				formationPlacement,
 				draggedSprite.Image,
-				getCanonCenterX(formationPlacement, ecd.gameCanonDeck.CanonCapacity()),
+				getCanonCenterX(formationPlacement, ecd.game.CanonDeck.CanonCapacity()),
 				canonYPlacement,
 			)
 			ecd.ebitenCanons[formationPlacement] = &ec

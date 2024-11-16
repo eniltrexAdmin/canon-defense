@@ -2,25 +2,18 @@ package game
 
 type HardcodedLevelGenerator struct{}
 
-func (lg HardcodedLevelGenerator) Generate(level int) Battleground {
+func (lg HardcodedLevelGenerator) Generate(level int) CanonTDGame {
 
-	var monsterFormation [][]*Monster
+	bg := NewBattleGround(5, 9, 5)
+	cd := NewCanonDeck(bg)
+	mt := NewMonsterTeam(bg)
 
-	for i := 1; i <= 10; i++ {
-		monsterRow := make([]*Monster, 5)
-		monsterFormation = append(monsterFormation, monsterRow)
-	}
+	mt.AddMonster(8, 3, Skeleton())
+	mt.AddMonster(4, 3, Skeleton())
 
-	skeleton := Skeleton()
-	monsterFormation[9][3] = &skeleton
-
-	skeleton2 := Skeleton()
-	monsterFormation[4][3] = &skeleton2
-
-	return Battleground{
-		Columns:     defaultBattleGroundSize,
-		Rows:        BattleGroundLength(len(monsterFormation)),
-		VisibleRows: BattleGroundVisibleRows(5),
-		Monsters:    monsterFormation,
+	return CanonTDGame{
+		Battleground: bg,
+		CanonDeck:    cd,
+		MonsterTeam:  mt,
 	}
 }

@@ -3,32 +3,12 @@ package game
 import (
 	"errors"
 	"fmt"
+	"time"
 )
-
-type canonDamage int64
-
-type Canon struct {
-	Damage canonDamage
-}
-
-func BuildCanon(damage canonDamage) Canon {
-	return Canon{
-		damage,
-	}
-}
-
-func (c1 *Canon) merge(c2 *Canon) {
-	c1.Damage += c2.Damage
-	c2 = nil
-}
 
 type CanonDeck struct {
 	Canons        map[BattleGroundColumn]*Canon
 	canonCapacity int
-}
-
-func (cd *CanonDeck) CanonCapacity() int {
-	return cd.canonCapacity
 }
 
 func NewCanonDeck(b Battleground) CanonDeck {
@@ -39,28 +19,37 @@ func NewCanonDeck(b Battleground) CanonDeck {
 	}
 }
 
-func (cd *CanonDeck) DeployCannon(position BattleGroundColumn, canon *Canon) {
+func (cd *CanonDeck) CanonCapacity() int {
+	return cd.canonCapacity
+}
+
+func (cd *CanonDeck) deployCannon(position BattleGroundColumn, canon *Canon) CanonDeployed {
 	if cd.Canons[position] != nil {
 		cd.Canons[position].merge(canon)
 	} else {
 		cd.Canons[position] = canon
 	}
+	return CanonDeployed{
+		DomainEvent: DomainEvent{occurredOn: time.Now().Format("2006-01-02 15:04:05")},
+		Canon:       *canon,
+		Destination: position,
+	}
 }
 
-// TODO review this function, it's weird, probably needs different API taking into account the FE
-// also the return could be something else. To discover later. (for example,
-// if origin == destination, return "no moves" or similar.
-// so a move would be something, a domain event probably.
-// the battleground would be updated by applying those.
+type CanonDeployed struct {
+	DomainEvent
+	Canon       Canon
+	Destination BattleGroundColumn
+}
 
-func (cd *CanonDeck) MoveCanon(origin, destination BattleGroundColumn) error {
+func (cd *CanonDeck) MoveCanon(origin, destination BattleGroundColumn) (CanonMoved, error) {
 	println(fmt.Sprintf("Moving cannon from %d to %d", origin, destination))
 	if origin == destination {
-		return nil
+		return CanonMoved{}, nil
 	}
 	canon := cd.Canons[origin]
 	if canon == nil {
-		return errors.New("no canon to move here")
+		return CanonMoved{}, errors.New("no canon to move here")
 	}
 
 	if cd.Canons[destination] == nil {
@@ -69,10 +58,16 @@ func (cd *CanonDeck) MoveCanon(origin, destination BattleGroundColumn) error {
 		cd.Canons[destination].merge(canon)
 	}
 	delete(cd.Canons, origin)
-	return nil
+	return CanonMoved{
+		DomainEvent: DomainEvent{occurredOn: time.Now().Format("2006-01-02 15:04:05")},
+		Canon:       *canon,
+		Origin:      origin,
+		Destination: destination,
+	}, nil
 }
 
 type CanonMoved struct {
+	DomainEvent
 	Canon       Canon
 	Origin      BattleGroundColumn
 	Destination BattleGroundColumn

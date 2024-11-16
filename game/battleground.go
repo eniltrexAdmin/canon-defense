@@ -3,24 +3,33 @@ package game
 const defaultBattleGroundSize BattleGroundColumn = 5
 
 type BattleGroundColumn int8
-type BattleGroundLength uint64
-type BattleGroundVisibleRows int8
+type BattleGroundRow uint64
 
 type Battleground struct {
 	Columns     BattleGroundColumn
-	Rows        BattleGroundLength
-	VisibleRows BattleGroundVisibleRows
-	Monsters    [][]*Monster
+	Rows        BattleGroundRow
+	VisibleRows BattleGroundRow
 }
 
-type LevelGenerator interface {
-	Generate(level int) Battleground
-}
-
-func ToBattleGroundColumn(input int, bg Battleground) BattleGroundColumn {
-	// TODO encapsulate panics in probably all in game, and return errors here instead.
-	if input < 0 || input > int(bg.Columns) {
-		panic("value cannot be converted to column")
+func NewBattleGround(columns, rows, visibleRows int) Battleground {
+	if visibleRows > rows {
+		panic("visibleRows > rows")
 	}
-	return BattleGroundColumn(input)
+	if columns < 1 || rows < 1 || visibleRows < 1 {
+		panic("battleground needs to exist in all dimensions!")
+	}
+	return Battleground{
+		Columns:     BattleGroundColumn(columns),
+		Rows:        BattleGroundRow(rows),
+		VisibleRows: BattleGroundRow(visibleRows),
+	}
+}
+
+func (bg Battleground) checkIndexPosition(row, column int) {
+	if row >= int(bg.Rows) || row < 0 {
+		panic("row index out of bounds")
+	}
+	if column >= int(bg.Columns) || column < 0 {
+		panic("column index out of bounds")
+	}
 }

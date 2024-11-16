@@ -6,13 +6,13 @@ import (
 )
 
 type MonsterAttackState struct {
-	ebitenBattleGround *ebitenBattleGround
+	ebitenMonsterTeam *ebitenMonsterTeam
 }
 
-func newMonsterAttackState(numPositions int, ebitenBattleGround *ebitenBattleGround) MonsterAttackState {
-	ebitenBattleGround.monsterAdvancePositions(numPositions)
+func newMonsterAttackState(numPositions int, ebitenMonsterTeam *ebitenMonsterTeam) MonsterAttackState {
+	ebitenMonsterTeam.monsterAdvancePositions(numPositions)
 	return MonsterAttackState{
-		ebitenBattleGround: ebitenBattleGround,
+		ebitenMonsterTeam: ebitenMonsterTeam,
 	}
 }
 
@@ -22,8 +22,8 @@ func (s MonsterAttackState) Debug() string {
 
 func (s MonsterAttackState) Update(stack *states.StateStack, keys []ebiten.Key) error {
 
-	s.ebitenBattleGround.updateAttack()
-	if !s.ebitenBattleGround.monsterAttacking {
+	s.ebitenMonsterTeam.updateAttack()
+	if !s.ebitenMonsterTeam.monsterAttacking {
 		stack.Pop()
 	}
 

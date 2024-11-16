@@ -18,44 +18,13 @@ const PlatformYPadding float64 = 20
 const BattleGroundHeight float64 = 500
 
 type ebitenBattleGround struct {
-	tiles            []ebiten_sprite.EbitenSprite
-	visibleMonsters  []*ebitenMonster
-	rowDistance      float64
-	monsterAttacking bool
+	tiles       []ebiten_sprite.EbitenSprite
+	rowDistance float64
 }
 
 func (ecd *ebitenBattleGround) draw(screen *ebiten.Image) {
 	for _, tile := range ecd.tiles {
 		tile.Draw(screen)
-	}
-	for _, visibleMonsters := range ecd.visibleMonsters {
-		visibleMonsters.draw(screen)
-	}
-}
-
-func (ecd *ebitenBattleGround) update(bullets []*ebitenCanonBullet) {
-	for _, visibleMonsters := range ecd.visibleMonsters {
-		visibleMonsters.update(bullets)
-	}
-}
-
-func (ecd *ebitenBattleGround) monsterAdvancePositions(numPositions int) {
-	ecd.monsterAttacking = true
-	for _, visibleMonsters := range ecd.visibleMonsters {
-		visibleMonsters.advance(ecd.rowDistance * float64(numPositions))
-	}
-}
-
-func (ecd *ebitenBattleGround) updateAttack() {
-	monsterMoving := false
-	for _, visibleMonsters := range ecd.visibleMonsters {
-		visibleMonsters.updateAttack()
-		if visibleMonsters.isMoving {
-			monsterMoving = true
-		}
-	}
-	if !monsterMoving {
-		ecd.monsterAttacking = false
 	}
 }
 
@@ -70,8 +39,6 @@ func newEbitenBattleGround(bg game.Battleground) ebitenBattleGround {
 	platformImage := ebiten.NewImageFromImage(img)
 
 	var tiles []ebiten_sprite.EbitenSprite
-
-	var visibleMonsters []*ebitenMonster
 
 	for i := 0; i < int(bg.VisibleRows); i++ {
 		for j := 0; j < int(bg.Columns); j++ {
@@ -92,29 +59,10 @@ func newEbitenBattleGround(bg game.Battleground) ebitenBattleGround {
 				TileSize,
 			)
 			tiles = append(tiles, tile)
-
-			possibleMonster := monsterFromGameInEbitenBattleGround(i, j, bg)
-
-			if possibleMonster != nil {
-				monster := NewEbitenMonster(possibleMonster, posX, posY)
-				visibleMonsters = append(visibleMonsters, &monster)
-			}
 		}
 	}
 	return ebitenBattleGround{
-		tiles:            tiles,
-		visibleMonsters:  visibleMonsters,
-		rowDistance:      float64(availableHeight),
-		monsterAttacking: false,
+		tiles:       tiles,
+		rowDistance: float64(availableHeight),
 	}
-}
-
-func monsterFromGameInEbitenBattleGround(ebitenRow, ebitenColumn int, bg game.Battleground) *game.Monster {
-	gameI, gameJ := translateEbitenToGame(ebitenRow, ebitenColumn, int(bg.VisibleRows))
-	return bg.Monsters[gameI][gameJ]
-}
-
-func translateEbitenToGame(ebitenRow, ebitenColumn int, gameVisibleRows int) (int, int) {
-
-	return gameVisibleRows - (ebitenRow + 1), ebitenColumn
 }

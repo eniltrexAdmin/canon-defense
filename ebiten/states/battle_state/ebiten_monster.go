@@ -10,20 +10,16 @@ import (
 	"log"
 )
 
-const animationSpeed float64 = 0.15
-
 const movementSpeed float64 = 2
 
 type ebitenMonster struct {
-	monster                    *game.Monster
-	sprite                     ebiten_sprite.EbitenSprite
-	hurtImage                  *ebiten.Image
-	frame                      float64
-	currentSprite              *ebiten_sprite.EbitenAnimatedSprite
-	idleSprite                 ebiten_sprite.EbitenAnimatedSprite
-	hitSprite                  ebiten_sprite.EbitenAnimatedSprite
-	destinationX, destinationY float64
-	isMoving                   bool
+	monster       *game.Monster
+	currentSprite *ebiten_sprite.EbitenAnimatedSprite
+	idleSprite    ebiten_sprite.EbitenAnimatedSprite
+	hitSprite     ebiten_sprite.EbitenAnimatedSprite
+	destination   ebiten_sprite.ScreenCoordinate
+	isMoving      bool
+	damageTaken   bool
 }
 
 func (m *ebitenMonster) draw(screen *ebiten.Image) {
@@ -39,18 +35,18 @@ func (m *ebitenMonster) update(bullets []*ebitenCanonBullet) {
 	m.currentSprite.Update()
 }
 
-func (m *ebitenMonster) advance(distance float64) {
-	// TODO change ebiten Animated sprite to accept a pointer to "rectangle" instead.
-	m.destinationX = m.currentSprite.PosX
-	m.destinationY = m.currentSprite.PosY + distance
-	m.isMoving = true
+func (m *ebitenMonster) setDestination(distance float64) {
+	m.destination = ebiten_sprite.ScreenCoordinate{
+		X: m.currentSprite.Position().X,
+		Y: m.currentSprite.Position().Y + distance,
+	}
+	m.currentSprite = &m.idleSprite
 }
 
 func (m *ebitenMonster) updateAttack() {
-	m.currentSprite = &m.idleSprite
-	if m.currentSprite.PosY != m.destinationY {
-		m.idleSprite.PosY = m.idleSprite.PosY + movementSpeed
-		m.hitSprite.PosY = m.hitSprite.PosY + movementSpeed
+	if !m.currentSprite.Position().Equals(m.destination) {
+		m.currentSprite.Move(m.destination, movementSpeed)
+		m.isMoving = true
 	} else {
 		m.isMoving = false
 	}
@@ -95,8 +91,11 @@ func NewEbitenMonster(monster *game.Monster, posX, posY float64) ebitenMonster {
 		bhImage,
 		64,
 		64,
-		1,
+		2,
 		0.1)
+
+	beholder.LinkSprite(&beholderHit)
+	//beholderHit.LinkSprite(&beholder)
 
 	return ebitenMonster{
 		monster:       monster,

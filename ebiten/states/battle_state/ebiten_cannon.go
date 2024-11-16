@@ -14,7 +14,7 @@ import (
 	"strconv"
 )
 
-const BulletSpeed float64 = 2.5
+const BulletSpeed float64 = 5
 
 type ebitenCanon struct {
 	sprite                               *ebiten_sprite.EbitenSprite
@@ -62,6 +62,7 @@ func newEbitenCanon(
 }
 
 func (ec *ebitenCanon) fire() {
+	// passing the bullet speed because it kind of belongs to the cannon type, etc
 	bullet := NewBullet(ec.bulletImage, BulletSpeed, ec.sprite.PosX, canonYPlacement)
 	ec.bullet = &bullet
 }
