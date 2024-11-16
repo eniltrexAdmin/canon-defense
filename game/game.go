@@ -38,6 +38,7 @@ func (g *CanonTDGame) DeployCannon(column int) {
 	c := g.CanonBuilder.Create()
 	de := g.CanonDeck.deployCannon(BattleGroundColumn(column), &c)
 	g.Turns = append(g.Turns, de)
+	g.Fire()
 }
 
 func (g *CanonTDGame) MoveCannon(origin, destination int) {
@@ -46,8 +47,13 @@ func (g *CanonTDGame) MoveCannon(origin, destination int) {
 		panic(err)
 	}
 	g.Turns = append(g.Turns, de)
+	g.Fire()
 }
 
-func (g *CanonTDGame) finishTurn() {
-
+func (g *CanonTDGame) Fire() {
+	for column, c := range g.CanonDeck.Canons {
+		if c != nil {
+			g.MonsterTeam.DamageMonsters(c, column)
+		}
+	}
 }

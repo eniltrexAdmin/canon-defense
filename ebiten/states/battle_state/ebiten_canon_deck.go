@@ -16,11 +16,12 @@ import (
 const canonYPlacement float64 = 550
 
 type ebitenCanonDeck struct {
-	ebitenCanons map[int]*ebitenCanon
-	deployAreas  map[int]*deployArea
-	actionButton ebitenActionButton
-	game         *game.CanonTDGame
-	Firing       bool
+	ebitenCanons  map[int]*ebitenCanon
+	deployAreas   map[int]*deployArea
+	actionButton  ebitenActionButton
+	game          *game.CanonTDGame
+	Firing        bool
+	draggedSprite *ebiten_sprite.EbitenDraggableSprite
 }
 
 func newEbitenCanonDeck(g game.CanonTDGame) ebitenCanonDeck {
@@ -95,70 +96,74 @@ func (ecd *ebitenCanonDeck) update() {
 		ecd.initDrag()
 	}
 	for _, canon := range ecd.ebitenCanons {
-		canon.update(ecd)
+		canon.update()
 	}
 
-	ecd.actionButton.update(ecd)
-	for _, deployArea := range ecd.deployAreas {
-		deployArea.update(ecd.draggedSprite())
-	}
-}
+	ecd.actionButton.update()
 
-func (ecd *ebitenCanonDeck) firingUpdate() {
-	bulletsInField := false
-	for _, canon := range ecd.ebitenCanons {
-		canon.firingUpdate()
-		if canon.bullet != nil {
-			bulletsInField = true
+	if ecd.draggedSprite != nil {
+		for _, deployArea := range ecd.deployAreas {
+			deployArea.update(&ecd.draggedSprite.EbitenSprite)
 		}
 	}
-	if bulletsInField == false {
-		ecd.Firing = false
+
+	if inpututil.IsMouseButtonJustReleased(ebiten.MouseButtonLeft) {
+		ecd.releaseDrag()
 	}
 }
 
 func (ecd *ebitenCanonDeck) initDrag() {
-	x, y := ebiten.CursorPosition()
-	ecd.actionButton.initDrag(x, y)
+	ecd.actionButton.canonSprite.InitDrag()
+	if ecd.actionButton.canonSprite.IsDragged {
+		ecd.draggedSprite = ecd.actionButton.canonSprite
+		return
+	}
 	for _, canon := range ecd.ebitenCanons {
-		canon.initDrag(x, y)
+		canon.sprite.InitDrag()
+		if canon.sprite.IsDragged {
+			ecd.draggedSprite = canon.sprite
+			return
+		}
 	}
 }
 
-func (ecd *ebitenCanonDeck) draggedSprite() *ebiten_sprite.EbitenSprite {
-	if ecd.actionButton.dragged {
-		return &ecd.actionButton.canonSprite
-	}
-	for _, canon := range ecd.ebitenCanons {
-		if canon.dragged {
-			return canon.sprite
+func (ecd *ebitenCanonDeck) releaseDrag() {
+	if ecd.draggedSprite != nil {
+		if ecd.actionButton.canonSprite.IsDragged {
+			ecd.deploy()
+			ecd.actionButton.canonSprite.ReleaseDrag()
+		}
+		for _, canon := range ecd.ebitenCanons {
+			if canon.sprite.IsDragged {
+				ecd.moveCanon(canon)
+				canon.sprite.ReleaseDrag()
+			}
 		}
 	}
-	return nil
 }
 
 func (ecd *ebitenCanonDeck) moveCanon(canon *ebitenCanon) {
-	deployedArea := ecd.getDeployedAreaPosition(*canon.sprite)
+	deployedArea := ecd.getDeployedAreaPosition()
 	if deployedArea != nil {
 		formationPlacement := *deployedArea
 		if canon.formationPlacement == formationPlacement {
 			return
 		}
 		ecd.game.MoveCannon(canon.formationPlacement, formationPlacement)
-		ecd.finishTurn(canon.sprite)
+		ecd.finishTurn()
 	}
 }
 
-func (ecd *ebitenCanonDeck) deploy(canonSprite ebiten_sprite.EbitenSprite) {
-	deployedArea := ecd.getDeployedAreaPosition(canonSprite)
+func (ecd *ebitenCanonDeck) deploy() {
+	deployedArea := ecd.getDeployedAreaPosition()
 	if deployedArea != nil {
 		formationPlacement := *deployedArea
 		ecd.game.DeployCannon(formationPlacement)
-		ecd.finishTurn(&canonSprite)
+		ecd.finishTurn()
 	}
 }
 
-func (ecd *ebitenCanonDeck) finishTurn(draggedSprite *ebiten_sprite.EbitenSprite) {
+func (ecd *ebitenCanonDeck) finishTurn() {
 	for formationPlacement := 0; formationPlacement < ecd.game.CanonDeck.CanonCapacity(); formationPlacement++ {
 		canon := ecd.game.CanonDeck.Canons[game.BattleGroundColumn(formationPlacement)]
 		if canon != nil {
@@ -166,7 +171,7 @@ func (ecd *ebitenCanonDeck) finishTurn(draggedSprite *ebiten_sprite.EbitenSprite
 			ec := newEbitenCanon(
 				*canon,
 				formationPlacement,
-				draggedSprite.Image,
+				ecd.actionButton.canonSprite.Image,
 				getCanonCenterX(formationPlacement, ecd.game.CanonDeck.CanonCapacity()),
 				canonYPlacement,
 			)
@@ -180,13 +185,28 @@ func (ecd *ebitenCanonDeck) finishTurn(draggedSprite *ebiten_sprite.EbitenSprite
 	ecd.Firing = true
 }
 
-func (ecd *ebitenCanonDeck) getDeployedAreaPosition(canonSprite ebiten_sprite.EbitenSprite) *int {
+func (ecd *ebitenCanonDeck) getDeployedAreaPosition() *int {
 	for position, da := range ecd.deployAreas {
-		if ebiten_sprite.Collision(da, canonSprite) {
+		if ebiten_sprite.Collision(da, ecd.draggedSprite) {
 			return &position
 		}
 	}
 	return nil
+}
+
+// DECK FIRING STATE
+
+func (ecd *ebitenCanonDeck) firingUpdate() {
+	bulletsInField := false
+	for _, canon := range ecd.ebitenCanons {
+		canon.firingUpdate()
+		if canon.bullet != nil {
+			bulletsInField = true
+		}
+	}
+	if bulletsInField == false {
+		ecd.Firing = false
+	}
 }
 
 func (ecd *ebitenCanonDeck) currentBullets() []*ebitenCanonBullet {

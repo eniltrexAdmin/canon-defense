@@ -15,7 +15,7 @@ func (s FireCannonsState) Debug() string {
 }
 
 func (s FireCannonsState) Update(stack *states.StateStack, keys []ebiten.Key) error {
-	s.ebitenMonsterTeam.update(s.ebitenCanonDeck.currentBullets())
+	s.ebitenMonsterTeam.updateDeckFiring(s.ebitenCanonDeck.currentBullets())
 	s.ebitenCanonDeck.firingUpdate()
 
 	if !s.ebitenCanonDeck.Firing {

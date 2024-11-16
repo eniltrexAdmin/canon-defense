@@ -1,13 +1,15 @@
 package game
 
-import "fmt"
+// at some point just having one index should suffice:
+// satting the "goal" like 6 or 7, and total rows
+// so a monster i from -5 to goal, when it's on 0 or more it's visible
 
 //9 Rows 5  columns
 //  0 1 2 3 4
 //9
 //8
 //7            6 Visible rows
-//6                              visibleRow := total Visible mt.LevelRows - gameRow - 1
+//6                              VisibleRow := total Visible mt.LevelRows - gameRow - 1
 //5           0                     x = 6 - 5 - 1  = 0
 //4           1                     x = 6 - 4 - 1 = 1
 //3           2                     x = 6 - 3 -1 = 2
@@ -16,52 +18,64 @@ import "fmt"
 //0           5                     x = 6 -0 -1 = 5
 
 type MonsterTeam struct {
-	Monsters        map[BattleGroundColumn]map[BattleGroundRow]*Monster
-	MonstersInField map[BattleGroundColumn]map[BattleGroundRow]*Monster
-	Battleground    Battleground
+	Battleground           Battleground
+	MonstersInBattleground []*MonsterInBattleGround
+}
+
+type MonsterInBattleGround struct {
+	Monster    Monster
+	Column     BattleGroundColumn
+	Row        BattleGroundRow
+	VisibleRow BattleGroundRow
+}
+
+func newMonsterInBattleGround(
+	bg Battleground,
+	column BattleGroundColumn,
+	row BattleGroundRow,
+	m Monster,
+) MonsterInBattleGround {
+	bg.checkIndexPosition(row, column)
+	return MonsterInBattleGround{
+		Monster:    m,
+		Column:     column,
+		Row:        row,
+		VisibleRow: bg.toVisibleRow(row),
+	}
 }
 
 func NewMonsterTeam(bg Battleground) MonsterTeam {
-	m := make(map[BattleGroundColumn]map[BattleGroundRow]*Monster, bg.Columns)
-
-	for c := BattleGroundColumn(0); c < bg.Columns; c++ {
-		m[c] = make(map[BattleGroundRow]*Monster, bg.Rows)
-	}
-
-	monstersInField := make(map[BattleGroundColumn]map[BattleGroundRow]*Monster, bg.Columns)
-	for c := BattleGroundColumn(0); c < bg.Columns; c++ {
-		monstersInField[c] = make(map[BattleGroundRow]*Monster, bg.VisibleRows)
-	}
-
 	return MonsterTeam{
-		Monsters:        m,
-		MonstersInField: monstersInField,
-		Battleground:    bg,
+		Battleground: bg,
 	}
 }
 
-func (mt *MonsterTeam) AddMonster(indexRow, indexColumn int, m Monster) {
-	mt.Battleground.checkIndexPosition(indexRow, indexColumn)
+func (mt *MonsterTeam) addMonster(indexRow, indexColumn int, m Monster) {
 	bgColumn := BattleGroundColumn(indexColumn)
 	bgRow := BattleGroundRow(indexRow)
-	mt.Monsters[bgColumn][bgRow] = &m
+	monsterInBg := newMonsterInBattleGround(mt.Battleground, bgColumn, bgRow, m)
+	mt.MonstersInBattleground = append(mt.MonstersInBattleground, &monsterInBg)
+}
 
-	visibleRow, err := mt.toVisibleRow(bgRow)
-	if err == nil {
-		mt.MonstersInField[bgColumn][visibleRow] = &m
+func (mt *MonsterTeam) monsterInColumn(c BattleGroundColumn) []*Monster {
+	m := make([]*Monster, 0)
+	for _, monsterInBg := range mt.MonstersInBattleground {
+		if monsterInBg.VisibleRow != NoVisibleRow && monsterInBg.Column == c {
+			m = append(m, &monsterInBg.Monster)
+		}
+	}
+	return m
+}
+
+func (mt *MonsterTeam) DamageMonsters(c *Canon, canonPosition BattleGroundColumn) {
+	for _, monster := range mt.monsterInColumn(canonPosition) {
+		monster.hit(c.Damage)
 	}
 }
 
-func (mt *MonsterTeam) toRealRow(visibleRow BattleGroundRow) BattleGroundRow {
-	return mt.Battleground.Rows - (visibleRow + 1)
-}
-
-func (mt *MonsterTeam) toVisibleRow(gameRow BattleGroundRow) (BattleGroundRow, error) {
-	if gameRow < mt.Battleground.Rows-mt.Battleground.VisibleRows ||
-		gameRow >= mt.Battleground.VisibleRows {
-		return 0, fmt.Errorf("gameRow %d is out of the visible range", gameRow)
+func (mt *MonsterTeam) advance() {
+	for _, monsterInBg := range mt.MonstersInBattleground {
+		monsterInBg.Row = monsterInBg.Row - 1
+		monsterInBg.VisibleRow = mt.Battleground.toVisibleRow(monsterInBg.Row)
 	}
-
-	visibleRow := mt.Battleground.VisibleRows - gameRow - 1
-	return visibleRow, nil
 }

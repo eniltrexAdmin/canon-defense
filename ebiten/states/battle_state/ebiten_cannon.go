@@ -6,7 +6,6 @@ import (
 	"canon-tower-defense/ebiten/ebiten_sprite"
 	"canon-tower-defense/game"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text"
 	"golang.org/x/image/font/basicfont"
 	"image"
@@ -17,15 +16,12 @@ import (
 const BulletSpeed float64 = 5
 
 type ebitenCanon struct {
-	sprite                               *ebiten_sprite.EbitenSprite
-	canon                                game.Canon
-	formationPlacement                   int
-	canonPlacedImage                     *ebiten.Image
-	bulletImage                          *ebiten.Image
-	bullet                               *ebitenCanonBullet
-	initialPlacementX, initialPlacementY float64
-	dragIniX, dragIniY                   float64
-	dragged                              bool
+	sprite             *ebiten_sprite.EbitenDraggableSprite
+	canon              game.Canon
+	formationPlacement int
+	canonPlacedImage   *ebiten.Image
+	bulletImage        *ebiten.Image
+	bullet             *ebitenCanonBullet
 }
 
 func newEbitenCanon(
@@ -49,15 +45,12 @@ func newEbitenCanon(
 	bulletImage := ebiten.NewImageFromImage(img3)
 
 	return ebitenCanon{
-		sprite:             &sprite,
+		sprite:             ebiten_sprite.NewFromSprite(sprite),
 		canon:              canon,
 		formationPlacement: formationPlacement,
 		canonPlacedImage:   cImage,
 		bulletImage:        bulletImage,
 		bullet:             nil,
-		initialPlacementX:  sprite.PosX,
-		initialPlacementY:  sprite.PosY,
-		dragged:            false,
 	}
 }
 
@@ -65,22 +58,6 @@ func (ec *ebitenCanon) fire() {
 	// passing the bullet speed because it kind of belongs to the cannon type, etc
 	bullet := NewBullet(ec.bulletImage, BulletSpeed, ec.sprite.PosX, canonYPlacement)
 	ec.bullet = &bullet
-}
-
-// TODO encapsulate drag logic in utils?
-func (ec *ebitenCanon) initDrag(x, y int) {
-	if ec.sprite.InBounds(x, y) {
-		ec.dragIniX = float64(x)
-		ec.dragIniY = float64(y)
-		ec.dragged = true
-	}
-}
-
-// TODO this should do other things.
-func (ec *ebitenCanon) JustRelease() {
-	ec.sprite.PosX = ec.initialPlacementX
-	ec.sprite.PosY = ec.initialPlacementY
-	ec.dragged = false
 }
 
 func (ec *ebitenCanon) firingUpdate() {
@@ -92,25 +69,8 @@ func (ec *ebitenCanon) firingUpdate() {
 	}
 }
 
-func (ec *ebitenCanon) update(deck *ebitenCanonDeck) {
-	if ec.dragged == false {
-		return
-	}
-	if inpututil.IsMouseButtonJustReleased(ebiten.MouseButtonLeft) {
-		deck.moveCanon(ec)
-		ec.JustRelease()
-		return
-	}
-
-	// TODO encapsulate drag logic in utils?
-	// that means here it's still being dragged.
-	x, y := ebiten.CursorPosition()
-
-	dragDeltaX := float64(x) - ec.dragIniX + ec.initialPlacementX
-	dragDeltaY := float64(y) - ec.dragIniY + ec.initialPlacementY
-
-	ec.sprite.PosX = dragDeltaX
-	ec.sprite.PosY = dragDeltaY
+func (ec *ebitenCanon) update() {
+	ec.sprite.Update()
 }
 
 func (ec *ebitenCanon) draw(screen *ebiten.Image) {

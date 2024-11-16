@@ -3,18 +3,14 @@ package battle_state
 import (
 	"canon-tower-defense/ebiten/ebiten_sprite"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
 const actionButtonYPlacement float64 = 650
 const actionButtonTileSize float64 = 50
 
 type ebitenActionButton struct {
-	canonSprite                          ebiten_sprite.EbitenSprite
-	pedestalSprite                       ebiten_sprite.EbitenSprite
-	initialPlacementX, initialPlacementY float64
-	dragIniX, dragIniY                   float64
-	dragged                              bool
+	canonSprite    *ebiten_sprite.EbitenDraggableSprite
+	pedestalSprite ebiten_sprite.EbitenSprite
 }
 
 func newEbitenActionButton(cImage *ebiten.Image, cpImage *ebiten.Image, availableWidth int) ebitenActionButton {
@@ -33,46 +29,13 @@ func newEbitenActionButton(cImage *ebiten.Image, cpImage *ebiten.Image, availabl
 	)
 
 	return ebitenActionButton{
-		canonSprite:       canonSprite,
-		pedestalSprite:    pedestalSprite,
-		dragged:           false,
-		initialPlacementX: canonSprite.PosX,
-		initialPlacementY: canonSprite.PosY,
+		canonSprite:    ebiten_sprite.NewFromSprite(canonSprite),
+		pedestalSprite: pedestalSprite,
 	}
 }
 
-func (ec *ebitenActionButton) initDrag(x, y int) {
-	if ec.canonSprite.InBounds(x, y) {
-		ec.dragIniX = float64(x)
-		ec.dragIniY = float64(y)
-		ec.dragged = true
-	}
-}
-
-func (ec *ebitenActionButton) JustRelease() {
-	ec.canonSprite.PosX = ec.initialPlacementX
-	ec.canonSprite.PosY = ec.initialPlacementY
-	ec.dragged = false
-}
-
-func (ec *ebitenActionButton) update(deck *ebitenCanonDeck) {
-	if ec.dragged == false {
-		return
-	}
-	if inpututil.IsMouseButtonJustReleased(ebiten.MouseButtonLeft) {
-		deck.deploy(ec.canonSprite)
-		ec.JustRelease()
-		return
-	}
-
-	// that means here it's still being dragged.
-	x, y := ebiten.CursorPosition()
-
-	dragDeltaX := float64(x) - ec.dragIniX + ec.initialPlacementX
-	dragDeltaY := float64(y) - ec.dragIniY + ec.initialPlacementY
-
-	ec.canonSprite.PosX = dragDeltaX
-	ec.canonSprite.PosY = dragDeltaY
+func (ec *ebitenActionButton) update() {
+	ec.canonSprite.Update()
 }
 
 func (ec *ebitenActionButton) draw(screen *ebiten.Image) {

@@ -41,7 +41,7 @@ func (s BattleState) Debug() string {
 
 func (s BattleState) Update(stack *states.StateStack, keys []ebiten.Key) error {
 
-	s.ebitenMonsterTeam.update(s.ebitenCanonDeck.currentBullets())
+	s.ebitenMonsterTeam.update()
 	s.ebitenCanonDeck.update()
 	if s.ebitenCanonDeck.Firing {
 		stack.Push(FireCannonsState{

@@ -9,15 +9,11 @@ type Monster struct {
 	columnMovement battlegroundMovement
 }
 
-func (m Monster) move(b Battleground) {
-
-}
-
-func (m Monster) hit(damage canonDamage) {
+func (m *Monster) hit(damage canonDamage) {
 	m.healthPoints -= damage
 }
 
-func (m Monster) alive() bool {
+func (m *Monster) alive() bool {
 	return m.healthPoints > 0
 }
 

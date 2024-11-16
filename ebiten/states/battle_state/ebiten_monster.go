@@ -27,13 +27,29 @@ func (m *ebitenMonster) draw(screen *ebiten.Image) {
 	//m.currentSprite.DrawDebug(screen)
 }
 
-func (m *ebitenMonster) update(bullets []*ebitenCanonBullet) {
+func (m *ebitenMonster) update() {
+	m.currentSprite.Update()
+}
+
+// DECK FIRING STATE
+func (m *ebitenMonster) updateDeckFiring(bullets []*ebitenCanonBullet) {
 	m.currentSprite = &m.idleSprite
 	if m.IsHit(bullets) {
 		m.currentSprite = &m.hitSprite
 	}
 	m.currentSprite.Update()
 }
+
+func (m *ebitenMonster) IsHit(bullets []*ebitenCanonBullet) bool {
+	for _, bullet := range bullets {
+		if ebiten_sprite.Collision(m.currentSprite, bullet.bulletSprite) {
+			return true
+		}
+	}
+	return false
+}
+
+// ATTACK STATE
 
 func (m *ebitenMonster) setDestination(distance float64) {
 	m.destination = ebiten_sprite.ScreenCoordinate{
@@ -51,15 +67,6 @@ func (m *ebitenMonster) updateAttack() {
 		m.isMoving = false
 	}
 	m.currentSprite.Update()
-}
-
-func (m *ebitenMonster) IsHit(bullets []*ebitenCanonBullet) bool {
-	for _, bullet := range bullets {
-		if ebiten_sprite.Collision(m.currentSprite, bullet.bulletSprite) {
-			return true
-		}
-	}
-	return false
 }
 
 func NewEbitenMonster(monster *game.Monster, posX, posY float64) ebitenMonster {

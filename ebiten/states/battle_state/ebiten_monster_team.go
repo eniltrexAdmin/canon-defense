@@ -17,21 +17,20 @@ func NewEbitenMonsterTeam(monsterTeam game.MonsterTeam) ebitenMonsterTeam {
 	availableHeight := int(BattleGroundHeight) / int(monsterTeam.Battleground.VisibleRows)
 	var visibleMonsters []*ebitenMonster
 
-	for i := game.BattleGroundRow(0); i < monsterTeam.Battleground.VisibleRows; i++ {
-		for j := game.BattleGroundColumn(0); j < monsterTeam.Battleground.Columns; j++ {
-			centerXSpace := availableWidth / 2
-			tileCenterPointX := float64(centerXSpace)
+	centerXSpace := availableWidth / 2
+	tileCenterPointX := float64(centerXSpace)
 
-			centerYSpace := availableHeight / 2
-			tileSCenterPointY := float64(centerYSpace)
+	centerYSpace := availableHeight / 2
+	tileSCenterPointY := float64(centerYSpace)
 
-			posX := float64(availableWidth*int(j)) + tileCenterPointX
-			posY := float64(availableHeight*int(i)) + tileSCenterPointY
+	for _, mig := range monsterTeam.MonstersInBattleground {
+		// at some point we might have get rid of visible rows all together.
+		if mig.VisibleRow != game.NoVisibleRow {
+			posX := float64(availableWidth*int(mig.Column)) + tileCenterPointX
+			posY := float64(availableHeight*int(mig.VisibleRow)) + tileSCenterPointY
 
-			if monsterTeam.MonstersInField[j][i] != nil {
-				monster := NewEbitenMonster(monsterTeam.MonstersInField[j][i], posX, posY)
-				visibleMonsters = append(visibleMonsters, &monster)
-			}
+			monster := NewEbitenMonster(&mig.Monster, posX, posY)
+			visibleMonsters = append(visibleMonsters, &monster)
 		}
 	}
 
@@ -42,34 +41,46 @@ func NewEbitenMonsterTeam(monsterTeam game.MonsterTeam) ebitenMonsterTeam {
 	}
 }
 
-func (ecd *ebitenMonsterTeam) draw(screen *ebiten.Image) {
-	for _, visibleMonsters := range ecd.visibleMonsters {
+func (emt *ebitenMonsterTeam) draw(screen *ebiten.Image) {
+	for _, visibleMonsters := range emt.visibleMonsters {
 		visibleMonsters.draw(screen)
 	}
 }
 
-func (ecd *ebitenMonsterTeam) update(bullets []*ebitenCanonBullet) {
-	for _, visibleMonsters := range ecd.visibleMonsters {
-		visibleMonsters.update(bullets)
+// BATTLE STATE
+
+func (emt *ebitenMonsterTeam) update() {
+	for _, visibleMonsters := range emt.visibleMonsters {
+		visibleMonsters.update()
 	}
 }
 
-func (ecd *ebitenMonsterTeam) monsterAdvancePositions(numPositions int) {
-	ecd.monsterAttacking = true
-	for _, visibleMonsters := range ecd.visibleMonsters {
-		visibleMonsters.setDestination(ecd.advanceStep * float64(numPositions))
+// DECK FIRING STATE
+
+func (emt *ebitenMonsterTeam) updateDeckFiring(bullets []*ebitenCanonBullet) {
+	for _, visibleMonsters := range emt.visibleMonsters {
+		visibleMonsters.updateDeckFiring(bullets)
 	}
 }
 
-func (ecd *ebitenMonsterTeam) updateAttack() {
+// ATTACK STATE
+
+func (emt *ebitenMonsterTeam) monsterAdvancePositions(numPositions int) {
+	emt.monsterAttacking = true
+	for _, visibleMonsters := range emt.visibleMonsters {
+		visibleMonsters.setDestination(emt.advanceStep * float64(numPositions))
+	}
+}
+
+func (emt *ebitenMonsterTeam) updateAttack() {
 	monsterMoving := false
-	for _, visibleMonsters := range ecd.visibleMonsters {
+	for _, visibleMonsters := range emt.visibleMonsters {
 		visibleMonsters.updateAttack()
 		if visibleMonsters.isMoving {
 			monsterMoving = true
 		}
 	}
 	if !monsterMoving {
-		ecd.monsterAttacking = false
+		emt.monsterAttacking = false
 	}
 }

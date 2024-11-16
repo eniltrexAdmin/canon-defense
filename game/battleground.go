@@ -3,7 +3,9 @@ package game
 const defaultBattleGroundSize BattleGroundColumn = 5
 
 type BattleGroundColumn int8
-type BattleGroundRow uint64
+type BattleGroundRow int64
+
+const NoVisibleRow BattleGroundRow = -1
 
 type Battleground struct {
 	Columns     BattleGroundColumn
@@ -25,11 +27,21 @@ func NewBattleGround(columns, rows, visibleRows int) Battleground {
 	}
 }
 
-func (bg Battleground) checkIndexPosition(row, column int) {
-	if row >= int(bg.Rows) || row < 0 {
-		panic("row index out of bounds")
+func (bg Battleground) checkIndexPosition(row BattleGroundRow, column BattleGroundColumn) {
+	if row >= bg.Rows || row < 0 {
+		panic("Row index out of bounds")
 	}
-	if column >= int(bg.Columns) || column < 0 {
-		panic("column index out of bounds")
+	if column >= bg.Columns || column < 0 {
+		panic("Column index out of bounds")
 	}
+}
+
+func (bg Battleground) toVisibleRow(gameRow BattleGroundRow) BattleGroundRow {
+	if gameRow < bg.Rows-bg.VisibleRows ||
+		gameRow >= bg.VisibleRows {
+		return NoVisibleRow
+	}
+
+	visibleRow := bg.VisibleRows - gameRow - 1
+	return visibleRow
 }
