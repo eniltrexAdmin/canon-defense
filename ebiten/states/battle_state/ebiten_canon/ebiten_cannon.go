@@ -1,4 +1,4 @@
-package battle_state
+package ebiten_canon
 
 import (
 	"bytes"
@@ -17,11 +17,11 @@ const BulletSpeed float64 = 5
 
 type ebitenCanon struct {
 	sprite             *ebiten_sprite.EbitenDraggableSprite
-	canon              game.Canon
+	Canon              game.Canon
 	formationPlacement int
 	canonPlacedImage   *ebiten.Image
 	bulletImage        *ebiten.Image
-	bullet             *ebitenCanonBullet
+	bullet             *EbitenCanonBullet
 }
 
 func newEbitenCanon(
@@ -46,7 +46,7 @@ func newEbitenCanon(
 
 	return ebitenCanon{
 		sprite:             ebiten_sprite.NewFromSprite(sprite),
-		canon:              canon,
+		Canon:              canon,
 		formationPlacement: formationPlacement,
 		canonPlacedImage:   cImage,
 		bulletImage:        bulletImage,
@@ -63,7 +63,7 @@ func (ec *ebitenCanon) fire() {
 func (ec *ebitenCanon) firingUpdate() {
 	if ec.bullet != nil {
 		ec.bullet.update()
-		if ec.bullet.bulletSprite.PosY < -10 {
+		if ec.bullet.BulletSprite.PosY < -10 {
 			ec.bullet = nil
 		}
 	}
@@ -76,7 +76,7 @@ func (ec *ebitenCanon) update() {
 func (ec *ebitenCanon) draw(screen *ebiten.Image) {
 	ec.sprite.Draw(screen)
 	if ec.bullet != nil {
-		ec.bullet.draw(screen, int(ec.canon.Damage))
+		ec.bullet.draw(screen, int(ec.Canon.Damage))
 	}
 	ec.drawDamage(screen)
 }
@@ -94,7 +94,7 @@ func (ec *ebitenCanon) drawDamage(screen *ebiten.Image) {
 	op.GeoM.Translate(posX, posY)
 
 	text.DrawWithOptions(screen,
-		strconv.FormatInt(int64(ec.canon.Damage), 10),
+		strconv.FormatInt(int64(ec.Canon.Damage), 10),
 		basicFont,
 		op,
 	)

@@ -126,6 +126,14 @@ func (e *EbitenAnimatedSprite) Draw(screen *ebiten.Image) {
 	screen.DrawImage(e.Image.SubImage(e.getCurrentSubImage()).(*ebiten.Image), &op)
 }
 
+func (e *EbitenAnimatedSprite) DrawWithFade(screen *ebiten.Image, alfa float32) {
+	op := ebiten.DrawImageOptions{}
+	op.ColorScale.ScaleAlpha(alfa)
+	op.GeoM.Scale(e.imageScale, e.imageScale)
+	op.GeoM.Translate(e.topLeftCorner())
+	screen.DrawImage(e.Image.SubImage(e.getCurrentSubImage()).(*ebiten.Image), &op)
+}
+
 func (e *EbitenAnimatedSprite) getCurrentSubImage() image.Rectangle {
 	i := int(math.Floor(e.currentFrame))
 	initialX := i * e.subImageWidth

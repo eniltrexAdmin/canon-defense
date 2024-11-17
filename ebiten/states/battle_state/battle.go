@@ -2,6 +2,9 @@ package battle_state
 
 import (
 	"canon-tower-defense/ebiten/states"
+	"canon-tower-defense/ebiten/states/battle_state/ebiten_background"
+	"canon-tower-defense/ebiten/states/battle_state/ebiten_canon"
+	"canon-tower-defense/ebiten/states/battle_state/ebiten_monster"
 	"canon-tower-defense/game"
 	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
@@ -9,23 +12,21 @@ import (
 )
 
 type BattleState struct {
-	game *game.CanonTDGame
-	// IMPORTANT if I am modifying this objects inside like canon deck and battle ground through the
-	// battle state UPDATE function, update must have a POINTER receiver!!!
-	// (or else it's just a copy edited and thrown away).
-	// or whatever gets modified needs to be referenced.
-	ebitenCanonDeck    *ebitenCanonDeck
-	ebitenBattleGround ebitenBattleGround
-	ebitenMonsterTeam  *ebitenMonsterTeam
+	game               *game.CanonTDGame
+	ebitenCanonDeck    *ebiten_canon.EbitenCanonDeck
+	ebitenBattleGround ebiten_background.EbitenBattleGround
+	ebitenMonsterTeam  *ebiten_monster.EbitenMonsterTeam
 }
 
 func NewBattleState(level int) BattleState {
 	// loading assets, could be in init() and consistent usage of states.
 	g := game.Start(level)
 
-	ecd := newEbitenCanonDeck(g)
-	ebg := newEbitenBattleGround(g.Battleground)
-	emt := NewEbitenMonsterTeam(g)
+	ebiten_monster.LoadBattleImages()
+
+	ecd := ebiten_canon.NewEbitenCanonDeck(g)
+	ebg := ebiten_background.NewEbitenBattleGround(g.Battleground)
+	emt := ebiten_monster.NewEbitenMonsterTeam(g)
 
 	return BattleState{
 		game:               &g,
@@ -41,8 +42,8 @@ func (s BattleState) Debug() string {
 
 func (s BattleState) Update(stack *states.StateStack, keys []ebiten.Key) error {
 
-	s.ebitenMonsterTeam.update()
-	s.ebitenCanonDeck.update()
+	s.ebitenMonsterTeam.Update()
+	s.ebitenCanonDeck.Update()
 	if s.ebitenCanonDeck.Firing {
 		stack.Push(FireCannonsState{
 			ebitenCanonDeck:   s.ebitenCanonDeck,
@@ -55,8 +56,8 @@ func (s BattleState) Update(stack *states.StateStack, keys []ebiten.Key) error {
 }
 
 func (s BattleState) Draw(screen *ebiten.Image) {
-	s.ebitenBattleGround.draw(screen)
-	s.ebitenCanonDeck.draw(screen)
-	s.ebitenMonsterTeam.draw(screen)
+	s.ebitenBattleGround.Draw(screen)
+	s.ebitenCanonDeck.Draw(screen)
+	s.ebitenMonsterTeam.Draw(screen)
 	ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.ActualTPS()))
 }

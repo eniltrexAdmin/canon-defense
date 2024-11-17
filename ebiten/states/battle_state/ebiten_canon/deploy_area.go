@@ -1,4 +1,4 @@
-package battle_state
+package ebiten_canon
 
 import (
 	"canon-tower-defense/ebiten/ebiten_sprite"

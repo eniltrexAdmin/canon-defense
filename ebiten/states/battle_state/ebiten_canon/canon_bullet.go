@@ -1,4 +1,4 @@
-package battle_state
+package ebiten_canon
 
 import (
 	"canon-tower-defense/ebiten/ebiten_sprite"
@@ -7,13 +7,13 @@ import (
 	"math"
 )
 
-type ebitenCanonBullet struct {
-	bulletSprite ebiten_sprite.EbitenSprite
+type EbitenCanonBullet struct {
+	BulletSprite ebiten_sprite.EbitenSprite
 	bulletSpeed  float64
-	canon        *ebitenCanon
+	Canon        *ebitenCanon
 }
 
-func NewBullet(canon *ebitenCanon, bulletImage *ebiten.Image, speed float64, posX, posY float64) ebitenCanonBullet {
+func NewBullet(canon *ebitenCanon, bulletImage *ebiten.Image, speed float64, posX, posY float64) EbitenCanonBullet {
 
 	imgWidth := bulletImage.Bounds().Dx()
 	imgHeight := bulletImage.Bounds().Dy()
@@ -35,15 +35,15 @@ func NewBullet(canon *ebitenCanon, bulletImage *ebiten.Image, speed float64, pos
 		1,
 	)
 
-	return ebitenCanonBullet{bulletSprite: sprite, bulletSpeed: speed, canon: canon}
+	return EbitenCanonBullet{BulletSprite: sprite, bulletSpeed: speed, Canon: canon}
 }
 
-func (eb *ebitenCanonBullet) update() {
-	eb.bulletSprite.PosY -= eb.bulletSpeed
+func (eb *EbitenCanonBullet) update() {
+	eb.BulletSprite.PosY -= eb.bulletSpeed
 }
 
-func (eb *ebitenCanonBullet) draw(screen *ebiten.Image, damage int) {
-	imgHeight := float64(eb.bulletSprite.Image.Bounds().Dy()) // it's rotated
+func (eb *EbitenCanonBullet) draw(screen *ebiten.Image, damage int) {
+	imgHeight := float64(eb.BulletSprite.Image.Bounds().Dy()) // it's rotated
 	scale := 1 + float64(damage)/10
 
 	realHeight := imgHeight * scale
@@ -52,6 +52,6 @@ func (eb *ebitenCanonBullet) draw(screen *ebiten.Image, damage int) {
 	op.GeoM.Rotate(90 * math.Pi / 180)
 	op.GeoM.Scale(scale, scale)
 	// it's rotated so the height is used for centering width
-	op.GeoM.Translate(eb.bulletSprite.PosX+realHeight, eb.bulletSprite.PosY)
-	screen.DrawImage(eb.bulletSprite.Image, op)
+	op.GeoM.Translate(eb.BulletSprite.PosX+realHeight, eb.BulletSprite.PosY)
+	screen.DrawImage(eb.BulletSprite.Image, op)
 }

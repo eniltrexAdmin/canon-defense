@@ -1,4 +1,4 @@
-package battle_state
+package ebiten_background
 
 import (
 	"bytes"
@@ -17,18 +17,18 @@ const PlatformYPadding float64 = 20
 
 const BattleGroundHeight float64 = 500
 
-type ebitenBattleGround struct {
+type EbitenBattleGround struct {
 	tiles       []ebiten_sprite.EbitenSprite
 	rowDistance float64
 }
 
-func (ecd *ebitenBattleGround) draw(screen *ebiten.Image) {
+func (ecd *EbitenBattleGround) Draw(screen *ebiten.Image) {
 	for _, tile := range ecd.tiles {
 		tile.Draw(screen)
 	}
 }
 
-func newEbitenBattleGround(bg game.Battleground) ebitenBattleGround {
+func NewEbitenBattleGround(bg game.Battleground) EbitenBattleGround {
 	availableWidth := constants.ScreenWidth / int(bg.Columns)
 	availableHeight := int(BattleGroundHeight) / int(bg.VisibleRows)
 
@@ -61,7 +61,7 @@ func newEbitenBattleGround(bg game.Battleground) ebitenBattleGround {
 			tiles = append(tiles, tile)
 		}
 	}
-	return ebitenBattleGround{
+	return EbitenBattleGround{
 		tiles:       tiles,
 		rowDistance: float64(availableHeight),
 	}

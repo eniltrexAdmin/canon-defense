@@ -37,8 +37,7 @@ func (bg Battleground) checkIndexPosition(row BattleGroundRow, column BattleGrou
 }
 
 func (bg Battleground) toVisibleRow(gameRow BattleGroundRow) BattleGroundRow {
-	if gameRow < bg.Rows-bg.VisibleRows ||
-		gameRow >= bg.VisibleRows {
+	if gameRow >= bg.VisibleRows {
 		return NoVisibleRow
 	}
 

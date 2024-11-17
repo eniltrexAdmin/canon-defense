@@ -11,20 +11,19 @@ type MonsterTemplate struct {
 	columnMovement battlegroundMovement
 }
 
-func SkeletonTemplate() MonsterTemplate {
+func SkeletonTemplate(life int) MonsterTemplate {
 	return MonsterTemplate{
 		name:           "Skeleton",
-		healthPoints:   1,
+		healthPoints:   canonDamage(life),
 		columnMovement: 0,
 		rowMovement:    1,
 	}
 }
 
 type Monster struct {
-	Monster           MonsterTemplate
 	name              string
-	maxLife           canonDamage
-	healthPoints      canonDamage
+	MaxLife           canonDamage
+	HealthPoints      canonDamage
 	rowMovement       battlegroundMovement
 	columnMovement    battlegroundMovement
 	CurrentColumn     BattleGroundColumn
@@ -33,8 +32,28 @@ type Monster struct {
 	hitHistory        map[Turn]MonsterHit
 }
 
-func (m *Monster) alive() bool {
-	return m.healthPoints > 0
+func newMonsterInBattleGround(
+	bg Battleground,
+	column BattleGroundColumn,
+	row BattleGroundRow,
+	m MonsterTemplate,
+) Monster {
+	bg.checkIndexPosition(row, column)
+	return Monster{
+		name:              m.name,
+		MaxLife:           m.healthPoints,
+		HealthPoints:      m.healthPoints,
+		rowMovement:       m.rowMovement,
+		columnMovement:    m.columnMovement,
+		CurrentColumn:     column,
+		CurrentRow:        row,
+		CurrentVisibleRow: bg.toVisibleRow(row),
+		hitHistory:        make(map[Turn]MonsterHit),
+	}
+}
+
+func (m *Monster) IsAlive() bool {
+	return m.HealthPoints > 0
 }
 
 func (m *Monster) Hit(c *Canon, turn Turn) {
@@ -45,7 +64,7 @@ func (m *Monster) Hit(c *Canon, turn Turn) {
 	if _, exists := m.hitHistory[turn]; exists {
 		return
 	}
-	m.healthPoints -= c.Damage
+	m.HealthPoints -= c.Damage
 	m.hitHistory[turn] = MonsterHit{
 		Damage: c.Damage,
 		Turn:   turn,

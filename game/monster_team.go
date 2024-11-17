@@ -35,22 +35,6 @@ func (mt *MonsterTeam) addMonster(indexRow, indexColumn int, m MonsterTemplate) 
 	mt.Monsters = append(mt.Monsters, &monsterInBg)
 }
 
-func newMonsterInBattleGround(
-	bg Battleground,
-	column BattleGroundColumn,
-	row BattleGroundRow,
-	m MonsterTemplate,
-) Monster {
-	bg.checkIndexPosition(row, column)
-	return Monster{
-		Monster:           m,
-		CurrentColumn:     column,
-		CurrentRow:        row,
-		CurrentVisibleRow: bg.toVisibleRow(row),
-		hitHistory:        make(map[Turn]MonsterHit),
-	}
-}
-
 //func (mt *MonsterTeam) monsterInColumn(c BattleGroundColumn) []*Monster {
 //	m := make([]*Monster, 0)
 //	for _, monsterInBg := range mt.Monsters {

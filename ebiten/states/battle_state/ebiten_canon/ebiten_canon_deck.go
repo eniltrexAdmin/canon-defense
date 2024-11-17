@@ -1,4 +1,4 @@
-package battle_state
+package ebiten_canon
 
 import (
 	"bytes"
@@ -15,7 +15,7 @@ import (
 
 const canonYPlacement float64 = 550
 
-type ebitenCanonDeck struct {
+type EbitenCanonDeck struct {
 	ebitenCanons  map[int]*ebitenCanon
 	deployAreas   map[int]*deployArea
 	actionButton  ebitenActionButton
@@ -24,7 +24,7 @@ type ebitenCanonDeck struct {
 	draggedSprite *ebiten_sprite.EbitenDraggableSprite
 }
 
-func newEbitenCanonDeck(g game.CanonTDGame) ebitenCanonDeck {
+func NewEbitenCanonDeck(g game.CanonTDGame) EbitenCanonDeck {
 	img, _, err := image.Decode(bytes.NewReader(assets.RegularCanon))
 	if err != nil {
 		log.Fatal(err)
@@ -67,7 +67,7 @@ func newEbitenCanonDeck(g game.CanonTDGame) ebitenCanonDeck {
 
 	ab := newEbitenActionButton(canonImage, pedestalImage, constants.ScreenWidth)
 
-	return ebitenCanonDeck{
+	return EbitenCanonDeck{
 		ebitenCanons: cs,
 		deployAreas:  das,
 		actionButton: ab,
@@ -81,7 +81,7 @@ func getCanonCenterX(formationPlacement, numberCanons int) float64 {
 	return availableWidth*float64(formationPlacement) + availableWidth/2
 }
 
-func (ecd *ebitenCanonDeck) draw(screen *ebiten.Image) {
+func (ecd *EbitenCanonDeck) Draw(screen *ebiten.Image) {
 	for _, canon := range ecd.ebitenCanons {
 		canon.draw(screen)
 	}
@@ -91,7 +91,7 @@ func (ecd *ebitenCanonDeck) draw(screen *ebiten.Image) {
 	ecd.actionButton.draw(screen)
 }
 
-func (ecd *ebitenCanonDeck) update() {
+func (ecd *EbitenCanonDeck) Update() {
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
 		ecd.initDrag()
 	}
@@ -112,7 +112,7 @@ func (ecd *ebitenCanonDeck) update() {
 	}
 }
 
-func (ecd *ebitenCanonDeck) initDrag() {
+func (ecd *EbitenCanonDeck) initDrag() {
 	ecd.actionButton.canonSprite.InitDrag()
 	if ecd.actionButton.canonSprite.IsDragged {
 		ecd.draggedSprite = ecd.actionButton.canonSprite
@@ -127,7 +127,7 @@ func (ecd *ebitenCanonDeck) initDrag() {
 	}
 }
 
-func (ecd *ebitenCanonDeck) releaseDrag() {
+func (ecd *EbitenCanonDeck) releaseDrag() {
 	if ecd.draggedSprite != nil {
 		if ecd.actionButton.canonSprite.IsDragged {
 			ecd.deploy()
@@ -142,7 +142,7 @@ func (ecd *ebitenCanonDeck) releaseDrag() {
 	}
 }
 
-func (ecd *ebitenCanonDeck) moveCanon(canon *ebitenCanon) {
+func (ecd *EbitenCanonDeck) moveCanon(canon *ebitenCanon) {
 	deployedArea := ecd.getDeployedAreaPosition()
 	if deployedArea != nil {
 		formationPlacement := *deployedArea
@@ -154,7 +154,7 @@ func (ecd *ebitenCanonDeck) moveCanon(canon *ebitenCanon) {
 	}
 }
 
-func (ecd *ebitenCanonDeck) deploy() {
+func (ecd *EbitenCanonDeck) deploy() {
 	deployedArea := ecd.getDeployedAreaPosition()
 	if deployedArea != nil {
 		formationPlacement := *deployedArea
@@ -163,7 +163,7 @@ func (ecd *ebitenCanonDeck) deploy() {
 	}
 }
 
-func (ecd *ebitenCanonDeck) finishTurn() {
+func (ecd *EbitenCanonDeck) finishTurn() {
 	for formationPlacement := 0; formationPlacement < ecd.game.CanonDeck.CanonCapacity(); formationPlacement++ {
 		canon := ecd.game.CanonDeck.Canons[game.BattleGroundColumn(formationPlacement)]
 		if canon != nil {
@@ -185,7 +185,7 @@ func (ecd *ebitenCanonDeck) finishTurn() {
 	ecd.Firing = true
 }
 
-func (ecd *ebitenCanonDeck) getDeployedAreaPosition() *int {
+func (ecd *EbitenCanonDeck) getDeployedAreaPosition() *int {
 	for position, da := range ecd.deployAreas {
 		if ebiten_sprite.Collision(da, ecd.draggedSprite) {
 			return &position
@@ -196,7 +196,7 @@ func (ecd *ebitenCanonDeck) getDeployedAreaPosition() *int {
 
 // DECK FIRING STATE
 
-func (ecd *ebitenCanonDeck) firingUpdate() {
+func (ecd *EbitenCanonDeck) FiringUpdate() {
 	bulletsInField := false
 	for _, canon := range ecd.ebitenCanons {
 		canon.firingUpdate()
@@ -209,8 +209,8 @@ func (ecd *ebitenCanonDeck) firingUpdate() {
 	}
 }
 
-func (ecd *ebitenCanonDeck) currentBullets() []*ebitenCanonBullet {
-	bullets := make([]*ebitenCanonBullet, 0, len(ecd.ebitenCanons))
+func (ecd *EbitenCanonDeck) CurrentBullets() []*EbitenCanonBullet {
+	bullets := make([]*EbitenCanonBullet, 0, len(ecd.ebitenCanons))
 	for _, ec := range ecd.ebitenCanons {
 		if ec.bullet != nil {
 			bullets = append(bullets, ec.bullet)
