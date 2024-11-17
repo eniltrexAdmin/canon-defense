@@ -56,7 +56,7 @@ func newEbitenCanon(
 
 func (ec *ebitenCanon) fire() {
 	// passing the bullet speed because it kind of belongs to the cannon type, etc
-	bullet := NewBullet(ec.bulletImage, BulletSpeed, ec.sprite.PosX, canonYPlacement)
+	bullet := NewBullet(ec, ec.bulletImage, BulletSpeed, ec.sprite.PosX, canonYPlacement)
 	ec.bullet = &bullet
 }
 

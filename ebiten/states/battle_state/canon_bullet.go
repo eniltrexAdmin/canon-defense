@@ -10,9 +10,10 @@ import (
 type ebitenCanonBullet struct {
 	bulletSprite ebiten_sprite.EbitenSprite
 	bulletSpeed  float64
+	canon        *ebitenCanon
 }
 
-func NewBullet(bulletImage *ebiten.Image, speed float64, posX, posY float64) ebitenCanonBullet {
+func NewBullet(canon *ebitenCanon, bulletImage *ebiten.Image, speed float64, posX, posY float64) ebitenCanonBullet {
 
 	imgWidth := bulletImage.Bounds().Dx()
 	imgHeight := bulletImage.Bounds().Dy()
@@ -34,7 +35,7 @@ func NewBullet(bulletImage *ebiten.Image, speed float64, posX, posY float64) ebi
 		1,
 	)
 
-	return ebitenCanonBullet{bulletSprite: sprite, bulletSpeed: speed}
+	return ebitenCanonBullet{bulletSprite: sprite, bulletSpeed: speed, canon: canon}
 }
 
 func (eb *ebitenCanonBullet) update() {

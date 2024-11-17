@@ -18,30 +18,8 @@ package game
 //0           5                     x = 6 -0 -1 = 5
 
 type MonsterTeam struct {
-	Battleground           Battleground
-	MonstersInBattleground []*MonsterInBattleGround
-}
-
-type MonsterInBattleGround struct {
-	Monster    Monster
-	Column     BattleGroundColumn
-	Row        BattleGroundRow
-	VisibleRow BattleGroundRow
-}
-
-func newMonsterInBattleGround(
-	bg Battleground,
-	column BattleGroundColumn,
-	row BattleGroundRow,
-	m Monster,
-) MonsterInBattleGround {
-	bg.checkIndexPosition(row, column)
-	return MonsterInBattleGround{
-		Monster:    m,
-		Column:     column,
-		Row:        row,
-		VisibleRow: bg.toVisibleRow(row),
-	}
+	Battleground Battleground
+	Monsters     []*Monster
 }
 
 func NewMonsterTeam(bg Battleground) MonsterTeam {
@@ -50,32 +28,48 @@ func NewMonsterTeam(bg Battleground) MonsterTeam {
 	}
 }
 
-func (mt *MonsterTeam) addMonster(indexRow, indexColumn int, m Monster) {
+func (mt *MonsterTeam) addMonster(indexRow, indexColumn int, m MonsterTemplate) {
 	bgColumn := BattleGroundColumn(indexColumn)
 	bgRow := BattleGroundRow(indexRow)
 	monsterInBg := newMonsterInBattleGround(mt.Battleground, bgColumn, bgRow, m)
-	mt.MonstersInBattleground = append(mt.MonstersInBattleground, &monsterInBg)
+	mt.Monsters = append(mt.Monsters, &monsterInBg)
 }
 
-func (mt *MonsterTeam) monsterInColumn(c BattleGroundColumn) []*Monster {
-	m := make([]*Monster, 0)
-	for _, monsterInBg := range mt.MonstersInBattleground {
-		if monsterInBg.VisibleRow != NoVisibleRow && monsterInBg.Column == c {
-			m = append(m, &monsterInBg.Monster)
-		}
+func newMonsterInBattleGround(
+	bg Battleground,
+	column BattleGroundColumn,
+	row BattleGroundRow,
+	m MonsterTemplate,
+) Monster {
+	bg.checkIndexPosition(row, column)
+	return Monster{
+		Monster:           m,
+		CurrentColumn:     column,
+		CurrentRow:        row,
+		CurrentVisibleRow: bg.toVisibleRow(row),
+		hitHistory:        make(map[Turn]MonsterHit),
 	}
-	return m
 }
 
-func (mt *MonsterTeam) DamageMonsters(c *Canon, canonPosition BattleGroundColumn) {
-	for _, monster := range mt.monsterInColumn(canonPosition) {
-		monster.hit(c.Damage)
-	}
-}
+//func (mt *MonsterTeam) monsterInColumn(c BattleGroundColumn) []*Monster {
+//	m := make([]*Monster, 0)
+//	for _, monsterInBg := range mt.Monsters {
+//		if monsterInBg.CurrentVisibleRow != NoVisibleRow && monsterInBg.CurrentColumn == c {
+//			m = append(m, monsterInBg)
+//		}
+//	}
+//	return m
+//}
 
-func (mt *MonsterTeam) advance() {
-	for _, monsterInBg := range mt.MonstersInBattleground {
-		monsterInBg.Row = monsterInBg.Row - 1
-		monsterInBg.VisibleRow = mt.Battleground.toVisibleRow(monsterInBg.Row)
-	}
-}
+//func (mt *MonsterTeam) DamageMonsters(c *Canon, canonPosition BattleGroundColumn) {
+//	for _, monster := range mt.monsterInColumn(canonPosition) {
+//		monster.hit(c.Damage)
+//	}
+//}
+
+//func (mt *MonsterTeam) advance() {
+//	for _, monsterInBg := range mt.MonstersInBattleground {
+//		monsterInBg.Row = monsterInBg.Row - 1
+//		monsterInBg.VisibleRow = mt.Battleground.toVisibleRow(monsterInBg.Row)
+//	}
+//}

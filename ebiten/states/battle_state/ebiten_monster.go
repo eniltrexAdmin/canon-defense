@@ -19,7 +19,8 @@ type ebitenMonster struct {
 	hitSprite     ebiten_sprite.EbitenAnimatedSprite
 	destination   ebiten_sprite.ScreenCoordinate
 	isMoving      bool
-	damageTaken   bool
+	isHit         bool
+	hittingBullet *ebitenCanonBullet
 }
 
 func (m *ebitenMonster) draw(screen *ebiten.Image) {
@@ -34,19 +35,23 @@ func (m *ebitenMonster) update() {
 // DECK FIRING STATE
 func (m *ebitenMonster) updateDeckFiring(bullets []*ebitenCanonBullet) {
 	m.currentSprite = &m.idleSprite
-	if m.IsHit(bullets) {
+	m.checkBullets(bullets)
+	if m.isHit {
 		m.currentSprite = &m.hitSprite
 	}
 	m.currentSprite.Update()
 }
 
-func (m *ebitenMonster) IsHit(bullets []*ebitenCanonBullet) bool {
+func (m *ebitenMonster) checkBullets(bullets []*ebitenCanonBullet) {
 	for _, bullet := range bullets {
 		if ebiten_sprite.Collision(m.currentSprite, bullet.bulletSprite) {
-			return true
+			m.hittingBullet = bullet
+			m.isHit = true
+			return
 		}
 	}
-	return false
+	m.hittingBullet = nil
+	m.isHit = false
 }
 
 // ATTACK STATE
@@ -110,5 +115,6 @@ func NewEbitenMonster(monster *game.Monster, posX, posY float64) ebitenMonster {
 		hitSprite:     beholderHit,
 		currentSprite: &beholder,
 		isMoving:      false,
+		isHit:         false,
 	}
 }

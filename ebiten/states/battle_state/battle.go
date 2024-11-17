@@ -25,7 +25,7 @@ func NewBattleState(level int) BattleState {
 
 	ecd := newEbitenCanonDeck(g)
 	ebg := newEbitenBattleGround(g.Battleground)
-	emt := NewEbitenMonsterTeam(g.MonsterTeam)
+	emt := NewEbitenMonsterTeam(g)
 
 	return BattleState{
 		game:               &g,
@@ -47,6 +47,7 @@ func (s BattleState) Update(stack *states.StateStack, keys []ebiten.Key) error {
 		stack.Push(FireCannonsState{
 			ebitenCanonDeck:   s.ebitenCanonDeck,
 			ebitenMonsterTeam: s.ebitenMonsterTeam,
+			game:              s.game,
 		})
 	}
 

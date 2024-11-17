@@ -7,14 +7,15 @@ import (
 )
 
 type ebitenMonsterTeam struct {
+	game             *game.CanonTDGame
 	visibleMonsters  []*ebitenMonster
 	monsterAttacking bool
 	advanceStep      float64
 }
 
-func NewEbitenMonsterTeam(monsterTeam game.MonsterTeam) ebitenMonsterTeam {
-	availableWidth := constants.ScreenWidth / int(monsterTeam.Battleground.Columns)
-	availableHeight := int(BattleGroundHeight) / int(monsterTeam.Battleground.VisibleRows)
+func NewEbitenMonsterTeam(g game.CanonTDGame) ebitenMonsterTeam {
+	availableWidth := constants.ScreenWidth / int(g.MonsterTeam.Battleground.Columns)
+	availableHeight := int(BattleGroundHeight) / int(g.MonsterTeam.Battleground.VisibleRows)
 	var visibleMonsters []*ebitenMonster
 
 	centerXSpace := availableWidth / 2
@@ -23,13 +24,13 @@ func NewEbitenMonsterTeam(monsterTeam game.MonsterTeam) ebitenMonsterTeam {
 	centerYSpace := availableHeight / 2
 	tileSCenterPointY := float64(centerYSpace)
 
-	for _, mig := range monsterTeam.MonstersInBattleground {
+	for _, mig := range g.MonsterTeam.Monsters {
 		// at some point we might have get rid of visible rows all together.
-		if mig.VisibleRow != game.NoVisibleRow {
-			posX := float64(availableWidth*int(mig.Column)) + tileCenterPointX
-			posY := float64(availableHeight*int(mig.VisibleRow)) + tileSCenterPointY
+		if mig.CurrentVisibleRow != game.NoVisibleRow {
+			posX := float64(availableWidth*int(mig.CurrentColumn)) + tileCenterPointX
+			posY := float64(availableHeight*int(mig.CurrentVisibleRow)) + tileSCenterPointY
 
-			monster := NewEbitenMonster(&mig.Monster, posX, posY)
+			monster := NewEbitenMonster(mig, posX, posY)
 			visibleMonsters = append(visibleMonsters, &monster)
 		}
 	}
@@ -38,6 +39,7 @@ func NewEbitenMonsterTeam(monsterTeam game.MonsterTeam) ebitenMonsterTeam {
 		visibleMonsters:  visibleMonsters,
 		monsterAttacking: false,
 		advanceStep:      float64(availableHeight),
+		game:             &g,
 	}
 }
 
@@ -60,6 +62,12 @@ func (emt *ebitenMonsterTeam) update() {
 func (emt *ebitenMonsterTeam) updateDeckFiring(bullets []*ebitenCanonBullet) {
 	for _, visibleMonsters := range emt.visibleMonsters {
 		visibleMonsters.updateDeckFiring(bullets)
+		if visibleMonsters.isHit {
+			emt.game.HitMonster(
+				&visibleMonsters.hittingBullet.canon.canon,
+				visibleMonsters.monster,
+			)
+		}
 	}
 }
 

@@ -2,6 +2,8 @@ package game
 
 type canonDamage int64
 
+// TODO this one needs another iteration, like monster plus monster in field, and canon deck might have less logic.
+
 type Canon struct {
 	Damage canonDamage
 }
