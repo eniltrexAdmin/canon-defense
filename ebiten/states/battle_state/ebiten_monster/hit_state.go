@@ -39,7 +39,6 @@ func (m *MonsterHitState) setContext(context *EbitenMonster) {
 
 func (m *MonsterHitState) draw(screen *ebiten.Image) {
 	m.sprite.Draw(screen)
-	//m.context.LifeLine.Draw(screen)
 }
 
 func (m *MonsterHitState) update() {

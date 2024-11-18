@@ -45,6 +45,16 @@ func (e *EbitenMonster) transitionTo(state EbitenMonsterState) {
 	e.state.setContext(e)
 }
 
+func (e *EbitenMonster) Attack() {
+	// probably not the best way.
+	idleState, ok := e.state.(*MonsterIdleState)
+	if !ok {
+		panic("ok its weird to attack guys that were not in idel state")
+	}
+	attackState := newMonsterAttackState(idleState)
+	e.transitionTo(attackState)
+}
+
 func (e *EbitenMonster) Draw(screen *ebiten.Image) {
 	e.state.draw(screen)
 	e.LifeLine.Draw(screen)

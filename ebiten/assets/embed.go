@@ -27,3 +27,6 @@ var BeholderHit []byte
 
 //go:embed "monsters/Beholder_die.png"
 var BeholderDie []byte
+
+//go:embed "monsters/Beholder_attack_green.png"
+var BeholderAttack []byte
