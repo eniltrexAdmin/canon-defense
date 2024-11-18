@@ -2,7 +2,6 @@ package ebiten_monster
 
 import (
 	"canon-tower-defense/ebiten/ebiten_sprite"
-	"canon-tower-defense/ebiten/states/battle_state/ebiten_canon"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -38,14 +37,6 @@ func (m *MonsterAttackState) draw(screen *ebiten.Image) {
 }
 
 func (m *MonsterAttackState) update() {
-	m.sprite.Update()
-}
-
-func (m *MonsterAttackState) updateDeckFiring(bullets []*ebiten_canon.EbitenCanonBullet) {
-	m.sprite.Update()
-}
-
-func (m *MonsterAttackState) updateAttack() {
 	m.sprite.Update()
 }
 

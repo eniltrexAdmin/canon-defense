@@ -42,10 +42,6 @@ func (m *MonsterHitState) draw(screen *ebiten.Image) {
 }
 
 func (m *MonsterHitState) update() {
-	m.sprite.Update()
-}
-
-func (m *MonsterHitState) updateDeckFiring(bullets []*ebiten_canon.EbitenCanonBullet) {
 	if !ebiten_sprite.Collision(m.sprite, m.hittingBullet.BulletSprite) {
 		if m.context.monster.IsAlive() {
 			idleState := newFromHitState(m)
@@ -57,10 +53,6 @@ func (m *MonsterHitState) updateDeckFiring(bullets []*ebiten_canon.EbitenCanonBu
 		}
 	}
 
-	m.sprite.Update()
-}
-
-func (m *MonsterHitState) updateAttack() {
 	m.sprite.Update()
 }
 

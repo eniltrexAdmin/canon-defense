@@ -11,16 +11,15 @@ type EbitenMonsterState interface {
 	setContext(context *EbitenMonster)
 	draw(screen *ebiten.Image)
 	update()
-	updateDeckFiring(bullets []*ebiten_canon.EbitenCanonBullet)
-	updateAttack()
 	stateName() string
 }
 
 type EbitenMonster struct {
-	state    EbitenMonsterState
-	monster  *game.Monster
-	LifeLine *LifeLine
-	game     *game.CanonTDGame
+	state          EbitenMonsterState
+	monster        *game.Monster
+	LifeLine       *LifeLine
+	game           *game.CanonTDGame
+	bulletsInField []*ebiten_canon.EbitenCanonBullet
 }
 
 func NewEbitenMonster(monster *game.Monster, posX, posY float64, game *game.CanonTDGame) *EbitenMonster {
@@ -65,11 +64,8 @@ func (e *EbitenMonster) Update() {
 	e.LifeLine.Update()
 }
 
-func (e *EbitenMonster) UpdateDeckFiring(bullets []*ebiten_canon.EbitenCanonBullet) {
-	e.state.updateDeckFiring(bullets)
-	e.LifeLine.Update()
-}
-
-func (e *EbitenMonster) UpdateAttack() {
-	e.state.updateAttack()
+func (e *EbitenMonster) DeckFiring(bullets []*ebiten_canon.EbitenCanonBullet) {
+	e.bulletsInField = bullets
+	//e.state.updateDeckFiring(bullets)
+	//e.LifeLine.Update()
 }

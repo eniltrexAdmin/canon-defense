@@ -45,11 +45,8 @@ func (s BattleState) Update(stack *states.StateStack, keys []ebiten.Key) error {
 	s.ebitenMonsterTeam.Update()
 	s.ebitenCanonDeck.Update()
 	if s.ebitenCanonDeck.Firing {
-		stack.Push(FireCannonsState{
-			ebitenCanonDeck:   s.ebitenCanonDeck,
-			ebitenMonsterTeam: s.ebitenMonsterTeam,
-			game:              s.game,
-		})
+		fireState := NewFireCannonState(s.ebitenCanonDeck, s.ebitenMonsterTeam, s.game)
+		stack.Push(fireState)
 	}
 
 	return nil

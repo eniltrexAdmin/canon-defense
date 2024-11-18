@@ -2,9 +2,10 @@ package ebiten_monster
 
 import (
 	"canon-tower-defense/ebiten/ebiten_sprite"
-	"canon-tower-defense/ebiten/states/battle_state/ebiten_canon"
 	"github.com/hajimehoshi/ebiten/v2"
 )
+
+const DyingFadeOutSpeed = 0.02
 
 type MonsterDeadState struct {
 	sprite  *ebiten_sprite.EbitenAnimatedSprite
@@ -39,18 +40,10 @@ func (m *MonsterDeadState) draw(screen *ebiten.Image) {
 }
 
 func (m *MonsterDeadState) update() {
-	m.fadeOut -= 0.01
+	m.fadeOut -= DyingFadeOutSpeed
 	if m.fadeOut < 0 {
 		m.fadeOut = 0
 	}
-	m.sprite.Update()
-}
-
-func (m *MonsterDeadState) updateDeckFiring(bullets []*ebiten_canon.EbitenCanonBullet) {
-	m.sprite.Update()
-}
-
-func (m *MonsterDeadState) updateAttack() {
 	m.sprite.Update()
 }
 

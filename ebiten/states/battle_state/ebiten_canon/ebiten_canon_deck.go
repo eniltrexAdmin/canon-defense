@@ -91,6 +91,19 @@ func (ecd *EbitenCanonDeck) Draw(screen *ebiten.Image) {
 	ecd.actionButton.draw(screen)
 }
 
+func (ecd *EbitenCanonDeck) FiringUpdate() {
+	bulletsInField := false
+	for _, canon := range ecd.ebitenCanons {
+		canon.firingUpdate()
+		if canon.bullet != nil {
+			bulletsInField = true
+		}
+	}
+	if bulletsInField == false {
+		ecd.Firing = false
+	}
+}
+
 func (ecd *EbitenCanonDeck) Update() {
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
 		ecd.initDrag()
@@ -192,21 +205,6 @@ func (ecd *EbitenCanonDeck) getDeployedAreaPosition() *int {
 		}
 	}
 	return nil
-}
-
-// DECK FIRING STATE
-
-func (ecd *EbitenCanonDeck) FiringUpdate() {
-	bulletsInField := false
-	for _, canon := range ecd.ebitenCanons {
-		canon.firingUpdate()
-		if canon.bullet != nil {
-			bulletsInField = true
-		}
-	}
-	if bulletsInField == false {
-		ecd.Firing = false
-	}
 }
 
 func (ecd *EbitenCanonDeck) CurrentBullets() []*EbitenCanonBullet {

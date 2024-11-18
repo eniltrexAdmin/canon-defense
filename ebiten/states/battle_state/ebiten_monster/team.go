@@ -62,18 +62,9 @@ func (emt *EbitenMonsterTeam) Update() {
 	}
 }
 
-// DECK FIRING STATE
-
-func (emt *EbitenMonsterTeam) UpdateDeckFiring(bullets []*ebiten_canon.EbitenCanonBullet) {
+func (emt *EbitenMonsterTeam) DeckFiring(bullets []*ebiten_canon.EbitenCanonBullet) {
 	for _, visibleMonsters := range emt.visibleMonsters {
-		visibleMonsters.UpdateDeckFiring(bullets)
-		//if visibleMonsters.isHit {
-		//	emt.game.HitMonster(
-		//		&visibleMonsters.hittingBullet.canon.canon,
-		//		visibleMonsters.monster,
-		//	)
-		//	visibleMonsters.LifeLine.SetCurrentLife(int(visibleMonsters.monster.HealthPoints))
-		//}
+		visibleMonsters.DeckFiring(bullets)
 	}
 }
 

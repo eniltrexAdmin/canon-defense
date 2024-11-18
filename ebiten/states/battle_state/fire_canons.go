@@ -14,12 +14,26 @@ type FireCannonsState struct {
 	game              *game.CanonTDGame
 }
 
+func NewFireCannonState(
+	ebitenCanonDeck *ebiten_canon.EbitenCanonDeck,
+	ebitenMonsterTeam *ebiten_monster.EbitenMonsterTeam,
+	game *game.CanonTDGame,
+) *FireCannonsState {
+	ebitenMonsterTeam.DeckFiring(ebitenCanonDeck.CurrentBullets())
+	fcs := FireCannonsState{
+		ebitenCanonDeck:   ebitenCanonDeck,
+		ebitenMonsterTeam: ebitenMonsterTeam,
+		game:              game,
+	}
+	return &fcs
+}
+
 func (s FireCannonsState) Debug() string {
-	return "BattleState State"
+	return "FireCannons State"
 }
 
 func (s FireCannonsState) Update(stack *states.StateStack, keys []ebiten.Key) error {
-	s.ebitenMonsterTeam.UpdateDeckFiring(s.ebitenCanonDeck.CurrentBullets())
+	s.ebitenMonsterTeam.Update()
 	s.ebitenCanonDeck.FiringUpdate()
 
 	//if !s.ebitenCanonDeck.Firing {
