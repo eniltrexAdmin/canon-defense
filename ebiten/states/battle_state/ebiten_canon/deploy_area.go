@@ -36,7 +36,7 @@ func (d *deployArea) GetRectangle() image.Rectangle {
 	return image.Rect(x, y, x+width, y+height)
 }
 
-func (d *deployArea) update(draggedSprite *ebiten_sprite.EbitenSprite) {
+func (d *deployArea) update(draggedSprite *ebiten_sprite.EbitenDraggableSprite) {
 	if draggedSprite == nil {
 		d.strokeWidth = 0
 		return

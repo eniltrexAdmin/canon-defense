@@ -3,6 +3,7 @@ package ebiten_monster
 import (
 	"canon-tower-defense/ebiten/ebiten_sprite"
 	"github.com/hajimehoshi/ebiten/v2"
+	"image"
 )
 
 const DyingFadeOutSpeed = 0.02
@@ -49,4 +50,12 @@ func (m *MonsterDeadState) update() {
 
 func (m *MonsterDeadState) stateName() string {
 	return "Dead State"
+}
+
+func (m *MonsterDeadState) Coordinates() ebiten_sprite.ScreenCoordinate {
+	return m.sprite.Position()
+}
+
+func (m *MonsterDeadState) GetRectangle() image.Rectangle {
+	return m.sprite.GetRectangle()
 }

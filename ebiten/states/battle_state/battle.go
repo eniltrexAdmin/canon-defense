@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
 type BattleState struct {
@@ -41,13 +42,20 @@ func (s BattleState) Debug() string {
 }
 
 func (s BattleState) Update(stack *states.StateStack, keys []ebiten.Key) error {
+	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
+		s.ebitenCanonDeck.InitDrag()
+	}
+
+	if inpututil.IsMouseButtonJustReleased(ebiten.MouseButtonLeft) {
+		s.ebitenCanonDeck.ReleaseDrag()
+		if s.ebitenCanonDeck.Firing {
+			fireState := NewFireCannonState(s.ebitenCanonDeck, s.ebitenMonsterTeam, s.game)
+			stack.Push(fireState)
+		}
+	}
 
 	s.ebitenMonsterTeam.Update()
 	s.ebitenCanonDeck.Update()
-	if s.ebitenCanonDeck.Firing {
-		fireState := NewFireCannonState(s.ebitenCanonDeck, s.ebitenMonsterTeam, s.game)
-		stack.Push(fireState)
-	}
 
 	return nil
 }

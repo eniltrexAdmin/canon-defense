@@ -8,7 +8,6 @@ import (
 	"canon-tower-defense/game"
 	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"image"
 	"log"
 )
@@ -91,41 +90,19 @@ func (ecd *EbitenCanonDeck) Draw(screen *ebiten.Image) {
 	ecd.actionButton.draw(screen)
 }
 
-func (ecd *EbitenCanonDeck) FiringUpdate() {
-	bulletsInField := false
-	for _, canon := range ecd.ebitenCanons {
-		canon.firingUpdate()
-		if canon.bullet != nil {
-			bulletsInField = true
-		}
-	}
-	if bulletsInField == false {
-		ecd.Firing = false
-	}
-}
-
 func (ecd *EbitenCanonDeck) Update() {
-	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
-		ecd.initDrag()
-	}
 	for _, canon := range ecd.ebitenCanons {
 		canon.update()
 	}
 
 	ecd.actionButton.update()
 
-	if ecd.draggedSprite != nil {
-		for _, deployArea := range ecd.deployAreas {
-			deployArea.update(&ecd.draggedSprite.EbitenSprite)
-		}
-	}
-
-	if inpututil.IsMouseButtonJustReleased(ebiten.MouseButtonLeft) {
-		ecd.releaseDrag()
+	for _, deployArea := range ecd.deployAreas {
+		deployArea.update(ecd.draggedSprite)
 	}
 }
 
-func (ecd *EbitenCanonDeck) initDrag() {
+func (ecd *EbitenCanonDeck) InitDrag() {
 	ecd.actionButton.canonSprite.InitDrag()
 	if ecd.actionButton.canonSprite.IsDragged {
 		ecd.draggedSprite = ecd.actionButton.canonSprite
@@ -140,7 +117,7 @@ func (ecd *EbitenCanonDeck) initDrag() {
 	}
 }
 
-func (ecd *EbitenCanonDeck) releaseDrag() {
+func (ecd *EbitenCanonDeck) ReleaseDrag() {
 	if ecd.draggedSprite != nil {
 		if ecd.actionButton.canonSprite.IsDragged {
 			ecd.deploy()
@@ -152,6 +129,7 @@ func (ecd *EbitenCanonDeck) releaseDrag() {
 				canon.sprite.ReleaseDrag()
 			}
 		}
+		ecd.draggedSprite = nil
 	}
 }
 

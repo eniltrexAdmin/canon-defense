@@ -24,7 +24,7 @@ type Monster struct {
 	name              string
 	MaxLife           canonDamage
 	HealthPoints      canonDamage
-	rowMovement       battlegroundMovement
+	RowMovement       battlegroundMovement
 	columnMovement    battlegroundMovement
 	CurrentColumn     BattleGroundColumn
 	CurrentRow        BattleGroundRow
@@ -43,7 +43,7 @@ func newMonsterInBattleGround(
 		name:              m.name,
 		MaxLife:           m.healthPoints,
 		HealthPoints:      m.healthPoints,
-		rowMovement:       m.rowMovement,
+		RowMovement:       m.rowMovement,
 		columnMovement:    m.columnMovement,
 		CurrentColumn:     column,
 		CurrentRow:        row,

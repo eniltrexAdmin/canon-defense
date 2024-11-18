@@ -60,16 +60,13 @@ func (ec *ebitenCanon) fire() {
 	ec.bullet = &bullet
 }
 
-func (ec *ebitenCanon) firingUpdate() {
+func (ec *ebitenCanon) update() {
 	if ec.bullet != nil {
 		ec.bullet.update()
 		if ec.bullet.BulletSprite.PosY < -10 {
 			ec.bullet = nil
 		}
 	}
-}
-
-func (ec *ebitenCanon) update() {
 	ec.sprite.Update()
 }
 

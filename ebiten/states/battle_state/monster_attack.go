@@ -10,8 +10,8 @@ type MonsterAttackState struct {
 	ebitenMonsterTeam *ebiten_monster.EbitenMonsterTeam
 }
 
-func newMonsterAttackState(numPositions int, ebitenMonsterTeam *ebiten_monster.EbitenMonsterTeam) MonsterAttackState {
-	//ebitenMonsterTeam.monsterAdvancePositions(numPositions)
+func newMonsterAttackState(ebitenMonsterTeam *ebiten_monster.EbitenMonsterTeam) MonsterAttackState {
+	ebitenMonsterTeam.Advance()
 	return MonsterAttackState{
 		ebitenMonsterTeam: ebitenMonsterTeam,
 	}
@@ -23,10 +23,10 @@ func (s MonsterAttackState) Debug() string {
 
 func (s MonsterAttackState) Update(stack *states.StateStack, keys []ebiten.Key) error {
 
-	s.ebitenMonsterTeam.UpdateAttack()
-	//if !s.ebitenMonsterTeam.monsterAttacking {
-	//	stack.Pop()
-	//}
+	s.ebitenMonsterTeam.Update()
+	if !s.ebitenMonsterTeam.AreAttacking() {
+		stack.Pop()
+	}
 
 	return nil
 }

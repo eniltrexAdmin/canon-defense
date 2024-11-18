@@ -34,12 +34,14 @@ func (s FireCannonsState) Debug() string {
 
 func (s FireCannonsState) Update(stack *states.StateStack, keys []ebiten.Key) error {
 	s.ebitenMonsterTeam.Update()
-	s.ebitenCanonDeck.FiringUpdate()
+	s.ebitenCanonDeck.Update()
 
-	//if !s.ebitenCanonDeck.Firing {
-	//	monsterAdvanceState := newMonsterAttackState(1, s.ebitenMonsterTeam)
-	//	stack.Switch(monsterAdvanceState)
-	//}
+	bullets := s.ebitenCanonDeck.CurrentBullets()
+	if len(bullets) == 0 {
+		s.ebitenCanonDeck.Firing = false
+		monsterAdvanceState := newMonsterAttackState(s.ebitenMonsterTeam)
+		stack.Switch(monsterAdvanceState)
+	}
 
 	return nil
 }

@@ -4,6 +4,7 @@ import (
 	"canon-tower-defense/ebiten/ebiten_sprite"
 	"canon-tower-defense/ebiten/states/battle_state/ebiten_canon"
 	"github.com/hajimehoshi/ebiten/v2"
+	"image"
 )
 
 type MonsterHitState struct {
@@ -44,7 +45,7 @@ func (m *MonsterHitState) draw(screen *ebiten.Image) {
 func (m *MonsterHitState) update() {
 	if !ebiten_sprite.Collision(m.sprite, m.hittingBullet.BulletSprite) {
 		if m.context.monster.IsAlive() {
-			idleState := newFromHitState(m)
+			idleState := newIdleMonster(m.Coordinates())
 			m.context.transitionTo(&idleState)
 		} else {
 			// go to dead state
@@ -58,4 +59,12 @@ func (m *MonsterHitState) update() {
 
 func (m *MonsterHitState) stateName() string {
 	return "hit State"
+}
+
+func (m *MonsterHitState) Coordinates() ebiten_sprite.ScreenCoordinate {
+	return m.sprite.Position()
+}
+
+func (m *MonsterHitState) GetRectangle() image.Rectangle {
+	return m.sprite.GetRectangle()
 }

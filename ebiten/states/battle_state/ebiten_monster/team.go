@@ -12,8 +12,7 @@ import (
 type EbitenMonsterTeam struct {
 	game            *game.CanonTDGame
 	visibleMonsters []*EbitenMonster
-	//monsterAttacking bool
-	//advanceStep      float64
+	advanceStep     float64
 }
 
 func NewEbitenMonsterTeam(g game.CanonTDGame) EbitenMonsterTeam {
@@ -42,9 +41,8 @@ func NewEbitenMonsterTeam(g game.CanonTDGame) EbitenMonsterTeam {
 
 	return EbitenMonsterTeam{
 		visibleMonsters: visibleMonsters,
-		//monsterAttacking: false,
-		//advanceStep:      float64(availableHeight),
-		game: &g,
+		game:            &g,
+		advanceStep:     float64(availableHeight),
 	}
 }
 
@@ -53,8 +51,6 @@ func (emt *EbitenMonsterTeam) Draw(screen *ebiten.Image) {
 		visibleMonsters.Draw(screen)
 	}
 }
-
-// BATTLE STATE
 
 func (emt *EbitenMonsterTeam) Update() {
 	for _, visibleMonsters := range emt.visibleMonsters {
@@ -68,25 +64,17 @@ func (emt *EbitenMonsterTeam) DeckFiring(bullets []*ebiten_canon.EbitenCanonBull
 	}
 }
 
-// ATTACK STATE
+func (emt *EbitenMonsterTeam) Advance() {
+	for _, visibleMonsters := range emt.visibleMonsters {
+		visibleMonsters.Advance(emt.advanceStep)
+	}
+}
 
-//func (emt *ebitenMonsterTeam) monsterAdvancePositions(numPositions int) {
-//	emt.monsterAttacking = true
-//	for _, visibleMonsters := range emt.visibleMonsters {
-//		visibleMonsters.setDestination(emt.advanceStep * float64(numPositions))
-//	}
-//}
-//
-
-func (emt *EbitenMonsterTeam) UpdateAttack() {
-	//monsterMoving := false
-	//for _, visibleMonsters := range emt.visibleMonsters {
-	//	visibleMonsters.updateAttack()
-	//	if visibleMonsters.isMoving {
-	//		monsterMoving = true
-	//	}
-	//}
-	//if !monsterMoving {
-	//	emt.monsterAttacking = false
-	//}
+func (emt *EbitenMonsterTeam) AreAttacking() bool {
+	for _, visibleMonster := range emt.visibleMonsters {
+		if visibleMonster.IsAttacking() {
+			return true
+		}
+	}
+	return false
 }

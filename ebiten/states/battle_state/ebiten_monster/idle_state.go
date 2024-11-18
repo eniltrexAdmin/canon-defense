@@ -3,6 +3,7 @@ package ebiten_monster
 import (
 	"canon-tower-defense/ebiten/ebiten_sprite"
 	"github.com/hajimehoshi/ebiten/v2"
+	"image"
 )
 
 type MonsterIdleState struct {
@@ -10,10 +11,10 @@ type MonsterIdleState struct {
 	context *EbitenMonster
 }
 
-func newIdleMonster(posX, posY float64) MonsterIdleState {
+func newIdleMonster(coordinate ebiten_sprite.ScreenCoordinate) MonsterIdleState {
 	beholder := ebiten_sprite.NewFromCentralPoint(
-		posX,
-		posY,
+		coordinate.X,
+		coordinate.Y,
 		LoadedImages[BeholderIdle],
 		64,
 		64,
@@ -24,13 +25,9 @@ func newIdleMonster(posX, posY float64) MonsterIdleState {
 	}
 }
 
-func newFromHitState(hs *MonsterHitState) MonsterIdleState {
-	c := hs.sprite.Position()
-	return newIdleMonster(c.X, c.Y)
-}
-
 func (m *MonsterIdleState) setContext(context *EbitenMonster) {
 	m.context = context
+	m.context.LifeLine.Show()
 }
 
 func (m *MonsterIdleState) draw(screen *ebiten.Image) {
@@ -49,4 +46,12 @@ func (m *MonsterIdleState) update() {
 
 func (m *MonsterIdleState) stateName() string {
 	return "Idle State"
+}
+
+func (m *MonsterIdleState) Coordinates() ebiten_sprite.ScreenCoordinate {
+	return m.sprite.Position()
+}
+
+func (m *MonsterIdleState) GetRectangle() image.Rectangle {
+	return m.sprite.GetRectangle()
 }

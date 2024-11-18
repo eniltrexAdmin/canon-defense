@@ -51,7 +51,11 @@ func (l *LifeLine) Hide() {
 	l.display = false
 }
 
-func (l *LifeLine) Update() {
+func (l *LifeLine) Show() {
+	l.display = true
+}
+
+func (l *LifeLine) Update(rectangle image.Rectangle) {
 	if l.lifeMarker < l.destinationWidth {
 		l.lifeMarker += l.animationSpeed
 		if l.lifeMarker > l.destinationWidth {
@@ -66,6 +70,9 @@ func (l *LifeLine) Update() {
 	if l.lifeMarker == 0 {
 		l.display = false
 	}
+
+	l.posX = float32(rectangle.Min.X) + 5
+	l.posY = float32(rectangle.Max.Y)
 }
 
 func (l *LifeLine) Draw(screen *ebiten.Image) {
