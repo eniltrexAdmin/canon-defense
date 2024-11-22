@@ -23,7 +23,7 @@ type EbitenCanonDeck struct {
 	draggedSprite *ebiten_sprite.EbitenDraggableSprite
 }
 
-func NewEbitenCanonDeck(g game.CanonTDGame) EbitenCanonDeck {
+func NewEbitenCanonDeck(g *game.CanonTDGame) EbitenCanonDeck {
 	img, _, err := image.Decode(bytes.NewReader(assets.RegularCanon))
 	if err != nil {
 		log.Fatal(err)
@@ -70,7 +70,7 @@ func NewEbitenCanonDeck(g game.CanonTDGame) EbitenCanonDeck {
 		ebitenCanons: cs,
 		deployAreas:  das,
 		actionButton: ab,
-		game:         &g,
+		game:         g,
 		Firing:       false,
 	}
 }

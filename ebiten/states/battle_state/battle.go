@@ -25,9 +25,9 @@ func NewBattleState(level int) BattleState {
 
 	ebiten_monster.LoadBattleImages()
 
-	ecd := ebiten_canon.NewEbitenCanonDeck(g)
+	ecd := ebiten_canon.NewEbitenCanonDeck(&g)
 	ebg := ebiten_background.NewEbitenBattleGround(g.Battleground)
-	emt := ebiten_monster.NewEbitenMonsterTeam(g)
+	emt := ebiten_monster.NewEbitenMonsterTeam(&g)
 
 	return BattleState{
 		game:               &g,
@@ -39,6 +39,10 @@ func NewBattleState(level int) BattleState {
 
 func (s BattleState) Debug() string {
 	return "BattleState State"
+}
+
+func (s BattleState) DeployCannon() {
+
 }
 
 func (s BattleState) Update(stack *states.StateStack, keys []ebiten.Key) error {

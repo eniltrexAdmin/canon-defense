@@ -35,25 +35,9 @@ func (mt *MonsterTeam) addMonster(indexRow, indexColumn int, m MonsterTemplate) 
 	mt.Monsters = append(mt.Monsters, &monsterInBg)
 }
 
-//func (mt *MonsterTeam) monsterInColumn(c BattleGroundColumn) []*Monster {
-//	m := make([]*Monster, 0)
-//	for _, monsterInBg := range mt.Monsters {
-//		if monsterInBg.CurrentVisibleRow != NoVisibleRow && monsterInBg.CurrentColumn == c {
-//			m = append(m, monsterInBg)
-//		}
-//	}
-//	return m
-//}
-
-//func (mt *MonsterTeam) DamageMonsters(c *Canon, canonPosition BattleGroundColumn) {
-//	for _, monster := range mt.monsterInColumn(canonPosition) {
-//		monster.hit(c.Damage)
-//	}
-//}
-
-//func (mt *MonsterTeam) advance() {
-//	for _, monsterInBg := range mt.MonstersInBattleground {
-//		monsterInBg.Row = monsterInBg.Row - 1
-//		monsterInBg.VisibleRow = mt.Battleground.toVisibleRow(monsterInBg.Row)
-//	}
-//}
+func (mt *MonsterTeam) charge() {
+	for _, monster := range mt.Monsters {
+		monster.CurrentRow = monster.CurrentRow - 1
+		monster.CurrentVisibleRow = mt.Battleground.toVisibleRow(monster.CurrentRow)
+	}
+}

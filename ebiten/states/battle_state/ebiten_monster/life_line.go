@@ -1,7 +1,6 @@
 package ebiten_monster
 
 import (
-	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"image"
@@ -16,7 +15,6 @@ type LifeLine struct {
 	width, height    float32
 	posX, posY       float32
 	animationSpeed   float32
-	display          bool
 }
 
 func NewLifeLineFromRectangle(maxLife int, rectangle image.Rectangle) LifeLine {
@@ -35,24 +33,12 @@ func NewLifeLineFromRectangle(maxLife int, rectangle image.Rectangle) LifeLine {
 		posX:             posX,
 		posY:             float32(posY),
 		animationSpeed:   1,
-		display:          true,
 	}
 }
 
 func (l *LifeLine) SetCurrentLife(cl int) {
 	l.currentLife = cl
 	l.destinationWidth = float32(l.currentLife) / float32(l.maxLife) * l.width
-	println(fmt.Sprintf("Operation is: %d / %d * %f", l.currentLife, l.maxLife, l.width))
-	//
-	println(fmt.Sprintf("Setting destination width to be: %f", l.destinationWidth))
-}
-
-func (l *LifeLine) Hide() {
-	l.display = false
-}
-
-func (l *LifeLine) Show() {
-	l.display = true
 }
 
 func (l *LifeLine) Update(rectangle image.Rectangle) {
@@ -67,18 +53,12 @@ func (l *LifeLine) Update(rectangle image.Rectangle) {
 			l.lifeMarker = l.destinationWidth
 		}
 	}
-	if l.lifeMarker == 0 {
-		l.display = false
-	}
 
 	l.posX = float32(rectangle.Min.X) + 5
 	l.posY = float32(rectangle.Max.Y)
 }
 
 func (l *LifeLine) Draw(screen *ebiten.Image) {
-	if !l.display {
-		return
-	}
 	vector.DrawFilledRect(screen,
 		l.posX,
 		l.posY,

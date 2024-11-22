@@ -3,41 +3,33 @@ package ebiten_monster
 import (
 	"canon-tower-defense/ebiten/ebiten_sprite"
 	"github.com/hajimehoshi/ebiten/v2"
-	"image"
 )
 
 const DyingFadeOutSpeed = 0.02
 
 type MonsterDeadState struct {
-	sprite  *ebiten_sprite.EbitenAnimatedSprite
 	context *EbitenMonster
 	fadeOut float32
 }
 
-func newDeadFromHitState(hs *MonsterHitState) MonsterDeadState {
-	coordinate := hs.sprite.Position()
-
-	beholderDead := ebiten_sprite.NewFromCentralPoint(
-		coordinate.X,
-		coordinate.Y,
+func NewMonsterDeadState(context *EbitenMonster) *MonsterDeadState {
+	sprite := ebiten_sprite.NewFromCentralPoint(
+		context.sprite.Position().X,
+		context.sprite.Position().Y,
 		LoadedImages[BeholderDead],
 		64,
 		64,
 		1.1,
 		0.1)
-
-	return MonsterDeadState{
-		sprite:  &beholderDead,
+	context.sprite = &sprite
+	return &MonsterDeadState{
+		context: context,
 		fadeOut: 1,
 	}
 }
 
-func (m *MonsterDeadState) setContext(context *EbitenMonster) {
-	m.context = context
-}
-
 func (m *MonsterDeadState) draw(screen *ebiten.Image) {
-	m.sprite.DrawWithFade(screen, m.fadeOut)
+	m.context.sprite.DrawWithFade(screen, m.fadeOut)
 }
 
 func (m *MonsterDeadState) update() {
@@ -45,17 +37,9 @@ func (m *MonsterDeadState) update() {
 	if m.fadeOut < 0 {
 		m.fadeOut = 0
 	}
-	m.sprite.Update()
+	m.context.sprite.Update()
 }
 
 func (m *MonsterDeadState) stateName() string {
 	return "Dead State"
-}
-
-func (m *MonsterDeadState) Coordinates() ebiten_sprite.ScreenCoordinate {
-	return m.sprite.Position()
-}
-
-func (m *MonsterDeadState) GetRectangle() image.Rectangle {
-	return m.sprite.GetRectangle()
 }

@@ -10,12 +10,15 @@ import (
 )
 
 type EbitenMonsterTeam struct {
-	game            *game.CanonTDGame
-	visibleMonsters []*EbitenMonster
+	VisibleMonsters []*EbitenMonster
 	advanceStep     float64
 }
 
-func NewEbitenMonsterTeam(g game.CanonTDGame) EbitenMonsterTeam {
+func NewEbitenMonsterTeam(g *game.CanonTDGame) EbitenMonsterTeam {
+	f := func(event EbitenMonsterHitEvent) {
+		g.HitMonster(event.Canon, event.Monster)
+	}
+
 	availableWidth := constants.ScreenWidth / int(g.MonsterTeam.Battleground.Columns)
 	availableHeight := int(ebiten_background.BattleGroundHeight) / int(g.MonsterTeam.Battleground.VisibleRows)
 	var visibleMonsters []*EbitenMonster
@@ -30,48 +33,47 @@ func NewEbitenMonsterTeam(g game.CanonTDGame) EbitenMonsterTeam {
 
 		println(fmt.Printf("adding monster in %d\n", mig.CurrentVisibleRow))
 		// at some point we might have get rid of visible rows all together.
-		if mig.CurrentVisibleRow != game.NoVisibleRow {
-			posX := float64(availableWidth*int(mig.CurrentColumn)) + tileCenterPointX
-			posY := float64(availableHeight*int(mig.CurrentVisibleRow)) + tileSCenterPointY
+		//if mig.CurrentVisibleRow != game.NoVisibleRow {
+		posX := float64(availableWidth*int(mig.CurrentColumn)) + tileCenterPointX
+		posY := float64(availableHeight*int(mig.CurrentVisibleRow)) + tileSCenterPointY
 
-			monster := NewEbitenMonster(mig, posX, posY, &g)
-			visibleMonsters = append(visibleMonsters, monster)
-		}
+		monster := NewEbitenMonster(mig, posX, posY, f)
+		visibleMonsters = append(visibleMonsters, monster)
+		//}
 	}
 
 	return EbitenMonsterTeam{
-		visibleMonsters: visibleMonsters,
-		game:            &g,
+		VisibleMonsters: visibleMonsters,
 		advanceStep:     float64(availableHeight),
 	}
 }
 
 func (emt *EbitenMonsterTeam) Draw(screen *ebiten.Image) {
-	for _, visibleMonsters := range emt.visibleMonsters {
+	for _, visibleMonsters := range emt.VisibleMonsters {
 		visibleMonsters.Draw(screen)
 	}
 }
 
 func (emt *EbitenMonsterTeam) Update() {
-	for _, visibleMonsters := range emt.visibleMonsters {
+	for _, visibleMonsters := range emt.VisibleMonsters {
 		visibleMonsters.Update()
 	}
 }
 
 func (emt *EbitenMonsterTeam) DeckFiring(bullets []*ebiten_canon.EbitenCanonBullet) {
-	for _, visibleMonsters := range emt.visibleMonsters {
+	for _, visibleMonsters := range emt.VisibleMonsters {
 		visibleMonsters.DeckFiring(bullets)
 	}
 }
 
 func (emt *EbitenMonsterTeam) Advance() {
-	for _, visibleMonsters := range emt.visibleMonsters {
-		visibleMonsters.Advance(emt.advanceStep)
+	for _, visibleMonsters := range emt.VisibleMonsters {
+		visibleMonsters.Attack(emt.advanceStep)
 	}
 }
 
 func (emt *EbitenMonsterTeam) AreAttacking() bool {
-	for _, visibleMonster := range emt.visibleMonsters {
+	for _, visibleMonster := range emt.VisibleMonsters {
 		if visibleMonster.IsAttacking() {
 			return true
 		}
