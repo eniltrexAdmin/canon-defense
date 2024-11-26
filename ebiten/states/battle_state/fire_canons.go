@@ -19,6 +19,7 @@ func NewFireCannonState(
 	ebitenMonsterTeam *ebiten_monster.EbitenMonsterTeam,
 	game *game.CanonTDGame,
 ) *FireCannonsState {
+	ebitenCanonDeck.FireCanons(game)
 	ebitenMonsterTeam.DeckFiring(ebitenCanonDeck.CurrentBullets())
 	fcs := FireCannonsState{
 		ebitenCanonDeck:   ebitenCanonDeck,
@@ -38,7 +39,6 @@ func (s *FireCannonsState) Update(stack *states.StateStack, keys []ebiten.Key) e
 
 	bullets := s.ebitenCanonDeck.CurrentBullets()
 	if len(bullets) == 0 {
-		s.ebitenCanonDeck.Firing = false
 		monsterAdvanceState := newMonsterAttackState(s.ebitenMonsterTeam, s.game)
 		stack.Switch(monsterAdvanceState)
 	}

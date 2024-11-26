@@ -17,54 +17,68 @@ type BattleState struct {
 	ebitenCanonDeck    *ebiten_canon.EbitenCanonDeck
 	ebitenBattleGround ebiten_background.EbitenBattleGround
 	ebitenMonsterTeam  *ebiten_monster.EbitenMonsterTeam
+	transitionToFire   bool
 }
 
-func NewBattleState(level int) BattleState {
+func NewBattleState(level int) *BattleState {
 	// loading assets, could be in init() and consistent usage of states.
 	g := game.Start(level)
 
 	ebiten_monster.LoadBattleImages()
+	ebiten_canon.LoadBattleImages()
 
-	ecd := ebiten_canon.NewEbitenCanonDeck(&g)
 	ebg := ebiten_background.NewEbitenBattleGround(g.Battleground)
 	emt := ebiten_monster.NewEbitenMonsterTeam(&g)
 
-	return BattleState{
+	bs := BattleState{
 		game:               &g,
-		ebitenCanonDeck:    &ecd,
 		ebitenBattleGround: ebg,
 		ebitenMonsterTeam:  &emt,
+		transitionToFire:   false,
 	}
+
+	ecd := ebiten_canon.NewEbitenCanonDeck(&g, bs.deployCannon, bs.moveCannon)
+	bs.ebitenCanonDeck = &ecd
+
+	return &bs
 }
 
-func (s BattleState) Debug() string {
+func (s *BattleState) Debug() string {
 	return "BattleState State"
 }
 
-func (s BattleState) DeployCannon() {
-
+func (s *BattleState) deployCannon(on int) {
+	s.game.DeployCannon(on)
+	s.transitionToFire = true
 }
 
-func (s BattleState) Update(stack *states.StateStack, keys []ebiten.Key) error {
+func (s *BattleState) moveCannon(from, to int) {
+	s.game.MoveCannon(from, to)
+	s.transitionToFire = true
+}
+
+func (s *BattleState) Update(stack *states.StateStack, keys []ebiten.Key) error {
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
 		s.ebitenCanonDeck.InitDrag()
 	}
 
 	if inpututil.IsMouseButtonJustReleased(ebiten.MouseButtonLeft) {
 		s.ebitenCanonDeck.ReleaseDrag()
-		if s.ebitenCanonDeck.Firing {
-			fireState := NewFireCannonState(s.ebitenCanonDeck, s.ebitenMonsterTeam, s.game)
-			stack.Push(fireState)
-		}
 	}
 
 	s.ebitenMonsterTeam.Update()
 	s.ebitenCanonDeck.Update()
 
+	if s.transitionToFire {
+		s.transitionToFire = false
+		fireState := NewFireCannonState(s.ebitenCanonDeck, s.ebitenMonsterTeam, s.game)
+		stack.Push(fireState)
+	}
+
 	return nil
 }
 
-func (s BattleState) Draw(screen *ebiten.Image) {
+func (s *BattleState) Draw(screen *ebiten.Image) {
 	s.ebitenBattleGround.Draw(screen)
 	s.ebitenCanonDeck.Draw(screen)
 	s.ebitenMonsterTeam.Draw(screen)

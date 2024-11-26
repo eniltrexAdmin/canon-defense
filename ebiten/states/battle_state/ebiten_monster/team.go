@@ -30,16 +30,13 @@ func NewEbitenMonsterTeam(g *game.CanonTDGame) EbitenMonsterTeam {
 	tileSCenterPointY := float64(centerYSpace)
 
 	for _, mig := range g.MonsterTeam.Monsters {
-
 		println(fmt.Printf("adding monster in %d\n", mig.CurrentVisibleRow))
-		// at some point we might have get rid of visible rows all together.
-		//if mig.CurrentVisibleRow != game.NoVisibleRow {
+
 		posX := float64(availableWidth*int(mig.CurrentColumn)) + tileCenterPointX
 		posY := float64(availableHeight*int(mig.CurrentVisibleRow)) + tileSCenterPointY
 
 		monster := NewEbitenMonster(mig, posX, posY, f)
 		visibleMonsters = append(visibleMonsters, monster)
-		//}
 	}
 
 	return EbitenMonsterTeam{

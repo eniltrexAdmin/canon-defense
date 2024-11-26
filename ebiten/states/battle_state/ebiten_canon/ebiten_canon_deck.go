@@ -1,60 +1,36 @@
 package ebiten_canon
 
 import (
-	"bytes"
-	"canon-tower-defense/ebiten/assets"
 	"canon-tower-defense/ebiten/constants"
 	"canon-tower-defense/ebiten/ebiten_sprite"
 	"canon-tower-defense/game"
 	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
-	"image"
-	"log"
 )
 
 const canonYPlacement float64 = 550
 
 type EbitenCanonDeck struct {
-	ebitenCanons  map[int]*ebitenCanon
-	deployAreas   map[int]*deployArea
-	actionButton  ebitenActionButton
-	game          *game.CanonTDGame
-	Firing        bool
-	draggedSprite *ebiten_sprite.EbitenDraggableSprite
+	ebitenCanons        map[int]*ebitenCanon
+	deployAreas         map[int]*deployArea
+	actionButton        ebitenActionButton
+	draggedSprite       *ebiten_sprite.EbitenDraggableSprite
+	deployCannonTrigger func(on int)
+	moveCannonTrigger   func(from, to int)
 }
 
-func NewEbitenCanonDeck(g *game.CanonTDGame) EbitenCanonDeck {
-	img, _, err := image.Decode(bytes.NewReader(assets.RegularCanon))
-	if err != nil {
-		log.Fatal(err)
-	}
-	canonImage := ebiten.NewImageFromImage(img)
-
-	img2, _, err := image.Decode(bytes.NewReader(assets.CanonPedestal))
-	if err != nil {
-		log.Fatal(err)
-	}
-	pedestalImage := ebiten.NewImageFromImage(img2)
+func NewEbitenCanonDeck(
+	g *game.CanonTDGame,
+	deployCannonTrigger func(on int),
+	moveCannonTrigger func(from, to int),
+) EbitenCanonDeck {
 
 	availableWidth := float64(constants.ScreenWidth / g.CanonDeck.CanonCapacity())
-
-	cs := make(map[int]*ebitenCanon, g.CanonDeck.CanonCapacity())
 	das := make(map[int]*deployArea, g.CanonDeck.CanonCapacity())
 
 	color := ebiten_sprite.RandomColor()
 	for formationPlacement := 0; formationPlacement < g.CanonDeck.CanonCapacity(); formationPlacement++ {
 		centerX := getCanonCenterX(formationPlacement, g.CanonDeck.CanonCapacity())
-		canon := g.CanonDeck.Canons[game.BattleGroundColumn(formationPlacement)]
-		if canon != nil {
-			ec := newEbitenCanon(
-				*canon,
-				formationPlacement,
-				canonImage,
-				centerX,
-				canonYPlacement,
-			)
-			cs[formationPlacement] = &ec
-		}
 
 		da := NewDeployAreaFromCentralPoint(
 			centerX, canonYPlacement,
@@ -64,20 +40,50 @@ func NewEbitenCanonDeck(g *game.CanonTDGame) EbitenCanonDeck {
 		das[formationPlacement] = &da
 	}
 
-	ab := newEbitenActionButton(canonImage, pedestalImage, constants.ScreenWidth)
+	ab := newEbitenActionButton(LoadedImages[RegularCanon], LoadedImages[RegularCanonPedestal], constants.ScreenWidth)
 
 	return EbitenCanonDeck{
-		ebitenCanons: cs,
-		deployAreas:  das,
-		actionButton: ab,
-		game:         g,
-		Firing:       false,
+		ebitenCanons:        canonMapFromGame(g.CanonDeck),
+		deployAreas:         das,
+		actionButton:        ab,
+		deployCannonTrigger: deployCannonTrigger,
+		moveCannonTrigger:   moveCannonTrigger,
 	}
+}
+
+func canonMapFromGame(gcd game.CanonDeck) map[int]*ebitenCanon {
+	cs := make(map[int]*ebitenCanon, gcd.CanonCapacity())
+	for formationPlacement := 0; formationPlacement < gcd.CanonCapacity(); formationPlacement++ {
+		canon := gcd.Canons[game.BattleGroundColumn(formationPlacement)]
+		if canon != nil {
+			println(fmt.Sprintf("Setting cannon to position %d", formationPlacement))
+			ec := newEbitenCanon(
+				*canon,
+				formationPlacement,
+				LoadedImages[RegularCanon],
+				getCanonCenterX(formationPlacement, gcd.CanonCapacity()),
+				canonYPlacement,
+			)
+			cs[formationPlacement] = &ec
+		} else {
+			println(fmt.Sprintf("No cannon to position %d", formationPlacement))
+		}
+	}
+	return cs
 }
 
 func getCanonCenterX(formationPlacement, numberCanons int) float64 {
 	availableWidth := float64(constants.ScreenWidth / numberCanons)
 	return availableWidth*float64(formationPlacement) + availableWidth/2
+}
+
+func (ecd *EbitenCanonDeck) FireCanons(g *game.CanonTDGame) {
+	ecd.ebitenCanons = canonMapFromGame(g.CanonDeck)
+	for _, canon := range ecd.ebitenCanons {
+		if canon != nil {
+			canon.fire()
+		}
+	}
 }
 
 func (ecd *EbitenCanonDeck) Draw(screen *ebiten.Image) {
@@ -140,40 +146,15 @@ func (ecd *EbitenCanonDeck) moveCanon(canon *ebitenCanon) {
 		if canon.formationPlacement == formationPlacement {
 			return
 		}
-		ecd.game.MoveCannon(canon.formationPlacement, formationPlacement)
-		ecd.finishTurn()
+		ecd.moveCannonTrigger(canon.formationPlacement, formationPlacement)
 	}
 }
 
 func (ecd *EbitenCanonDeck) deploy() {
 	deployedArea := ecd.getDeployedAreaPosition()
 	if deployedArea != nil {
-		formationPlacement := *deployedArea
-		ecd.game.DeployCannon(formationPlacement)
-		ecd.finishTurn()
+		ecd.deployCannonTrigger(*deployedArea)
 	}
-}
-
-func (ecd *EbitenCanonDeck) finishTurn() {
-	for formationPlacement := 0; formationPlacement < ecd.game.CanonDeck.CanonCapacity(); formationPlacement++ {
-		canon := ecd.game.CanonDeck.Canons[game.BattleGroundColumn(formationPlacement)]
-		if canon != nil {
-			println(fmt.Sprintf("Setting cannon to position %d", formationPlacement))
-			ec := newEbitenCanon(
-				*canon,
-				formationPlacement,
-				ecd.actionButton.canonSprite.Image,
-				getCanonCenterX(formationPlacement, ecd.game.CanonDeck.CanonCapacity()),
-				canonYPlacement,
-			)
-			ecd.ebitenCanons[formationPlacement] = &ec
-			ec.fire()
-		} else {
-			println(fmt.Sprintf("Deleting cannon to position %d", formationPlacement))
-			delete(ecd.ebitenCanons, formationPlacement)
-		}
-	}
-	ecd.Firing = true
 }
 
 func (ecd *EbitenCanonDeck) getDeployedAreaPosition() *int {
