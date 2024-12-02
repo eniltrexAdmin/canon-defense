@@ -8,10 +8,10 @@ func (lg HardcodedLevelGenerator) Generate(level int) CanonTDGame {
 	cd := NewCanonDeck(bg)
 	mt := NewMonsterTeam(bg)
 
-	mt.addMonster(8, 3, SkeletonTemplate(15))
-	mt.addMonster(2, 4, SkeletonTemplate(1))
-	mt.addMonster(4, 3, SkeletonTemplate(2))
-	mt.addMonster(3, 0, SkeletonTemplate(1))
+	//mt.addMonster(8, 3, SkeletonTemplate(15))
+	//mt.addMonster(2, 4, SkeletonTemplate(1))
+	//mt.addMonster(4, 3, SkeletonTemplate(2))
+	//mt.addMonster(3, 0, SkeletonTemplate(1))
 	mt.addMonster(1, 2, SkeletonTemplate(1))
 
 	return CanonTDGame{

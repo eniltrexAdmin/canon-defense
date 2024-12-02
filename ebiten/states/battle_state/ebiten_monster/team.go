@@ -10,7 +10,7 @@ import (
 )
 
 type EbitenMonsterTeam struct {
-	VisibleMonsters []*EbitenMonster
+	visibleMonsters []*EbitenMonster
 	advanceStep     float64
 }
 
@@ -40,38 +40,47 @@ func NewEbitenMonsterTeam(g *game.CanonTDGame) EbitenMonsterTeam {
 	}
 
 	return EbitenMonsterTeam{
-		VisibleMonsters: visibleMonsters,
+		visibleMonsters: visibleMonsters,
 		advanceStep:     float64(availableHeight),
 	}
 }
 
 func (emt *EbitenMonsterTeam) Draw(screen *ebiten.Image) {
-	for _, visibleMonsters := range emt.VisibleMonsters {
+	for _, visibleMonsters := range emt.visibleMonsters {
 		visibleMonsters.Draw(screen)
 	}
 }
 
 func (emt *EbitenMonsterTeam) Update() {
-	for _, visibleMonsters := range emt.VisibleMonsters {
+	for _, visibleMonsters := range emt.visibleMonsters {
 		visibleMonsters.Update()
 	}
 }
 
 func (emt *EbitenMonsterTeam) DeckFiring(bullets []*ebiten_canon.EbitenCanonBullet) {
-	for _, visibleMonsters := range emt.VisibleMonsters {
+	for _, visibleMonsters := range emt.visibleMonsters {
 		visibleMonsters.DeckFiring(bullets)
 	}
 }
 
 func (emt *EbitenMonsterTeam) Advance() {
-	for _, visibleMonsters := range emt.VisibleMonsters {
+	for _, visibleMonsters := range emt.visibleMonsters {
 		visibleMonsters.Attack(emt.advanceStep)
 	}
 }
 
 func (emt *EbitenMonsterTeam) AreAttacking() bool {
-	for _, visibleMonster := range emt.VisibleMonsters {
+	for _, visibleMonster := range emt.visibleMonsters {
 		if visibleMonster.IsAttacking() {
+			return true
+		}
+	}
+	return false
+}
+
+func (emt *EbitenMonsterTeam) AreAlive() bool {
+	for _, visibleMonster := range emt.visibleMonsters {
+		if visibleMonster.monster.IsAlive() {
 			return true
 		}
 	}

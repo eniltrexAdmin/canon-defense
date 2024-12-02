@@ -3,9 +3,8 @@ package main
 import (
 	"canon-tower-defense/ebiten/constants"
 	"canon-tower-defense/ebiten/states"
-	"canon-tower-defense/ebiten/states/level_selection_state"
 	"canon-tower-defense/ebiten/states/presentation_state"
-	"canon-tower-defense/game"
+	"canon-tower-defense/ebiten/states/state_factory"
 	"canon-tower-defense/game/player"
 	"errors"
 	"github.com/hajimehoshi/ebiten/v2"
@@ -19,13 +18,15 @@ type EbitenGame struct {
 }
 
 func NewGame() EbitenGame {
-	pl := player.NewPlayer()
+	constants.GlobalContext.Player = player.NewPlayer()
 
-	// first stack the level selector
-	stateStack := states.NewStateStack()
-	levelSelection := level_selection_state.NewLevelSelection(pl, game.LevelSelector{}, &stateStack)
+	factory := state_factory.CanonTowerDefenseStaticStateFactory{}
+
+	stateStack := states.NewStateStack(factory)
+	levelSelection := factory.Create(states.LevelSelectionStateName, &stateStack)
 	stateStack.Push(levelSelection)
 	stateStack.Push(presentation_state.NewPresentationState())
+
 	return EbitenGame{
 		keys:       make([]ebiten.Key, 0),
 		stateStack: &stateStack,
@@ -37,7 +38,7 @@ func (g *EbitenGame) Update() error {
 	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
 		return errors.New("exiting")
 	}
-	return g.stateStack.Update(g.stateStack, g.keys)
+	return g.stateStack.Update(g.keys)
 }
 
 func (g *EbitenGame) Draw(screen *ebiten.Image) {

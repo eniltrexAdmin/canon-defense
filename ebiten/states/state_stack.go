@@ -13,17 +13,28 @@ type State interface {
 	//Init()// TODO we can add init/enter/and exit or others.
 }
 
+type StateFactory interface {
+	Create(stateName string, params ...any) State
+}
+
+const BattleStateName string = "BattleState"
+const LevelSelectionStateName string = "LevelSelectionState"
+
 type StateStack struct {
-	states []State
+	states       []State
+	StateFactory StateFactory
 }
 
-func NewStateStack() StateStack {
-	return StateStack{states: []State{}}
+func NewStateStack(factory StateFactory) StateStack {
+	return StateStack{
+		states:       []State{},
+		StateFactory: factory,
+	}
 }
 
-func (s *StateStack) Update(stack *StateStack, keys []ebiten.Key) error {
+func (s *StateStack) Update(keys []ebiten.Key) error {
 	lastState := s.states[len(s.states)-1]
-	return lastState.Update(stack, keys)
+	return lastState.Update(s, keys)
 }
 
 func (s *StateStack) Draw(screen *ebiten.Image) {

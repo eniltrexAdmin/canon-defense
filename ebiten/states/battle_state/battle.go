@@ -44,7 +44,7 @@ func NewBattleState(level int) *BattleState {
 }
 
 func (s *BattleState) Debug() string {
-	return "BattleState State"
+	return "battleState State"
 }
 
 func (s *BattleState) deployCannon(on int) {

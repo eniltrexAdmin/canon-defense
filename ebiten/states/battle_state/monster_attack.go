@@ -3,6 +3,7 @@ package battle_state
 import (
 	"canon-tower-defense/ebiten/states"
 	"canon-tower-defense/ebiten/states/battle_state/ebiten_monster"
+	"canon-tower-defense/ebiten/states/victory_state"
 	"canon-tower-defense/game"
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -26,8 +27,12 @@ func (s MonsterAttackState) Debug() string {
 func (s MonsterAttackState) Update(stack *states.StateStack, keys []ebiten.Key) error {
 
 	s.ebitenMonsterTeam.Update()
-	if !s.ebitenMonsterTeam.AreAttacking() {
-		stack.Pop()
+	if !s.ebitenMonsterTeam.AreAlive() {
+		stack.Switch(&victory_state.VictoryState{})
+	} else {
+		if !s.ebitenMonsterTeam.AreAttacking() {
+			stack.Pop()
+		}
 	}
 
 	return nil
