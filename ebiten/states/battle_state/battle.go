@@ -1,6 +1,7 @@
 package battle_state
 
 import (
+	"canon-tower-defense/ebiten/constants"
 	"canon-tower-defense/ebiten/states"
 	"canon-tower-defense/ebiten/states/battle_state/ebiten_background"
 	"canon-tower-defense/ebiten/states/battle_state/ebiten_canon"
@@ -10,7 +11,11 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/vector"
+	"image/color"
 )
+
+const GameOverLine float32 = 510
 
 type BattleState struct {
 	game               *game.CanonTDGame
@@ -80,7 +85,16 @@ func (s *BattleState) Update(stack *states.StateStack, keys []ebiten.Key) error 
 
 func (s *BattleState) Draw(screen *ebiten.Image) {
 	s.ebitenBattleGround.Draw(screen)
+	DrawGameOverLine(screen)
 	s.ebitenCanonDeck.Draw(screen)
 	s.ebitenMonsterTeam.Draw(screen)
 	ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.ActualTPS()))
+}
+
+func DrawGameOverLine(screen *ebiten.Image) {
+	lineColor := color.RGBA{R: 255, A: 255} // Red color
+
+	vector.StrokeLine(screen, 0, GameOverLine,
+		constants.ScreenWidth, GameOverLine,
+		2, lineColor, false)
 }

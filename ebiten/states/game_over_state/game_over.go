@@ -1,4 +1,4 @@
-package victory_state
+package game_over_state
 
 import (
 	"canon-tower-defense/ebiten/constants"
@@ -11,18 +11,13 @@ import (
 	"golang.org/x/image/font/basicfont"
 )
 
-type VictoryState struct{}
+type GameOverState struct{}
 
-func NewVictoryState() *VictoryState {
-	constants.GlobalContext.Player.LevelCompleted()
-	return &VictoryState{}
+func (s *GameOverState) Debug() string {
+	return "Game Over State"
 }
 
-func (s *VictoryState) Debug() string {
-	return "VictoryState State"
-}
-
-func (s *VictoryState) Update(stack *states.StateStack, keys []ebiten.Key) error {
+func (s *GameOverState) Update(stack *states.StateStack, keys []ebiten.Key) error {
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
 		st := stack.StateFactory.Create(states.LevelSelectionStateName, stack)
 		stack.Pop()
@@ -32,15 +27,15 @@ func (s *VictoryState) Update(stack *states.StateStack, keys []ebiten.Key) error
 	return nil
 }
 
-func (s *VictoryState) Draw(screen *ebiten.Image) {
+func (s *GameOverState) Draw(screen *ebiten.Image) {
 	basicFont := basicfont.Face7x13
 
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Scale(4, 4)
-	op.GeoM.Translate(constants.ScreenWidth/2-100, constants.ScreenHeight/2-10)
+	op.GeoM.Translate(constants.ScreenWidth/2-120, constants.ScreenHeight/2-100)
 
 	text.DrawWithOptions(screen,
-		"VICTORY!!!",
+		"Game Over!",
 		basicFont,
 		op,
 	)

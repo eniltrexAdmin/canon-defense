@@ -3,6 +3,7 @@ package battle_state
 import (
 	"canon-tower-defense/ebiten/states"
 	"canon-tower-defense/ebiten/states/battle_state/ebiten_monster"
+	"canon-tower-defense/ebiten/states/game_over_state"
 	"canon-tower-defense/ebiten/states/victory_state"
 	"canon-tower-defense/game"
 	"github.com/hajimehoshi/ebiten/v2"
@@ -28,10 +29,16 @@ func (s MonsterAttackState) Update(stack *states.StateStack, keys []ebiten.Key) 
 
 	s.ebitenMonsterTeam.Update()
 	if !s.ebitenMonsterTeam.AreAlive() {
-		stack.Switch(&victory_state.VictoryState{})
+		// TODO that should follow the factory actually.
+		stack.Switch(victory_state.NewVictoryState())
 	} else {
 		if !s.ebitenMonsterTeam.AreAttacking() {
-			stack.Pop()
+			if s.ebitenMonsterTeam.ReachedGameOver() {
+				// TODO that should follow the factory actually.
+				stack.Switch(&game_over_state.GameOverState{})
+			} else {
+				stack.Pop()
+			}
 		}
 	}
 

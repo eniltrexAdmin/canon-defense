@@ -86,3 +86,12 @@ func (emt *EbitenMonsterTeam) AreAlive() bool {
 	}
 	return false
 }
+
+func (emt *EbitenMonsterTeam) ReachedGameOver() bool {
+	for _, visibleMonster := range emt.visibleMonsters {
+		if visibleMonster.ReachedGameOver() {
+			return true
+		}
+	}
+	return false
+}

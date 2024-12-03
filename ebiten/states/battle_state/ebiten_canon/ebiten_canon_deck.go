@@ -8,7 +8,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-const canonYPlacement float64 = 550
+const CanonYPlacement float64 = 550
 
 type EbitenCanonDeck struct {
 	ebitenCanons        map[int]*ebitenCanon
@@ -33,7 +33,7 @@ func NewEbitenCanonDeck(
 		centerX := getCanonCenterX(formationPlacement, g.CanonDeck.CanonCapacity())
 
 		da := NewDeployAreaFromCentralPoint(
-			centerX, canonYPlacement,
+			centerX, CanonYPlacement,
 			availableWidth-20, 60,
 			color,
 		)
@@ -62,7 +62,7 @@ func canonMapFromGame(gcd game.CanonDeck) map[int]*ebitenCanon {
 				formationPlacement,
 				LoadedImages[RegularCanon],
 				getCanonCenterX(formationPlacement, gcd.CanonCapacity()),
-				canonYPlacement,
+				CanonYPlacement,
 			)
 			cs[formationPlacement] = &ec
 		} else {

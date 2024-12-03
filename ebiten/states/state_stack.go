@@ -5,7 +5,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-// State is coupled to Ebiten. TODO decouple it, if possible
+// State is coupled to Ebiten.
 type State interface {
 	Update(stack *StateStack, keys []ebiten.Key) error
 	Draw(screen *ebiten.Image)

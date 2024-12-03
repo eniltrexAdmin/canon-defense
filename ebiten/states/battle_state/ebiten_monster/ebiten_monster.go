@@ -73,3 +73,11 @@ func (e *EbitenMonster) Attack(stepHeight float64) {
 func (e *EbitenMonster) IsAttacking() bool {
 	return e.state.stateName() == AttackStateName
 }
+
+func (e *EbitenMonster) ReachedGameOver() bool {
+	if !e.monster.IsAlive() {
+		return false
+	}
+	println(fmt.Sprintf("row is : %d", e.monster.CurrentRow))
+	return e.monster.CurrentRow < 0
+}

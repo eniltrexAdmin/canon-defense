@@ -6,6 +6,10 @@ type Player struct {
 
 func NewPlayer() Player {
 	return Player{
-		CurrentLevel: 2,
+		CurrentLevel: 1,
 	}
+}
+
+func (p *Player) LevelCompleted() {
+	p.CurrentLevel++
 }

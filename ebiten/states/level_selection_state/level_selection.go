@@ -87,7 +87,7 @@ func (p LevelSelection) layout() *widget.Container {
 			widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
 				level := args.Button.GetWidget().CustomData
 				if le, ok := level.(int); ok {
-					p.startBattle(le)
+					p.startBattle(le + 1)
 				} else {
 					log.Fatal("Could not convert level to integer")
 				}
