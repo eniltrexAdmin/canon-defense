@@ -16,7 +16,7 @@ func NewMonsterDeadState(context *EbitenMonster) *MonsterDeadState {
 	sprite := ebiten_sprite.NewFromCentralPoint(
 		context.sprite.Position().X,
 		context.sprite.Position().Y,
-		LoadedImages[BeholderDead],
+		context.animations.Dead,
 		64,
 		64,
 		1.1,

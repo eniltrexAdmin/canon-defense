@@ -7,6 +7,7 @@ import (
 	"canon-tower-defense/ebiten/states/battle_state/ebiten_canon"
 	"canon-tower-defense/ebiten/states/battle_state/ebiten_monster"
 	"canon-tower-defense/game"
+	"canon-tower-defense/game/data"
 	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -27,9 +28,8 @@ type BattleState struct {
 
 func NewBattleState(level int) *BattleState {
 	// loading assets, could be in init() and consistent usage of states.
-	g := game.Start(level)
+	g := game.Start(data.HardcodedLevelGenerator{}, level)
 
-	ebiten_monster.LoadBattleImages()
 	ebiten_canon.LoadBattleImages()
 
 	ebg := ebiten_background.NewEbitenBattleGround(g.Battleground)

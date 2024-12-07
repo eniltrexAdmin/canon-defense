@@ -1,6 +1,8 @@
 package game
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type CanonBuilder struct{}
 
@@ -19,12 +21,24 @@ type CanonTDGame struct {
 	playerTurn   bool
 }
 
+func NewGame(Battleground Battleground,
+	CanonDeck CanonDeck,
+	MonsterTeam MonsterTeam,
+) CanonTDGame {
+	return CanonTDGame{
+		Battleground: Battleground,
+		CanonDeck:    CanonDeck,
+		MonsterTeam:  MonsterTeam,
+		playerTurn:   true,
+	}
+}
+
 type LevelGenerator interface {
 	Generate(level int) CanonTDGame
 }
 
-func Start(level int) CanonTDGame {
-	return HardcodedLevelGenerator{}.Generate(level)
+func Start(lg LevelGenerator, level int) CanonTDGame {
+	return lg.Generate(level)
 }
 
 type UserActions interface {

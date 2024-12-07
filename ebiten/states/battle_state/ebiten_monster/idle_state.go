@@ -13,7 +13,7 @@ func NewIdleState(context *EbitenMonster, coordinate ebiten_sprite.ScreenCoordin
 	sprite := ebiten_sprite.NewFromCentralPoint(
 		coordinate.X,
 		coordinate.Y,
-		LoadedImages[BeholderIdle],
+		context.animations.Idle,
 		64,
 		64,
 		1,

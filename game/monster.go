@@ -1,31 +1,24 @@
 package game
 
-import "fmt"
+import (
+	"fmt"
+)
 
-type battlegroundMovement uint8
+type BattlegroundMovement uint8
 
 type MonsterTemplate struct {
-	name           string
-	healthPoints   canonDamage
-	rowMovement    battlegroundMovement
-	columnMovement battlegroundMovement
-}
-
-func SkeletonTemplate(life int) MonsterTemplate {
-	return MonsterTemplate{
-		name:           "Skeleton",
-		healthPoints:   canonDamage(life),
-		columnMovement: 0,
-		rowMovement:    1,
-	}
+	Name           string
+	HealthPoints   CanonDamage
+	RowMovement    BattlegroundMovement
+	ColumnMovement BattlegroundMovement
 }
 
 type Monster struct {
-	name              string
-	MaxLife           canonDamage
-	HealthPoints      canonDamage
-	RowMovement       battlegroundMovement
-	columnMovement    battlegroundMovement
+	Name              string
+	MaxLife           CanonDamage
+	HealthPoints      CanonDamage
+	RowMovement       BattlegroundMovement
+	columnMovement    BattlegroundMovement
 	CurrentColumn     BattleGroundColumn
 	CurrentRow        BattleGroundRow
 	CurrentVisibleRow BattleGroundRow
@@ -40,11 +33,11 @@ func newMonsterInBattleGround(
 ) Monster {
 	bg.checkIndexPosition(row, column)
 	return Monster{
-		name:              m.name,
-		MaxLife:           m.healthPoints,
-		HealthPoints:      m.healthPoints,
-		RowMovement:       m.rowMovement,
-		columnMovement:    m.columnMovement,
+		Name:              m.Name,
+		MaxLife:           m.HealthPoints,
+		HealthPoints:      m.HealthPoints,
+		RowMovement:       m.RowMovement,
+		columnMovement:    m.ColumnMovement,
 		CurrentColumn:     column,
 		CurrentRow:        row,
 		CurrentVisibleRow: bg.toVisibleRow(row),
@@ -72,6 +65,6 @@ func (m *Monster) Hit(c *Canon, turn Turn) {
 }
 
 type MonsterHit struct {
-	Damage canonDamage
+	Damage CanonDamage
 	Turn   Turn
 }

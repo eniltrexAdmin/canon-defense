@@ -28,7 +28,7 @@ func NewMonsterTeam(bg Battleground) MonsterTeam {
 	}
 }
 
-func (mt *MonsterTeam) addMonster(indexRow, indexColumn int, m MonsterTemplate) {
+func (mt *MonsterTeam) AddMonster(indexRow, indexColumn int, m MonsterTemplate) {
 	bgColumn := BattleGroundColumn(indexColumn)
 	bgRow := BattleGroundRow(indexRow)
 	monsterInBg := newMonsterInBattleGround(mt.Battleground, bgColumn, bgRow, m)

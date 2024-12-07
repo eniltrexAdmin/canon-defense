@@ -18,7 +18,7 @@ func NewMonsterAttackState(context *EbitenMonster, stepHeight float64) *MonsterA
 	sprite := ebiten_sprite.NewFromCentralPoint(
 		position.X,
 		position.Y,
-		LoadedImages[BeholderAttack],
+		context.animations.Attack,
 		128,
 		128,
 		1,

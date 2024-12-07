@@ -13,6 +13,13 @@ type EbitenMonsterHitEvent struct {
 	Canon   *game.Canon
 }
 
+type EbitenMonsterImages struct {
+	Idle   *ebiten.Image
+	Hit    *ebiten.Image
+	Dead   *ebiten.Image
+	Attack *ebiten.Image
+}
+
 type EbitenMonsterState interface {
 	draw(screen *ebiten.Image)
 	update()
@@ -23,6 +30,7 @@ type EbitenMonster struct {
 	state          EbitenMonsterState
 	monster        *game.Monster
 	sprite         *ebiten_sprite.EbitenAnimatedSprite
+	animations     EbitenMonsterImages
 	lifeLine       *LifeLine
 	bulletsInField []*ebiten_canon.EbitenCanonBullet // not convinced if it should be here or only idle state
 	hitTrigger     func(event EbitenMonsterHitEvent)
@@ -35,6 +43,7 @@ func NewEbitenMonster(monster *game.Monster, posX, posY float64, HitTrigger func
 	c := &EbitenMonster{
 		monster:    monster,
 		hitTrigger: HitTrigger,
+		animations: LoadMonsterImages(monster),
 	}
 
 	c.state = NewIdleState(c, coordinate)
