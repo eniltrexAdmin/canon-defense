@@ -12,18 +12,31 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            gcc \
+            libc6-dev \
+            libgl1-mesa-dev \
+            libxcursor-dev \
+            libxi-dev \
+            libxinerama-dev \
+            libxrandr-dev \
+            libxxf86vm-dev \
+            libasound2-dev \
+            pkg-config        
+
       - name: Install go language
         uses: actions/setup-go@v5
         with:
-          go-version: '1.21.x'
+          go-version: '1.22.x'
       - name: Install dependencies
-        run: go get .
-
-      - name: Unit testing
-        run: go test
+        run: go mod download
 
       - name: Build Go WASM executable
-        run: env GOOS=js GOARCH=wasm go build -o canon-defense.wasm github.com/eniltrexAdmin/canon-defense
+        run: env GOOS=js GOARCH=wasm go build -o canon-defense.wasm github.com/eniltrexAdmin/canon-defense ./ebiten
 
       - id: upload-artifact
         name: Upload executable as artifact

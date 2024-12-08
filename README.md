@@ -10,6 +10,7 @@ https://github.dev/hajimehoshi/ebiten
 
 - [ ] Fix animation dead monster on top row
 - [ ] CI/CD pipeline
+- [ ] Sounds!
 
 ### Upcoming Features
 
