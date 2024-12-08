@@ -36,7 +36,7 @@ jobs:
         run: go mod download
 
       - name: Build Go WASM executable
-        run: env GOOS=js GOARCH=wasm go build -o canon-defense.wasm github.com/eniltrexAdmin/canon-defense ./ebiten
+        run: env GOOS=js GOARCH=wasm go build -o canon-defense.wasm ./ebiten
 
       - id: upload-artifact
         name: Upload executable as artifact
