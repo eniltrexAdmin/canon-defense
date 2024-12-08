@@ -14,6 +14,19 @@ type ScreenCoordinate struct {
 	Y float64
 }
 
+type AnimatedSprite struct {
+	Image                         *ebiten.Image
+	SubImageWidth, SubImageHeight int
+}
+
+func NewAnimatedSprite(i *ebiten.Image, subImageWidth, subImageHeight int) AnimatedSprite {
+	return AnimatedSprite{
+		Image:          i,
+		SubImageWidth:  subImageWidth,
+		SubImageHeight: subImageHeight,
+	}
+}
+
 func (sc ScreenCoordinate) Equals(sc2 ScreenCoordinate) bool {
 	return sc.X == sc2.X && sc.Y == sc2.Y
 }
@@ -34,9 +47,7 @@ type EbitenAnimatedSprite struct {
 
 func NewFromCentralPoint(
 	centralX, centralY float64,
-	image *ebiten.Image,
-	subImageWidth int,
-	subImageHeight int,
+	sprite AnimatedSprite,
 	scaleFactor float64,
 	animationSpeed float64,
 ) EbitenAnimatedSprite {
@@ -45,19 +56,19 @@ func NewFromCentralPoint(
 		Y: centralY,
 	}
 
-	intendedWidth := float64(subImageWidth) * scaleFactor
-	intendedHeight := float64(subImageHeight) * scaleFactor
+	intendedWidth := float64(sprite.SubImageWidth) * scaleFactor
+	intendedHeight := float64(sprite.SubImageHeight) * scaleFactor
 
 	return EbitenAnimatedSprite{
 		position:       &cp,
 		width:          intendedWidth,
 		height:         intendedHeight,
-		Image:          image,
+		Image:          sprite.Image,
 		imageScale:     scaleFactor,
-		subImageWidth:  subImageWidth,
-		subImageHeight: subImageHeight,
+		subImageWidth:  sprite.SubImageWidth,
+		subImageHeight: sprite.SubImageHeight,
 		currentFrame:   0,
-		totalFrames:    getTotalFrames(image, subImageWidth),
+		totalFrames:    getTotalFrames(sprite.Image, sprite.SubImageWidth),
 		animationSpeed: animationSpeed,
 		debugColor:     RandomColor(),
 	}

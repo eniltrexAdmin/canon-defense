@@ -18,9 +18,7 @@ func NewMonsterHitState(
 	sprite := ebiten_sprite.NewFromCentralPoint(
 		context.sprite.Position().X,
 		context.sprite.Position().Y,
-		context.animations.Hit,
-		64,
-		64,
+		context.animationsSprites.Hit,
 		1.1,
 		0.1)
 	context.sprite = &sprite

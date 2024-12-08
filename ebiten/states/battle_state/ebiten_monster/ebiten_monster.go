@@ -13,11 +13,11 @@ type EbitenMonsterHitEvent struct {
 	Canon   *game.Canon
 }
 
-type EbitenMonsterImages struct {
-	Idle   *ebiten.Image
-	Hit    *ebiten.Image
-	Dead   *ebiten.Image
-	Attack *ebiten.Image
+type EbitenMonsterAnimationsSprites struct {
+	Idle   ebiten_sprite.AnimatedSprite
+	Hit    ebiten_sprite.AnimatedSprite
+	Dead   ebiten_sprite.AnimatedSprite
+	Attack ebiten_sprite.AnimatedSprite
 }
 
 type EbitenMonsterState interface {
@@ -27,13 +27,13 @@ type EbitenMonsterState interface {
 }
 
 type EbitenMonster struct {
-	state          EbitenMonsterState
-	monster        *game.Monster
-	sprite         *ebiten_sprite.EbitenAnimatedSprite
-	animations     EbitenMonsterImages
-	lifeLine       *LifeLine
-	bulletsInField []*ebiten_canon.EbitenCanonBullet // not convinced if it should be here or only idle state
-	hitTrigger     func(event EbitenMonsterHitEvent)
+	state             EbitenMonsterState
+	monster           *game.Monster
+	sprite            *ebiten_sprite.EbitenAnimatedSprite
+	animationsSprites EbitenMonsterAnimationsSprites
+	lifeLine          *LifeLine
+	bulletsInField    []*ebiten_canon.EbitenCanonBullet // not convinced if it should be here or only idle state
+	hitTrigger        func(event EbitenMonsterHitEvent)
 }
 
 func NewEbitenMonster(monster *game.Monster, posX, posY float64, HitTrigger func(event EbitenMonsterHitEvent)) *EbitenMonster {
@@ -41,9 +41,9 @@ func NewEbitenMonster(monster *game.Monster, posX, posY float64, HitTrigger func
 	coordinate := ebiten_sprite.ScreenCoordinate{X: posX, Y: posY}
 
 	c := &EbitenMonster{
-		monster:    monster,
-		hitTrigger: HitTrigger,
-		animations: LoadMonsterImages(monster),
+		monster:           monster,
+		hitTrigger:        HitTrigger,
+		animationsSprites: LoadMonsterImages(monster),
 	}
 
 	c.state = NewIdleState(c, coordinate)

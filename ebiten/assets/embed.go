@@ -54,9 +54,6 @@ var PurpleWormHit []byte
 //go:embed "monsters/PurpleWorm_die.png"
 var PurpleWormDie []byte
 
-//go:embed "monsters/PurpleWorm_move.png"
-var PurpleWormMove []byte
-
 //go:embed "monsters/PurpleWorm_attack.png"
 var PurpleWormAttack []byte
 
@@ -69,5 +66,41 @@ var DragonHit []byte
 //go:embed "monsters/AdultRedDragon_die.png"
 var DragonDie []byte
 
-//go:embed "monsters/AdultRedDragon_fly.png"
+//go:embed "monsters/AdultRedDragon_attack.png"
 var DragonAttack []byte
+
+//go:embed "monsters/Medusa_idle.png"
+var Medusa []byte
+
+//go:embed "monsters/Medusa_hit.png"
+var MedusaHit []byte
+
+//go:embed "monsters/Medusa_die.png"
+var MedusaDie []byte
+
+//go:embed "monsters/Medusa_attack.png"
+var MedusaAttack []byte
+
+//go:embed "monsters/SerpentFly_idle.png"
+var SerpentFly []byte
+
+//go:embed "monsters/SerpentFly_hit.png"
+var SerpentFlyHit []byte
+
+//go:embed "monsters/SerpentFly_die.png"
+var SerpentFlyDie []byte
+
+//go:embed "monsters/SerpentFly_attack.png"
+var SerpentFlyAttack []byte
+
+//go:embed "monsters/Slime_idle.png"
+var Slime []byte
+
+//go:embed "monsters/Slime_hit.png"
+var SlimeHit []byte
+
+//go:embed "monsters/Slime_die.png"
+var SlimeDie []byte
+
+//go:embed "monsters/Slime_attack.png"
+var SlimeAttack []byte
