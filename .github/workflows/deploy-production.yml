@@ -8,7 +8,7 @@ jobs:
   build-go-project:
     runs-on: ubuntu-latest
     outputs:
-      artifact-name: canon-defense.wasm
+      artifact-name: canon-defense
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -42,8 +42,8 @@ jobs:
         name: Upload executable as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: canon-defense.wasm
-          path: canon-defense.wasm
+          name: canon-defense
+          path: canon-defense
 
 
   deploy-webpage:
