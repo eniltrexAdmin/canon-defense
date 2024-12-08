@@ -8,7 +8,7 @@ jobs:
   build-go-project:
     runs-on: ubuntu-latest
     outputs:
-      artifact-name: canon-defense
+      artifact-name: canon-defense.wasm
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -36,14 +36,13 @@ jobs:
         run: go mod download
 
       - name: Build Go WASM executable
-        run: env GOOS=js GOARCH=wasm go build -o canon-defense ./ebiten
+        run: env GOOS=js GOARCH=wasm go build -o canon-defense.wasm ./ebiten
 
       - id: upload-artifact
         name: Upload executable as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: canon-defense
-          path: canon-defense
+          name: canon-defense.wasm
 
 
   deploy-webpage:
@@ -65,6 +64,7 @@ jobs:
     - name: Copy files to s3 bucket
       shell: bash
       run: |
+        ls -lah
         aws s3 cp html/index.html s3://${{ secrets.AWS_S3_BUCKET_NAME }}/
         aws s3 cp html/main.html s3://${{ secrets.AWS_S3_BUCKET_NAME }}/
         aws s3 cp ${{needs.build-go-project.outputs.artifact-name}} s3://${{ secrets.AWS_S3_BUCKET_NAME }}/
