@@ -1,0 +1,59 @@
+name: Deploy PRODUCTION
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-go-project:
+    runs-on: ubuntu-latest
+    outputs:
+      artifact-name: canon-defense.wasm
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install go language
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21.x'
+      - name: Install dependencies
+        run: go get .
+
+      - name: Unit testing
+        run: go test
+
+      - name: Build Go WASM executable
+        run: env GOOS=js GOARCH=wasm go build -o canon-defense.wasm github.com/eniltrexAdmin/canon-defense
+
+      - id: upload-artifact
+        name: Upload executable as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: canon-defense.wasm
+          path: canon-defense.wasm
+
+
+  deploy-webpage:
+    runs-on: ubuntu-latest
+    needs: build-go-project
+    steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_DEPLOYER_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_DEPLOYER_KEY_SECRET }}
+        aws-region:  eu-west-3
+    - name: Download compiled game artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: ${{needs.build-go-project.outputs.artifact-name}}
+    - name: Copy files to s3 bucket
+      shell: bash
+      run: |
+        aws s3 cp build/index.html s3://${{ secrets.AWS_S3_BUCKET_NAME }}/
+        aws s3 cp build/main.html s3://${{ secrets.AWS_S3_BUCKET_NAME }}/
+        aws s3 cp ${{needs.build-go-project.outputs.artifact-name}} s3://${{ secrets.AWS_S3_BUCKET_NAME }}/
+    - name: Invalidate cache so CF stops serving old non existent versions
+      shell: bash
+      run: |
+        aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_CF_ID }} --paths '/*'
