@@ -74,6 +74,11 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: ${{needs.build-go-project.outputs.artifact-name}}
+
+    - name: Download Wasm executable
+      uses: actions/download-artifact@v4
+      with:
+        name: ${{needs.build-go-project.outputs.wasm-exec-name}}
     - name: Copy files to s3 bucket
       shell: bash
       run: |
