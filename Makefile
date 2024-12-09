@@ -13,3 +13,9 @@ local-build:
 	docker create --name game-builder-container game-builder ls -lah /app/
 	docker cp game-builder-container:/app/tower-defense .
 	docker rm -f game-builder-container
+
+local-build-wasm:
+	docker build -t game-builder -f cicd/Wasm.Dockerfile .
+	docker create --name game-builder-container game-builder ls -lah /app/
+	docker cp game-builder-container:/app/tower-defense .
+	docker rm -f game-builder-container

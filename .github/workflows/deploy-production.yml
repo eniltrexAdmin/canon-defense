@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       artifact-name: canon-defense
+      wasm-exec-name: wasm_exec.js
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -37,6 +38,15 @@ jobs:
 
       - name: Build Go WASM executable
         run: env GOOS=js GOARCH=wasm go build -o canon-defense ./ebiten
+
+      - name: Fetch wasm_exec.js
+        run: cp $(go env GOROOT)/misc/wasm/wasm_exec.js ./wasm_exec.js
+
+      - name: upload-wasm-executreable
+        uses: actions/upload-artifact@v4
+        with:
+          name: wasm_exec.js
+          path: wasm_exec.js
 
       - id: upload-artifact
         name: Upload executable as artifact
@@ -73,6 +83,7 @@ jobs:
         aws s3 cp html/index.html s3://${{ secrets.AWS_S3_BUCKET_NAME }}/
         aws s3 cp html/main.html s3://${{ secrets.AWS_S3_BUCKET_NAME }}/
         aws s3 cp ${{needs.build-go-project.outputs.artifact-name}} s3://${{ secrets.AWS_S3_BUCKET_NAME }}/
+        aws s3 cp ${{needs.build-go-project.outputs.wasm-exec-name}} s3://${{ secrets.AWS_S3_BUCKET_NAME }}/
     - name: Invalidate cache so CF stops serving old non existent versions
       shell: bash
       run: |
