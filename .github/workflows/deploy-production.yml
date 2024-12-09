@@ -42,7 +42,7 @@ jobs:
       - name: Fetch wasm_exec.js
         run: cp $(go env GOROOT)/misc/wasm/wasm_exec.js ./wasm_exec.js
 
-      - name: upload-wasm-executreable
+      - name: upload-wasm-executable
         uses: actions/upload-artifact@v4
         with:
           name: wasm_exec.js
@@ -87,7 +87,7 @@ jobs:
         ls -lah ui
         aws s3 cp html/index.html s3://${{ secrets.AWS_S3_BUCKET_NAME }}/
         aws s3 cp html/main.html s3://${{ secrets.AWS_S3_BUCKET_NAME }}/
-        aws s3 cp ${{needs.build-go-project.outputs.artifact-name}} s3://${{ secrets.AWS_S3_BUCKET_NAME }}/
+        aws s3 cp ${{needs.build-go-project.outputs.artifact-name}} s3://${{ secrets.AWS_S3_BUCKET_NAME }}/ --content-type application/wasm
         aws s3 cp ${{needs.build-go-project.outputs.wasm-exec-name}} s3://${{ secrets.AWS_S3_BUCKET_NAME }}/
     - name: Invalidate cache so CF stops serving old non existent versions
       shell: bash
