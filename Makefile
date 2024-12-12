@@ -17,5 +17,6 @@ local-build:
 local-build-wasm:
 	docker build -t game-builder -f cicd/Wasm.Dockerfile .
 	docker create --name game-builder-container game-builder ls -lah /app/
-	docker cp game-builder-container:/app/tower-defense .
+	docker cp game-builder-container:/app/canon-defense.wasm html/
+	docker cp game-builder-container:/usr/local/go/misc/wasm/wasm_exec.js html/
 	docker rm -f game-builder-container

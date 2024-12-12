@@ -20,4 +20,4 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
 
-RUN GOOS=js GOARCH=wasm go build -o canon-defense ./ebiten
+RUN GOOS=js GOARCH=wasm go build -o canon-defense.wasm ./ebiten

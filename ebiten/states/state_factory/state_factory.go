@@ -3,7 +3,7 @@ package state_factory
 import (
 	"canon-tower-defense/ebiten/states"
 	"canon-tower-defense/ebiten/states/battle_state"
-	"canon-tower-defense/ebiten/states/level_selection_state"
+	"canon-tower-defense/ebiten/states/level_selection"
 	"canon-tower-defense/game"
 	"fmt"
 )
@@ -15,8 +15,7 @@ func (sgs CanonTowerDefenseStaticStateFactory) Create(stateName string, params .
 	case states.BattleStateName:
 		return sgs.battleState(getLevel(params...))
 	case states.LevelSelectionStateName:
-		st := getPointerStack(params...)
-		return sgs.levelSelection(st)
+		return sgs.levelSelection()
 	default:
 		panic(fmt.Sprintf("Unknown state name: %s", stateName))
 	}
@@ -33,21 +32,10 @@ func getLevel(params ...any) int {
 	return level
 }
 
-func getPointerStack(params ...any) *states.StateStack {
-	if len(params) < 1 {
-		panic(fmt.Errorf("missing parameters: player and stack"))
-	}
-	stack, ok := params[0].(*states.StateStack)
-	if !ok {
-		panic(fmt.Errorf("invalid parameter type: stack, real type"))
-	}
-	return stack
-}
-
 func (sgs CanonTowerDefenseStaticStateFactory) battleState(level int) states.State {
 	return battle_state.NewBattleState(level)
 }
 
-func (sgs CanonTowerDefenseStaticStateFactory) levelSelection(stack *states.StateStack) states.State {
-	return level_selection_state.NewLevelSelection(game.LevelSelector{}, stack)
+func (sgs CanonTowerDefenseStaticStateFactory) levelSelection() states.State {
+	return level_selection.NewLevelSelection(game.LevelSelector{})
 }

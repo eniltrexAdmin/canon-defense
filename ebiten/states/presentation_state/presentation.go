@@ -41,21 +41,15 @@ func (p *PresentationState) Update(stack *states.StateStack, keys []ebiten.Key) 
 }
 
 func (p *PresentationState) Draw(screen *ebiten.Image) {
-	// TODO this should be loaded once not on every draw tick
-	img, _, err := ebitenutil.NewImageFromReader(bytes.NewReader(assets.LogoPng))
-	if err != nil {
-		log.Fatal(err)
-	}
-	bgImage := ebiten.NewImageFromImage(img)
 
-	imgWidth := img.Bounds().Dx()
+	imgWidth := p.logoImage.Bounds().Dx()
 	// Calculate the scale factor based on width only
 	scaleX := float64(constants.ScreenWidth) / float64(imgWidth)
 
 	// Scale the Y-axis to maintain the aspect ratio
 	scaleY := scaleX
 
-	imgHeight := img.Bounds().Dy()
+	imgHeight := p.logoImage.Bounds().Dy()
 	newHeight := scaleY * float64(imgHeight)
 
 	// Calculate the offset to center the image vertically
@@ -68,5 +62,5 @@ func (p *PresentationState) Draw(screen *ebiten.Image) {
 
 	options.ColorScale.ScaleAlpha(p.fadeIn)
 	screen.Fill(color.Black)
-	screen.DrawImage(bgImage, options)
+	screen.DrawImage(p.logoImage, options)
 }
