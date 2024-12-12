@@ -84,7 +84,6 @@ jobs:
       run: |
         ls -lah
         pwd
-        ls -lah ui
         aws s3 cp html/index.html s3://${{ secrets.AWS_S3_BUCKET_NAME }}/
         aws s3 cp html/main.html s3://${{ secrets.AWS_S3_BUCKET_NAME }}/
         aws s3 cp ${{needs.build-go-project.outputs.artifact-name}} s3://${{ secrets.AWS_S3_BUCKET_NAME }}/ --content-type application/wasm
