@@ -1,2 +1,58 @@
 <!DOCTYPE html>
-<iframe src="main.html" width="450" height="800"></iframe>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Simple Canon Defense Game</title>
+    <style>
+        #wrapper {
+            margin-left: 100px;
+            display: flex;
+            justify-content: flex-start
+        }
+        h1 {
+            margin-left: 100px;
+        }
+        #wishes{
+            margin-left: 100px;
+        }
+    </style>
+</head>
+<h1>Simple Canon Defense</h1>
+<div id="wrapper">
+
+    <div id="the-game">
+        <iframe src="main.html" width="450" height="800"></iframe>
+    </div>
+
+    <div id="wishes">
+        <p> Game build using <a href ="https://github.dev/hajimehoshi/ebiten"> ebiten game engine</a></p>
+        <p> Sprites (pixel art) by <a href="https://franuka.itch.io/">"Franuka"</a> </p>
+
+        <h3>TODO</h3>
+        <h4> Bug fixing / Missing stuff</h4>
+        <ul>
+            <li>Fix animation dead monster on top row</li>
+            <li>Sounds!</li>
+            <li>Beatable level 3... yeah you cannot beat it.</li>
+            <li>More than 4 levels....😅 </li>
+        </ul>
+        <h4> Upcoming features</h4>
+        <ul>
+            <li>Make some monsters move laterally</li>
+            <li>Try maps with different amount of columns</li>
+        </ul>
+        <h4>Possible Future Features</h4>
+        <p>Those will probably never happen</p>
+        <ul>
+            <li>Random Map Generator</li>
+            <li>Custom Map creators</li>
+            <li>Canon bonuses (multipliers?)</li>
+            <li>Different kinds of canons</li>
+            <li> Types of monsters/canons - so some monsters can only be hit by certain canons or get more/less damage</li>
+        </ul>
+        <p>A lot of stuff on that list should rely on some backend server, which will double the time...</p>
+        <div id="dedication"><p>For my nephews Ethan and Arlo.</p></div>
+    </div>
+
+</div>
+</html>

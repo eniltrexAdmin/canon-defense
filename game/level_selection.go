@@ -9,8 +9,10 @@ type LevelSelector struct{}
 
 type Levels []bool
 
+const TotalLevels int = 10
+
 func (ls LevelSelector) LevelSelection(pl player.Player) Levels {
-	l := make([]bool, 10)
+	l := make([]bool, TotalLevels)
 	for i := 0; i < pl.CurrentLevel; i++ {
 		l[i] = true
 	}

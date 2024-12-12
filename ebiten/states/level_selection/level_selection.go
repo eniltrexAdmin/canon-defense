@@ -9,13 +9,15 @@ import (
 )
 
 type LevelSelection struct {
-	levels game.Levels
+	levels []*Level
 }
+
+// TODO that parameter should be a call, or something more related to the generator, probably inverse DI
 
 func NewLevelSelection(LevelSelector game.LevelSelector) LevelSelection {
 	pl := constants.GlobalContext.Player
 	state := LevelSelection{
-		levels: LevelSelector.LevelSelection(pl),
+		levels: NewLevelSet(LevelSelector.LevelSelection(pl)),
 	}
 
 	return state
@@ -26,13 +28,28 @@ func (p LevelSelection) Debug() string {
 }
 
 func (p LevelSelection) Update(stack *states.StateStack, keys []ebiten.Key) error {
+	x, y := ebiten.CursorPosition()
+	for _, level := range p.levels {
+		level.Update(x, y)
+	}
+
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
-		bs := stack.StateFactory.Create(states.BattleStateName, 1)
-		stack.Switch(bs)
+		for _, level := range p.levels {
+			if level.InBounds(x, y) {
+				GoBattle(stack, level.LevelNumber)
+			}
+		}
 	}
 	return nil
 }
 
-func (p LevelSelection) Draw(screen *ebiten.Image) {
+func GoBattle(stack *states.StateStack, level int) {
+	bs := stack.StateFactory.Create(states.BattleStateName, level)
+	stack.Switch(bs)
+}
 
+func (p LevelSelection) Draw(screen *ebiten.Image) {
+	for _, level := range p.levels {
+		level.Draw(screen)
+	}
 }
