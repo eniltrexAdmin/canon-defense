@@ -9,7 +9,8 @@ import (
 )
 
 type LevelSelection struct {
-	levels []*Level
+	levels   []*Level
+	touchIDs []ebiten.TouchID
 }
 
 // TODO that parameter should be a call, or something more related to the generator, probably inverse DI
@@ -40,6 +41,16 @@ func (p LevelSelection) Update(stack *states.StateStack, keys []ebiten.Key) erro
 			}
 		}
 	}
+	p.touchIDs = inpututil.AppendJustPressedTouchIDs(p.touchIDs[:0])
+	for _, id := range p.touchIDs {
+		x, y = ebiten.TouchPosition(id)
+		for _, level := range p.levels {
+			if level.InBounds(x, y) {
+				GoBattle(stack, level.LevelNumber)
+			}
+		}
+	}
+
 	return nil
 }
 
