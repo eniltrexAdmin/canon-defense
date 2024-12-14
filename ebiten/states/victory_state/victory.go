@@ -29,7 +29,12 @@ func (s *VictoryState) Debug() string {
 
 func (s *VictoryState) Update(stack *states.StateStack, keys []ebiten.Key) error {
 	s.ebitenMonsterTeam.Update()
-	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
+
+	var justPressedTouchIDs []ebiten.TouchID
+	justPressedTouchIDs = inpututil.AppendJustPressedTouchIDs(justPressedTouchIDs)
+	touchJustPressed := len(justPressedTouchIDs) > 0
+
+	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) || touchJustPressed {
 		st := stack.StateFactory.Create(states.LevelSelectionStateName, stack)
 		stack.Pop()
 		stack.Pop()
