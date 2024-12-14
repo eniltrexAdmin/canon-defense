@@ -108,14 +108,14 @@ func (ecd *EbitenCanonDeck) Update() {
 	}
 }
 
-func (ecd *EbitenCanonDeck) InitDrag() {
-	ecd.actionButton.canonSprite.InitDrag()
+func (ecd *EbitenCanonDeck) StrokeStart(st ebiten_sprite.Stroke) {
+	ecd.actionButton.canonSprite.StrokeStart(st)
 	if ecd.actionButton.canonSprite.IsDragged {
 		ecd.draggedSprite = ecd.actionButton.canonSprite
 		return
 	}
 	for _, canon := range ecd.ebitenCanons {
-		canon.sprite.InitDrag()
+		canon.sprite.StrokeStart(st)
 		if canon.sprite.IsDragged {
 			ecd.draggedSprite = canon.sprite
 			return

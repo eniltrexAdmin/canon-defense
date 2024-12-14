@@ -2,6 +2,7 @@ package battle_state
 
 import (
 	"canon-tower-defense/ebiten/constants"
+	"canon-tower-defense/ebiten/ebiten_sprite"
 	"canon-tower-defense/ebiten/states"
 	"canon-tower-defense/ebiten/states/battle_state/ebiten_background"
 	"canon-tower-defense/ebiten/states/battle_state/ebiten_canon"
@@ -11,7 +12,6 @@ import (
 	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
-	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"image/color"
 )
@@ -24,6 +24,7 @@ type BattleState struct {
 	ebitenBattleGround ebiten_background.EbitenBattleGround
 	ebitenMonsterTeam  *ebiten_monster.EbitenMonsterTeam
 	transitionToFire   bool
+	currentStroke      ebiten_sprite.Stroke
 }
 
 func NewBattleState(level int) *BattleState {
@@ -40,6 +41,7 @@ func NewBattleState(level int) *BattleState {
 		ebitenBattleGround: ebg,
 		ebitenMonsterTeam:  &emt,
 		transitionToFire:   false,
+		currentStroke:      nil,
 	}
 
 	ecd := ebiten_canon.NewEbitenCanonDeck(&g, bs.deployCannon, bs.moveCannon)
@@ -63,12 +65,16 @@ func (s *BattleState) moveCannon(from, to int) {
 }
 
 func (s *BattleState) Update(stack *states.StateStack, keys []ebiten.Key) error {
-	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
-		s.ebitenCanonDeck.InitDrag()
+	st, strokeStarted := ebiten_sprite.EbitenStrokeStarted()
+	if strokeStarted {
+		s.currentStroke = st
+		s.ebitenCanonDeck.StrokeStart(st)
 	}
 
-	if inpututil.IsMouseButtonJustReleased(ebiten.MouseButtonLeft) {
-		s.ebitenCanonDeck.ReleaseDrag()
+	if s.currentStroke != nil {
+		if s.currentStroke.IsJustReleased() {
+			s.ebitenCanonDeck.ReleaseDrag()
+		}
 	}
 
 	s.ebitenMonsterTeam.Update()
