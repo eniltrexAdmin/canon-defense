@@ -63,7 +63,7 @@ func (ec *ebitenCanon) fire() {
 func (ec *ebitenCanon) update() {
 	if ec.bullet != nil {
 		ec.bullet.update()
-		if ec.bullet.BulletSprite.PosY < -10 {
+		if !ebiten_sprite.SpriteInScreen(ec.bullet.BulletSprite) {
 			ec.bullet = nil
 		}
 	}

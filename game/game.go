@@ -13,6 +13,7 @@ func (cd CanonBuilder) Create() Canon {
 type Turn int
 
 type CanonTDGame struct {
+	level        int
 	Battleground Battleground
 	CanonDeck    CanonDeck
 	MonsterTeam  MonsterTeam
@@ -21,24 +22,20 @@ type CanonTDGame struct {
 	playerTurn   bool
 }
 
-func NewGame(Battleground Battleground,
-	CanonDeck CanonDeck,
-	MonsterTeam MonsterTeam,
-) CanonTDGame {
-	return CanonTDGame{
-		Battleground: Battleground,
-		CanonDeck:    CanonDeck,
-		MonsterTeam:  MonsterTeam,
-		playerTurn:   true,
-	}
-}
-
 type LevelGenerator interface {
-	Generate(level int) CanonTDGame
+	Generate(level int) (Battleground, CanonDeck, MonsterTeam)
 }
 
 func Start(lg LevelGenerator, level int) CanonTDGame {
-	return lg.Generate(level)
+	bg, cd, mt := lg.Generate(level)
+
+	return CanonTDGame{
+		level:        level,
+		Battleground: bg,
+		CanonDeck:    cd,
+		MonsterTeam:  mt,
+		playerTurn:   true,
+	}
 }
 
 type UserActions interface {
@@ -98,6 +95,10 @@ func (g *CanonTDGame) printBattleGround() {
 	for _, monster := range g.MonsterTeam.Monsters {
 		println(fmt.Sprintf("one Monster with max life %d and current life: %d", monster.MaxLife, monster.HealthPoints))
 	}
+}
+
+func (g *CanonTDGame) GetLeveL() int {
+	return g.level
 }
 
 // Probably this one is just "Server" not needed

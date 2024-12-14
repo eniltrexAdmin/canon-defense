@@ -11,6 +11,7 @@ import (
 
 type MonsterAttackState struct {
 	ebitenMonsterTeam *ebiten_monster.EbitenMonsterTeam
+	currentLevel      int
 }
 
 func newMonsterAttackState(ebitenMonsterTeam *ebiten_monster.EbitenMonsterTeam, g *game.CanonTDGame) MonsterAttackState {
@@ -18,6 +19,7 @@ func newMonsterAttackState(ebitenMonsterTeam *ebiten_monster.EbitenMonsterTeam, 
 	g.MonstersCharge()
 	return MonsterAttackState{
 		ebitenMonsterTeam: ebitenMonsterTeam,
+		currentLevel:      g.GetLeveL(),
 	}
 }
 
@@ -30,7 +32,7 @@ func (s MonsterAttackState) Update(stack *states.StateStack, keys []ebiten.Key) 
 	s.ebitenMonsterTeam.Update()
 	if !s.ebitenMonsterTeam.AreAlive() {
 		// TODO that should follow the factory actually.
-		stack.Switch(victory_state.NewVictoryState())
+		stack.Switch(victory_state.NewVictoryState(s.ebitenMonsterTeam, s.currentLevel))
 	} else {
 		if !s.ebitenMonsterTeam.AreAttacking() {
 			if s.ebitenMonsterTeam.ReachedGameOver() {

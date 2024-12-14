@@ -3,6 +3,7 @@ package victory_state
 import (
 	"canon-tower-defense/ebiten/constants"
 	"canon-tower-defense/ebiten/states"
+	"canon-tower-defense/ebiten/states/battle_state/ebiten_monster"
 	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -11,11 +12,15 @@ import (
 	"golang.org/x/image/font/basicfont"
 )
 
-type VictoryState struct{}
+type VictoryState struct {
+	ebitenMonsterTeam *ebiten_monster.EbitenMonsterTeam
+}
 
-func NewVictoryState() *VictoryState {
-	constants.GlobalContext.Player.LevelCompleted()
-	return &VictoryState{}
+func NewVictoryState(ebitenMonsterTeam *ebiten_monster.EbitenMonsterTeam, completedLevel int) *VictoryState {
+	constants.GlobalContext.Player.LevelCompleted(completedLevel)
+	return &VictoryState{
+		ebitenMonsterTeam: ebitenMonsterTeam,
+	}
 }
 
 func (s *VictoryState) Debug() string {
@@ -23,6 +28,7 @@ func (s *VictoryState) Debug() string {
 }
 
 func (s *VictoryState) Update(stack *states.StateStack, keys []ebiten.Key) error {
+	s.ebitenMonsterTeam.Update()
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
 		st := stack.StateFactory.Create(states.LevelSelectionStateName, stack)
 		stack.Pop()

@@ -1,6 +1,7 @@
 package ebiten_sprite
 
 import (
+	"canon-tower-defense/ebiten/constants"
 	"image"
 	"image/color"
 	"math/rand"
@@ -12,6 +13,11 @@ type Rectangle interface {
 
 func Collision(sprite1, sprite2 Rectangle) bool {
 	return sprite1.GetRectangle().Overlaps(sprite2.GetRectangle())
+}
+
+func SpriteInScreen(sprite1 Rectangle) bool {
+	screenRect := image.Rect(0, 0, constants.ScreenWidth, constants.ScreenHeight)
+	return sprite1.GetRectangle().Overlaps(screenRect)
 }
 
 // About colors

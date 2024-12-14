@@ -4,8 +4,11 @@ import "canon-tower-defense/game"
 
 type HardcodedLevelGenerator struct{}
 
-func (lg HardcodedLevelGenerator) Generate(level int) game.CanonTDGame {
-
+func (lg HardcodedLevelGenerator) Generate(level int) (
+	game.Battleground,
+	game.CanonDeck,
+	game.MonsterTeam,
+) {
 	switch level {
 	case 10:
 		return Level4()

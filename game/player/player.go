@@ -10,6 +10,6 @@ func NewPlayer() Player {
 	}
 }
 
-func (p *Player) LevelCompleted() {
-	p.CurrentLevel++
+func (p *Player) LevelCompleted(l int) {
+	p.CurrentLevel = l + 1
 }

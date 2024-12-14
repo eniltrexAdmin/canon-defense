@@ -51,7 +51,8 @@ func (m *Monster) IsAlive() bool {
 
 func (m *Monster) Hit(c *Canon, turn Turn) {
 	if m.CurrentVisibleRow == NoVisibleRow {
-		panic(fmt.Sprintf("hitting not visible monster?"))
+		println(fmt.Sprintf("hitting not visible monster? name: %s, column: %d, row %d", m.Name, m.CurrentVisibleRow, m.CurrentRow))
+		return
 	}
 
 	if _, exists := m.hitHistory[turn]; exists {
