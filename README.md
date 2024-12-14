@@ -8,9 +8,7 @@ https://github.dev/hajimehoshi/ebiten
 
 ### Bug Fixing / Missing stuff
 
-- [ ] Fix animation dead monster on top row
 - [ ] Sounds!
-- [ ] Add table support!!!
 
 ### Upcoming Features
 

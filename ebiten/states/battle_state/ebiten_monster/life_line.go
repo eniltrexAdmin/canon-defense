@@ -38,7 +38,7 @@ func NewLifeLineFromRectangle(maxLife int, rectangle image.Rectangle) LifeLine {
 
 func (l *LifeLine) SetCurrentLife(cl int) {
 	l.currentLife = cl
-	l.destinationWidth = float32(l.currentLife) / float32(l.maxLife) * l.width
+	l.destinationWidth = max(0, float32(l.currentLife)/float32(l.maxLife)*l.width)
 }
 
 func (l *LifeLine) Update(rectangle image.Rectangle) {
