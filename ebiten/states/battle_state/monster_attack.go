@@ -37,7 +37,7 @@ func (s MonsterAttackState) Update(stack *states.StateStack, keys []ebiten.Key) 
 		if !s.ebitenMonsterTeam.AreAttacking() {
 			if s.ebitenMonsterTeam.ReachedGameOver() {
 				// TODO that should follow the factory actually.
-				stack.Switch(&game_over_state.GameOverState{})
+				stack.Switch(game_over_state.NewGameOverState(s.ebitenMonsterTeam))
 			} else {
 				stack.Pop()
 			}

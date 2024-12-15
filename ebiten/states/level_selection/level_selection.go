@@ -34,23 +34,29 @@ func (p LevelSelection) Update(stack *states.StateStack, keys []ebiten.Key) erro
 		level.Update(x, y)
 	}
 
+	var selectedLevel *Level
+
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
-		for _, level := range p.levels {
-			if level.InBounds(x, y) {
-				GoBattle(stack, level.LevelNumber)
-			}
-		}
+		selectedLevel = p.GetSelectedLevel(x, y)
 	}
 	p.touchIDs = inpututil.AppendJustPressedTouchIDs(p.touchIDs[:0])
 	for _, id := range p.touchIDs {
 		x, y = ebiten.TouchPosition(id)
-		for _, level := range p.levels {
-			if level.InBounds(x, y) {
-				GoBattle(stack, level.LevelNumber)
-			}
-		}
+		selectedLevel = p.GetSelectedLevel(ebiten.TouchPosition(id))
+	}
+	if selectedLevel != nil {
+		GoBattle(stack, selectedLevel.LevelNumber)
 	}
 
+	return nil
+}
+
+func (p LevelSelection) GetSelectedLevel(xInt, yInt int) *Level {
+	for _, level := range p.levels {
+		if level.enabled && level.InBounds(xInt, yInt) {
+			return level
+		}
+	}
 	return nil
 }
 
