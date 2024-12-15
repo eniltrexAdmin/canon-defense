@@ -3,7 +3,6 @@ package ebiten_monster
 import (
 	"canon-tower-defense/ebiten/ebiten_sprite"
 	"canon-tower-defense/ebiten/states/battle_state/ebiten_canon"
-	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -38,17 +37,11 @@ func (m *MonsterHitState) draw(screen *ebiten.Image) {
 func (m *MonsterHitState) update() {
 	if !ebiten_sprite.Collision(m.context.sprite, m.hittingBullet.BulletSprite) {
 		if m.context.monster.IsAlive() {
-			println("Sapparently monser is still alive here!!!!")
 			m.context.setState(
 				NewIdleState(m.context, m.context.sprite.Position()))
 		} else {
-			println("SMONSER IS NOOOOT ALIVE I SHOULD TRANSITION TO DEAD!")
 			m.context.setState(NewMonsterDeadState(m.context))
 		}
-	} else {
-		println("COLLISION IS OOOONNNNN BABE")
-		rect := m.hittingBullet.BulletSprite.GetRectangle()
-		println(fmt.Sprintf("coordinates %d %d %d %d", rect.Min.X, rect.Min.Y, rect.Max.X, rect.Max.Y))
 	}
 
 	m.context.sprite.Update()
