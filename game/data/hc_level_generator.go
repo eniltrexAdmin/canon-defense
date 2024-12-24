@@ -11,9 +11,9 @@ func (lg HardcodedLevelGenerator) Generate(level int) (
 ) {
 	switch level {
 	case 10:
-		return Level8()
+		return Level10()
 	case 9:
-		return Level8()
+		return Level9()
 	case 8:
 		return Level8()
 	case 7:

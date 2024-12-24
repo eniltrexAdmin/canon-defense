@@ -161,11 +161,14 @@ func Level7() (
 	cd := game.NewCanonDeck(bg)
 	mt := game.NewMonsterTeam(bg)
 
-	mt.AddMonster(1, 2, SlimeTemplate())
-	mt.AddMonster(2, 2, SlimeTemplate())
-	mt.AddMonster(3, 2, SlimeTemplate())
-	mt.AddMonster(4, 2, SlimeTemplate())
-	mt.AddMonster(5, 2, SlimeTemplate())
+	mt.AddMonster(10, 2, DragonTemplate())
+	mt.AddMonster(15, 0, DragonTemplate())
+	mt.AddMonster(15, 4, DragonTemplate())
+	mt.AddMonster(20, 0, DragonTemplate())
+	mt.AddMonster(20, 1, DragonTemplate())
+	mt.AddMonster(20, 2, DragonTemplate())
+	mt.AddMonster(20, 3, DragonTemplate())
+	mt.AddMonster(20, 4, DragonTemplate())
 
 	return bg, cd, mt
 }
@@ -175,7 +178,7 @@ func Level8() (
 	game.CanonDeck,
 	game.MonsterTeam,
 ) {
-	bg := game.NewBattleGround(5, 21, 5)
+	bg := game.NewBattleGround(5, 31, 5)
 	cd := game.NewCanonDeck(bg)
 	mt := game.NewMonsterTeam(bg)
 
@@ -187,6 +190,36 @@ func Level8() (
 	mt.AddMonster(20, 2, DragonTemplate())
 	mt.AddMonster(20, 3, DragonTemplate())
 	mt.AddMonster(20, 4, DragonTemplate())
+
+	mt.AddMonster(30, 2, SlimeBossTemplate())
+
+	return bg, cd, mt
+}
+
+func Level9() (
+	game.Battleground,
+	game.CanonDeck,
+	game.MonsterTeam,
+) {
+	bg := game.NewBattleGround(5, 31, 10)
+	cd := game.NewCanonDeck(bg)
+	mt := game.NewMonsterTeam(bg)
+
+	mt.AddMonster(10, 2, AncientDragonTemplate())
+
+	return bg, cd, mt
+}
+
+func Level10() (
+	game.Battleground,
+	game.CanonDeck,
+	game.MonsterTeam,
+) {
+	bg := game.NewBattleGround(6, 21, 10)
+	cd := game.NewCanonDeck(bg)
+	mt := game.NewMonsterTeam(bg)
+
+	mt.AddMonster(7, 2, AncientDragonTemplate())
 
 	return bg, cd, mt
 }

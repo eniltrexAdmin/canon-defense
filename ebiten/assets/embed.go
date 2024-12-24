@@ -104,3 +104,27 @@ var SlimeDie []byte
 
 //go:embed "monsters/Slime_attack.png"
 var SlimeAttack []byte
+
+//go:embed "monsters/Djinn_idle.png"
+var Djinn []byte
+
+//go:embed "monsters/Djinn_hit.png"
+var DjinnHit []byte
+
+//go:embed "monsters/Djinn_die.png"
+var DjinnDie []byte
+
+//go:embed "monsters/Djinn_attack.png"
+var DjinnAttack []byte
+
+//go:embed "monsters/AncientBlackDragon_idle.png"
+var AncientDragon []byte
+
+//go:embed "monsters/AncientBlackDragon_hit.png"
+var AncientDragonHit []byte
+
+//go:embed "monsters/AncientBlackDragon_die.png"
+var AncientDragonDie []byte
+
+//go:embed "monsters/AncientBlackDragon_attack.png"
+var AncientDragonAttack []byte

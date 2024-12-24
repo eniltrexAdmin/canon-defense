@@ -28,6 +28,12 @@ func LoadMonsterImages(m *game.Monster) EbitenMonsterAnimationsSprites {
 		return MedusaImages()
 	case data.Slime:
 		return SlimeImages()
+	case data.Djinn:
+		return DjinnImages()
+	case data.SlimeBoss:
+		return SlimeImages()
+	case data.AncientDragon:
+		return AncientDragonImages()
 	default:
 		panic(fmt.Sprintf("No images for monster: %s", m.Name))
 	}
@@ -176,6 +182,48 @@ func Dragon() EbitenMonsterAnimationsSprites {
 		Attack: ebiten_sprite.NewAnimatedSprite(
 			loadImage(assets.DragonAttack),
 			224, 224,
+		),
+	}
+}
+
+func DjinnImages() EbitenMonsterAnimationsSprites {
+	return EbitenMonsterAnimationsSprites{
+		Idle: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.Djinn),
+			64, 64,
+		),
+		Hit: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.DjinnHit),
+			64, 64,
+		),
+		Dead: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.DjinnDie),
+			64, 64,
+		),
+		Attack: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.DjinnAttack),
+			128, 64,
+		),
+	}
+}
+
+func AncientDragonImages() EbitenMonsterAnimationsSprites {
+	return EbitenMonsterAnimationsSprites{
+		Idle: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.AncientDragon),
+			96, 96,
+		),
+		Hit: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.AncientDragonHit),
+			96, 96,
+		),
+		Dead: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.AncientDragonDie),
+			96, 96,
+		),
+		Attack: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.AncientDragonAttack),
+			288, 288,
 		),
 	}
 }

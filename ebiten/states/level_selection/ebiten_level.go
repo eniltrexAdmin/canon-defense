@@ -10,6 +10,9 @@ import (
 	"image/color"
 )
 
+const levelHeight float64 = 50
+const levelHeightPadding float64 = 20
+
 type Level struct {
 	LevelNumber int
 	PosX        float64
@@ -38,9 +41,9 @@ func NewEbitenLevel(levelNumber int, enabled bool) *Level {
 	return &Level{
 		LevelNumber: levelNumber,
 		PosX:        125,
-		PosY:        float64(10 + ((levelNumber - 1) * 100)),
+		PosY:        10 + float64(levelNumber-1)*(levelHeight+levelHeightPadding),
 		width:       200,
-		height:      75,
+		height:      levelHeight,
 		color:       c,
 		strokeWidth: 3,
 		enabled:     enabled,
@@ -99,7 +102,7 @@ func (l *Level) DrawText(screen *ebiten.Image) {
 
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Scale(1.5, 1.5)
-	op.GeoM.Translate(l.PosX+60, l.PosY+40)
+	op.GeoM.Translate(l.PosX+60, l.PosY+(levelHeight/2+10))
 
 	text.DrawWithOptions(screen,
 		fmt.Sprintf("LEVEL %d", l.LevelNumber),

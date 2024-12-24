@@ -9,6 +9,9 @@ const Slime string = "slime"
 const SerpentFly string = "serpent"
 const PurpleWormName string = "worm"
 const Dragon string = "dragon"
+const Djinn string = "djinn"
+const SlimeBoss string = "slimeBoss"
+const AncientDragon string = "ancientDragon"
 
 func SlimeTemplate() game.MonsterTemplate {
 	return game.MonsterTemplate{
@@ -68,6 +71,33 @@ func DragonTemplate() game.MonsterTemplate {
 	return game.MonsterTemplate{
 		Name:           Dragon,
 		HealthPoints:   game.CanonDamage(15),
+		ColumnMovement: 0,
+		RowMovement:    1,
+	}
+}
+
+func DjinnTemplate() game.MonsterTemplate {
+	return game.MonsterTemplate{
+		Name:           Djinn,
+		HealthPoints:   game.CanonDamage(20),
+		ColumnMovement: 0,
+		RowMovement:    1,
+	}
+}
+
+func SlimeBossTemplate() game.MonsterTemplate {
+	return game.MonsterTemplate{
+		Name:           SlimeBoss,
+		HealthPoints:   game.CanonDamage(100),
+		ColumnMovement: 0,
+		RowMovement:    1,
+	}
+}
+
+func AncientDragonTemplate() game.MonsterTemplate {
+	return game.MonsterTemplate{
+		Name:           AncientDragon,
+		HealthPoints:   game.CanonDamage(50),
 		ColumnMovement: 0,
 		RowMovement:    1,
 	}

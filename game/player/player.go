@@ -6,7 +6,7 @@ type Player struct {
 
 func NewPlayer() Player {
 	return Player{
-		CurrentLevel: 1,
+		CurrentLevel: 100,
 	}
 }
 
