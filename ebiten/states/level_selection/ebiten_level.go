@@ -38,10 +38,21 @@ func NewEbitenLevel(levelNumber int, enabled bool) *Level {
 	if !enabled {
 		c = disabledColor
 	}
+	column := 1
+	if levelNumber > 10 {
+		column = 2
+	}
+	var posX float64 = 20
+	posY := 10 + float64(levelNumber-1)*(levelHeight+levelHeightPadding)
+	if column > 1 {
+		posX = 240
+		posY = 10 + float64(levelNumber-11)*(levelHeight+levelHeightPadding)
+	}
+
 	return &Level{
 		LevelNumber: levelNumber,
-		PosX:        125,
-		PosY:        10 + float64(levelNumber-1)*(levelHeight+levelHeightPadding),
+		PosX:        posX,
+		PosY:        posY,
 		width:       200,
 		height:      levelHeight,
 		color:       c,

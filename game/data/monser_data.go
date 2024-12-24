@@ -10,6 +10,12 @@ const SerpentFly string = "serpent"
 const PurpleWormName string = "worm"
 const Dragon string = "dragon"
 const Djinn string = "djinn"
+const DeathKnight string = "death_knight"
+const FrostGiant string = "frost_giant"
+const Oni string = "oni"
+const OwlBear string = "owl_bear"
+const Samurai string = "samurai"
+const Tengu string = "tengu"
 const SlimeBoss string = "slimeBoss"
 const AncientDragon string = "ancientDragon"
 
@@ -79,6 +85,60 @@ func DragonTemplate() game.MonsterTemplate {
 func DjinnTemplate() game.MonsterTemplate {
 	return game.MonsterTemplate{
 		Name:           Djinn,
+		HealthPoints:   game.CanonDamage(20),
+		ColumnMovement: 0,
+		RowMovement:    1,
+	}
+}
+
+func DeathKnightTemplate() game.MonsterTemplate {
+	return game.MonsterTemplate{
+		Name:           DeathKnight,
+		HealthPoints:   game.CanonDamage(20),
+		ColumnMovement: 0,
+		RowMovement:    1,
+	}
+}
+
+func FrostGianTemplate() game.MonsterTemplate {
+	return game.MonsterTemplate{
+		Name:           FrostGiant,
+		HealthPoints:   game.CanonDamage(20),
+		ColumnMovement: 0,
+		RowMovement:    1,
+	}
+}
+
+func OniTemplate() game.MonsterTemplate {
+	return game.MonsterTemplate{
+		Name:           Oni,
+		HealthPoints:   game.CanonDamage(20),
+		ColumnMovement: 0,
+		RowMovement:    1,
+	}
+}
+
+func OwlBearTemplate() game.MonsterTemplate {
+	return game.MonsterTemplate{
+		Name:           OwlBear,
+		HealthPoints:   game.CanonDamage(20),
+		ColumnMovement: 0,
+		RowMovement:    1,
+	}
+}
+
+func SamuraiTemplate() game.MonsterTemplate {
+	return game.MonsterTemplate{
+		Name:           Samurai,
+		HealthPoints:   game.CanonDamage(20),
+		ColumnMovement: 0,
+		RowMovement:    1,
+	}
+}
+
+func TenguTemplate() game.MonsterTemplate {
+	return game.MonsterTemplate{
+		Name:           Tengu,
 		HealthPoints:   game.CanonDamage(20),
 		ColumnMovement: 0,
 		RowMovement:    1,

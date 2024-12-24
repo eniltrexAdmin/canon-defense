@@ -30,6 +30,18 @@ func LoadMonsterImages(m *game.Monster) EbitenMonsterAnimationsSprites {
 		return SlimeImages()
 	case data.Djinn:
 		return DjinnImages()
+	case data.DeathKnight:
+		return DeathKnightImages()
+	case data.FrostGiant:
+		return FrostGiantImages()
+	case data.OwlBear:
+		return OwlBearImages()
+	case data.Oni:
+		return OniImages()
+	case data.Samurai:
+		return SamuraiImages()
+	case data.Tengu:
+		return TenguImages()
 	case data.SlimeBoss:
 		return SlimeImages()
 	case data.AncientDragon:
@@ -223,6 +235,132 @@ func AncientDragonImages() EbitenMonsterAnimationsSprites {
 		),
 		Attack: ebiten_sprite.NewAnimatedSprite(
 			loadImage(assets.AncientDragonAttack),
+			288, 288,
+		),
+	}
+}
+
+func DeathKnightImages() EbitenMonsterAnimationsSprites {
+	return EbitenMonsterAnimationsSprites{
+		Idle: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.DeathKnight),
+			96, 96,
+		),
+		Hit: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.DeathKnightHit),
+			96, 96,
+		),
+		Dead: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.DeathKnightDie),
+			96, 96,
+		),
+		Attack: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.DeathKnightAttack),
+			288, 288,
+		),
+	}
+}
+
+func FrostGiantImages() EbitenMonsterAnimationsSprites {
+	return EbitenMonsterAnimationsSprites{
+		Idle: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.FrostGiant),
+			96, 96,
+		),
+		Hit: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.FrostGiantHit),
+			96, 96,
+		),
+		Dead: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.FrostGiantDie),
+			96, 96,
+		),
+		Attack: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.FrostGiantAttack),
+			288, 288,
+		),
+	}
+}
+
+func OniImages() EbitenMonsterAnimationsSprites {
+	return EbitenMonsterAnimationsSprites{
+		Idle: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.Oni),
+			96, 96,
+		),
+		Hit: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.OniHit),
+			96, 96,
+		),
+		Dead: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.OniDie),
+			96, 96,
+		),
+		Attack: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.OniAttack),
+			288, 288,
+		),
+	}
+}
+
+func OwlBearImages() EbitenMonsterAnimationsSprites {
+	return EbitenMonsterAnimationsSprites{
+		Idle: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.Owlbear),
+			96, 96,
+		),
+		Hit: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.OwlbearHit),
+			96, 96,
+		),
+		Dead: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.OwlbearDie),
+			96, 96,
+		),
+		Attack: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.OwlbearAttack),
+			288, 288,
+		),
+	}
+}
+
+func SamuraiImages() EbitenMonsterAnimationsSprites {
+	return EbitenMonsterAnimationsSprites{
+		Idle: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.Samurai),
+			96, 96,
+		),
+		Hit: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.SamuraiHit),
+			96, 96,
+		),
+		Dead: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.SamuraiDie),
+			96, 96,
+		),
+		Attack: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.SamuraiAttack),
+			288, 288,
+		),
+	}
+}
+
+func TenguImages() EbitenMonsterAnimationsSprites {
+	return EbitenMonsterAnimationsSprites{
+		Idle: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.Tengu),
+			96, 96,
+		),
+		Hit: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.TenguHit),
+			96, 96,
+		),
+		Dead: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.TenguDie),
+			96, 96,
+		),
+		Attack: ebiten_sprite.NewAnimatedSprite(
+			loadImage(assets.TenguAttack),
 			288, 288,
 		),
 	}

@@ -128,3 +128,75 @@ var AncientDragonDie []byte
 
 //go:embed "monsters/AncientBlackDragon_attack.png"
 var AncientDragonAttack []byte
+
+//go:embed "monsters/DeathKnight_idle.png"
+var DeathKnight []byte
+
+//go:embed "monsters/DeathKnight_hit.png"
+var DeathKnightHit []byte
+
+//go:embed "monsters/DeathKnight_die.png"
+var DeathKnightDie []byte
+
+//go:embed "monsters/DeathKnight_attack.png"
+var DeathKnightAttack []byte
+
+//go:embed "monsters/FrostGiant_idle.png"
+var FrostGiant []byte
+
+//go:embed "monsters/FrostGiant_hit.png"
+var FrostGiantHit []byte
+
+//go:embed "monsters/FrostGiant_die.png"
+var FrostGiantDie []byte
+
+//go:embed "monsters/FrostGiant_attack.png"
+var FrostGiantAttack []byte
+
+//go:embed "monsters/Oni_idle.png"
+var Oni []byte
+
+//go:embed "monsters/Oni_hit.png"
+var OniHit []byte
+
+//go:embed "monsters/Oni_die.png"
+var OniDie []byte
+
+//go:embed "monsters/Oni_attack.png"
+var OniAttack []byte
+
+//go:embed "monsters/Owlbear_idle.png"
+var Owlbear []byte
+
+//go:embed "monsters/Owlbear_hit.png"
+var OwlbearHit []byte
+
+//go:embed "monsters/Owlbear_die.png"
+var OwlbearDie []byte
+
+//go:embed "monsters/Owlbear_attack.png"
+var OwlbearAttack []byte
+
+//go:embed "monsters/Samurai_idle.png"
+var Samurai []byte
+
+//go:embed "monsters/Samurai_hit.png"
+var SamuraiHit []byte
+
+//go:embed "monsters/Samurai_die.png"
+var SamuraiDie []byte
+
+//go:embed "monsters/Samurai_attack.png"
+var SamuraiAttack []byte
+
+//go:embed "monsters/Tengu_idle.png"
+var Tengu []byte
+
+//go:embed "monsters/Tengu_hit.png"
+var TenguHit []byte
+
+//go:embed "monsters/Tengu_die.png"
+var TenguDie []byte
+
+//go:embed "monsters/Tengu_attack.png"
+var TenguAttack []byte

@@ -9,7 +9,7 @@ type LevelSelector struct{}
 
 type Levels []bool
 
-const TotalLevels int = 10
+const TotalLevels int = 15
 
 func (ls LevelSelector) LevelSelection(pl player.Player) Levels {
 	l := make([]bool, TotalLevels)
