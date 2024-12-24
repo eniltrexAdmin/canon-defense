@@ -40,3 +40,8 @@ func (bg Battleground) toVisibleRow(gameRow BattleGroundRow) BattleGroundRow {
 	visibleRow := bg.VisibleRows - gameRow - 1
 	return visibleRow
 }
+
+func ToVisibleRow(visibleRows, gameRow BattleGroundRow) BattleGroundRow {
+	visibleRow := visibleRows - gameRow - 1
+	return visibleRow
+}

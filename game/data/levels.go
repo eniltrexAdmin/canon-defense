@@ -201,11 +201,37 @@ func Level9() (
 	game.CanonDeck,
 	game.MonsterTeam,
 ) {
-	bg := game.NewBattleGround(5, 31, 10)
+	bg := game.NewBattleGround(5, 31, 7)
 	cd := game.NewCanonDeck(bg)
 	mt := game.NewMonsterTeam(bg)
 
-	mt.AddMonster(10, 2, AncientDragonTemplate())
+	mt.AddMonster(8, 1, SlimeTemplate())
+	mt.AddMonster(8, 4, SlimeTemplate())
+	mt.AddMonster(9, 2, FrostGianTemplate())
+	mt.AddMonster(12, 1, OniTemplate())
+	mt.AddMonster(15, 3, TenguTemplate())
+	mt.AddMonster(20, 0, SamuraiTemplate())
+	mt.AddMonster(20, 1, SamuraiTemplate())
+	mt.AddMonster(20, 2, SamuraiTemplate())
+	mt.AddMonster(21, 0, SamuraiTemplate())
+	mt.AddMonster(21, 1, SamuraiTemplate())
+	mt.AddMonster(21, 2, SamuraiTemplate())
+	mt.AddMonster(22, 0, SamuraiTemplate())
+	mt.AddMonster(22, 1, SamuraiTemplate())
+	mt.AddMonster(22, 2, SamuraiTemplate())
+	mt.AddMonster(23, 0, SamuraiTemplate())
+	mt.AddMonster(23, 1, SamuraiTemplate())
+	mt.AddMonster(23, 2, SamuraiTemplate())
+	mt.AddMonster(24, 0, SamuraiTemplate())
+	mt.AddMonster(24, 1, SamuraiTemplate())
+	mt.AddMonster(24, 2, SamuraiTemplate())
+	mt.AddMonster(25, 0, SamuraiTemplate())
+	mt.AddMonster(25, 1, SamuraiTemplate())
+	mt.AddMonster(25, 2, SamuraiTemplate())
+	mt.AddMonster(26, 0, SamuraiTemplate())
+	mt.AddMonster(26, 1, SamuraiTemplate())
+	mt.AddMonster(26, 2, SamuraiTemplate())
+	mt.AddMonster(28, 4, DeathKnightTemplate())
 
 	return bg, cd, mt
 }
@@ -215,11 +241,29 @@ func Level10() (
 	game.CanonDeck,
 	game.MonsterTeam,
 ) {
-	bg := game.NewBattleGround(6, 21, 10)
+	bg := game.NewBattleGround(6, 21, 8)
 	cd := game.NewCanonDeck(bg)
 	mt := game.NewMonsterTeam(bg)
 
-	mt.AddMonster(7, 2, AncientDragonTemplate())
+	mt.AddMonster(4, 1, DeathKnightTemplate())
+	mt.AddMonster(4, 2, FrostGianTemplate())
+	mt.AddMonster(4, 3, OniTemplate())
+	mt.AddMonster(4, 4, OwlBearTemplate())
+	mt.AddMonster(5, 0, SamuraiTemplate())
+
+	return bg, cd, mt
+}
+
+func Level15() (
+	game.Battleground,
+	game.CanonDeck,
+	game.MonsterTeam,
+) {
+	bg := game.NewBattleGround(5, 31, 8)
+	cd := game.NewCanonDeck(bg)
+	mt := game.NewMonsterTeam(bg)
+
+	mt.AddMonster(30, 2, AncientDragonTemplate())
 
 	return bg, cd, mt
 }

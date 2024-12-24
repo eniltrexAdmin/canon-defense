@@ -37,7 +37,8 @@ func (mt *MonsterTeam) AddMonster(indexRow, indexColumn int, m MonsterTemplate) 
 
 func (mt *MonsterTeam) charge() {
 	for _, monster := range mt.Monsters {
-		monster.CurrentRow = monster.CurrentRow - 1
-		monster.CurrentVisibleRow = mt.Battleground.toVisibleRow(monster.CurrentRow)
+		monster.Move(mt.Battleground.VisibleRows)
+		//monster.CurrentRow = monster.CurrentRow - BattleGroundRow(monster.RowMovement)
+		//monster.CurrentVisibleRow = mt.Battleground.toVisibleRow(monster.CurrentRow)
 	}
 }

@@ -140,7 +140,7 @@ func TenguTemplate() game.MonsterTemplate {
 	return game.MonsterTemplate{
 		Name:           Tengu,
 		HealthPoints:   game.CanonDamage(20),
-		ColumnMovement: 0,
+		ColumnMovement: 1,
 		RowMovement:    1,
 	}
 }
@@ -159,6 +159,6 @@ func AncientDragonTemplate() game.MonsterTemplate {
 		Name:           AncientDragon,
 		HealthPoints:   game.CanonDamage(50),
 		ColumnMovement: 0,
-		RowMovement:    1,
+		RowMovement:    2,
 	}
 }

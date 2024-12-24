@@ -69,3 +69,8 @@ type MonsterHit struct {
 	Damage CanonDamage
 	Turn   Turn
 }
+
+func (m *Monster) Move(visibleRows BattleGroundRow) {
+	m.CurrentRow = m.CurrentRow - BattleGroundRow(m.RowMovement)
+	m.CurrentVisibleRow = ToVisibleRow(visibleRows, m.CurrentRow)
+}
