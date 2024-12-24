@@ -6,11 +6,21 @@ import (
 
 type BattlegroundMovement uint8
 
+type LateralMovement interface {
+	nextColumnPlacement(m Monster, bg Battleground) BattleGroundColumn
+}
+
+type NoLateralMovement struct{}
+
+func (nlm NoLateralMovement) nextColumnPlacement(m Monster, bg Battleground) BattleGroundColumn {
+	return m.CurrentColumn
+}
+
 type MonsterTemplate struct {
-	Name           string
-	HealthPoints   CanonDamage
-	RowMovement    BattlegroundMovement
-	ColumnMovement BattlegroundMovement
+	Name            string
+	HealthPoints    CanonDamage
+	RowMovement     BattlegroundMovement
+	LateralMovement LateralMovement
 }
 
 type Monster struct {
@@ -18,7 +28,7 @@ type Monster struct {
 	MaxLife           CanonDamage
 	HealthPoints      CanonDamage
 	RowMovement       BattlegroundMovement
-	columnMovement    BattlegroundMovement
+	lateralMovement   LateralMovement
 	CurrentColumn     BattleGroundColumn
 	CurrentRow        BattleGroundRow
 	CurrentVisibleRow BattleGroundRow
@@ -37,7 +47,7 @@ func newMonsterInBattleGround(
 		MaxLife:           m.HealthPoints,
 		HealthPoints:      m.HealthPoints,
 		RowMovement:       m.RowMovement,
-		columnMovement:    m.ColumnMovement,
+		lateralMovement:   m.LateralMovement,
 		CurrentColumn:     column,
 		CurrentRow:        row,
 		CurrentVisibleRow: bg.toVisibleRow(row),
@@ -70,7 +80,8 @@ type MonsterHit struct {
 	Turn   Turn
 }
 
-func (m *Monster) Move(visibleRows BattleGroundRow) {
+func (m *Monster) Move(bg Battleground) {
 	m.CurrentRow = m.CurrentRow - BattleGroundRow(m.RowMovement)
-	m.CurrentVisibleRow = ToVisibleRow(visibleRows, m.CurrentRow)
+	m.CurrentVisibleRow = ToVisibleRow(bg.VisibleRows, m.CurrentRow)
+	m.CurrentColumn = m.lateralMovement.nextColumnPlacement(*m, bg)
 }

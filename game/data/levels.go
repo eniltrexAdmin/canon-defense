@@ -208,8 +208,8 @@ func Level9() (
 	mt.AddMonster(8, 1, SlimeTemplate())
 	mt.AddMonster(8, 4, SlimeTemplate())
 	mt.AddMonster(9, 2, FrostGianTemplate())
-	mt.AddMonster(12, 1, OniTemplate())
-	mt.AddMonster(15, 3, TenguTemplate())
+	mt.AddMonster(12, 1, FrostGianTemplate())
+	mt.AddMonster(15, 3, FrostGianTemplate())
 	mt.AddMonster(20, 0, SamuraiTemplate())
 	mt.AddMonster(20, 1, SamuraiTemplate())
 	mt.AddMonster(20, 2, SamuraiTemplate())
@@ -245,11 +245,10 @@ func Level10() (
 	cd := game.NewCanonDeck(bg)
 	mt := game.NewMonsterTeam(bg)
 
-	mt.AddMonster(4, 1, DeathKnightTemplate())
-	mt.AddMonster(4, 2, FrostGianTemplate())
-	mt.AddMonster(4, 3, OniTemplate())
-	mt.AddMonster(4, 4, OwlBearTemplate())
-	mt.AddMonster(5, 0, SamuraiTemplate())
+	mt.AddMonster(4, 1, TenguTemplate())
+	mt.AddMonster(4, 2, TenguTemplate())
+	mt.AddMonster(4, 3, TenguTemplate())
+	mt.AddMonster(4, 4, TenguTemplate())
 
 	return bg, cd, mt
 }
