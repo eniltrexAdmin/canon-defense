@@ -15,8 +15,8 @@ type MonsterAttackState struct {
 }
 
 func newMonsterAttackState(ebitenMonsterTeam *ebiten_monster.EbitenMonsterTeam, g *game.CanonTDGame) MonsterAttackState {
-	ebitenMonsterTeam.Advance()
 	g.MonstersCharge()
+	ebitenMonsterTeam.Advance()
 	return MonsterAttackState{
 		ebitenMonsterTeam: ebitenMonsterTeam,
 		currentLevel:      g.GetLeveL(),

@@ -6,16 +6,6 @@ import (
 
 type BattlegroundMovement uint8
 
-type LateralMovement interface {
-	nextColumnPlacement(m Monster, bg Battleground) BattleGroundColumn
-}
-
-type NoLateralMovement struct{}
-
-func (nlm NoLateralMovement) nextColumnPlacement(m Monster, bg Battleground) BattleGroundColumn {
-	return m.CurrentColumn
-}
-
 type MonsterTemplate struct {
 	Name            string
 	HealthPoints    CanonDamage
@@ -68,6 +58,7 @@ func (m *Monster) Hit(c *Canon, turn Turn) {
 	if _, exists := m.hitHistory[turn]; exists {
 		return
 	}
+	// TODO I would like to check the column.
 	m.HealthPoints -= c.Damage
 	m.hitHistory[turn] = MonsterHit{
 		Damage: c.Damage,
@@ -83,5 +74,7 @@ type MonsterHit struct {
 func (m *Monster) Move(bg Battleground) {
 	m.CurrentRow = m.CurrentRow - BattleGroundRow(m.RowMovement)
 	m.CurrentVisibleRow = ToVisibleRow(bg.VisibleRows, m.CurrentRow)
+	println(fmt.Sprintf("monster is in column: %d", m.CurrentColumn))
 	m.CurrentColumn = m.lateralMovement.nextColumnPlacement(*m, bg)
+	println(fmt.Sprintf("monster moved to column: %d", m.CurrentColumn))
 }

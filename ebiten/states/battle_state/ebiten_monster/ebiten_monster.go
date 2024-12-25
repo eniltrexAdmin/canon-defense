@@ -72,11 +72,11 @@ func (e *EbitenMonster) DeckFiring(bullets []*ebiten_canon.EbitenCanonBullet) {
 	e.bulletsInField = bullets
 }
 
-func (e *EbitenMonster) Attack(stepHeight float64) {
+func (e *EbitenMonster) Attack(stepHeight, stepWidth float64) {
 	if !e.monster.IsAlive() {
 		return
 	}
-	e.setState(NewMonsterAttackState(e, stepHeight))
+	e.setState(NewMonsterAttackState(e, stepHeight, stepWidth))
 }
 
 func (e *EbitenMonster) IsAttacking() bool {

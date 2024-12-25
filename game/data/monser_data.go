@@ -136,11 +136,11 @@ func SamuraiTemplate() game.MonsterTemplate {
 	}
 }
 
-func TenguTemplate() game.MonsterTemplate {
+func TenguTemplate(m *game.ZigZagMovement) game.MonsterTemplate {
 	return game.MonsterTemplate{
 		Name:            Tengu,
-		HealthPoints:    game.CanonDamage(20),
-		LateralMovement: game.NoLateralMovement{},
+		HealthPoints:    game.CanonDamage(5),
+		LateralMovement: m,
 		RowMovement:     1,
 	}
 }

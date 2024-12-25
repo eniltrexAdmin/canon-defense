@@ -13,7 +13,7 @@ type MonsterAttackState struct {
 	destination ebiten_sprite.ScreenCoordinate
 }
 
-func NewMonsterAttackState(context *EbitenMonster, stepHeight float64) *MonsterAttackState {
+func NewMonsterAttackState(context *EbitenMonster, stepHeight, lateralHeight float64) *MonsterAttackState {
 	position := context.sprite.Position()
 	sprite := ebiten_sprite.NewFromCentralPoint(
 		position.X,
@@ -24,8 +24,10 @@ func NewMonsterAttackState(context *EbitenMonster, stepHeight float64) *MonsterA
 	context.sprite = &sprite
 	stepSize := stepHeight * float64(context.monster.RowMovement)
 
+	destX := lateralHeight*float64(context.monster.CurrentColumn) + lateralHeight/2
+
 	destination := ebiten_sprite.ScreenCoordinate{
-		X: position.X,
+		X: destX,
 		Y: stepSize + position.Y,
 	}
 

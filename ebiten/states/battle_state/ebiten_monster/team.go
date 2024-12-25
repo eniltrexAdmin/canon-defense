@@ -12,6 +12,7 @@ import (
 type EbitenMonsterTeam struct {
 	visibleMonsters []*EbitenMonster
 	advanceStep     float64
+	lateralStep     float64
 }
 
 func NewEbitenMonsterTeam(g *game.CanonTDGame) EbitenMonsterTeam {
@@ -42,6 +43,7 @@ func NewEbitenMonsterTeam(g *game.CanonTDGame) EbitenMonsterTeam {
 	return EbitenMonsterTeam{
 		visibleMonsters: visibleMonsters,
 		advanceStep:     float64(availableHeight),
+		lateralStep:     float64(availableWidth),
 	}
 }
 
@@ -65,7 +67,7 @@ func (emt *EbitenMonsterTeam) DeckFiring(bullets []*ebiten_canon.EbitenCanonBull
 
 func (emt *EbitenMonsterTeam) Advance() {
 	for _, visibleMonsters := range emt.visibleMonsters {
-		visibleMonsters.Attack(emt.advanceStep)
+		visibleMonsters.Attack(emt.advanceStep, emt.lateralStep)
 	}
 }
 
