@@ -247,17 +247,17 @@ func Level10() (
 
 	mt.AddMonster(4, 1, TenguTemplate(game.NewZigZagMovement(
 		"right",
-		game.BattleGroundColumn(0),
+		game.BattleGroundColumn(1),
 		game.BattleGroundColumn(2), bg,
 	)))
 	mt.AddMonster(5, 2, TenguTemplate(game.NewZigZagMovement(
 		"right",
-		game.BattleGroundColumn(1),
+		game.BattleGroundColumn(2),
 		game.BattleGroundColumn(3), bg,
 	)))
 	mt.AddMonster(6, 3, TenguTemplate(game.NewZigZagMovement(
 		"right",
-		game.BattleGroundColumn(2),
+		game.BattleGroundColumn(3),
 		game.BattleGroundColumn(4), bg,
 	)))
 	mt.AddMonster(7, 4, TenguTemplate(game.NewZigZagMovement(
