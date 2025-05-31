@@ -5,7 +5,8 @@ import (
 	"canon-tower-defense/ebiten/states"
 	"canon-tower-defense/ebiten/states/presentation_state"
 	"canon-tower-defense/ebiten/states/state_factory"
-	"canon-tower-defense/game/player"
+	"canon-tower-defense/game"
+	"canon-tower-defense/game/session"
 	"errors"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -18,7 +19,7 @@ type EbitenGame struct {
 }
 
 func NewGame() EbitenGame {
-	constants.GlobalContext.Player = player.NewPlayer()
+	constants.GlobalContext.Session = session.NewSession(game.TotalLevels)
 
 	factory := state_factory.CanonTowerDefenseStaticStateFactory{}
 

@@ -1,6 +1,6 @@
 package constants
 
-import "canon-tower-defense/game/player"
+import "canon-tower-defense/game/session"
 
 const (
 	ScreenWidth  = 450
@@ -8,7 +8,7 @@ const (
 )
 
 type GameContext struct {
-	Player player.Player
+	Session session.Session
 }
 
 var GlobalContext = &GameContext{}

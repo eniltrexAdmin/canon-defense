@@ -22,6 +22,8 @@ type CanonTDGame struct {
 	playerTurn   bool
 }
 
+const TotalLevels int = 20
+
 type LevelGenerator interface {
 	Generate(level int) (Battleground, CanonDeck, MonsterTeam)
 }

@@ -3,7 +3,6 @@ package level_selection
 import (
 	"canon-tower-defense/ebiten/constants"
 	"canon-tower-defense/ebiten/states"
-	"canon-tower-defense/game"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
@@ -13,12 +12,10 @@ type LevelSelection struct {
 	touchIDs []ebiten.TouchID
 }
 
-// TODO that parameter should be a call, or something more related to the generator, probably inverse DI
-
-func NewLevelSelection(LevelSelector game.LevelSelector) LevelSelection {
-	pl := constants.GlobalContext.Player
+func NewLevelSelection() LevelSelection {
+	pl := constants.GlobalContext.Session
 	state := LevelSelection{
-		levels: NewLevelSet(LevelSelector.LevelSelection(pl)),
+		levels: NewLevelSet(pl.CompletedLevels),
 	}
 
 	return state

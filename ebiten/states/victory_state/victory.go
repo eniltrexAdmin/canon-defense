@@ -17,7 +17,7 @@ type VictoryState struct {
 }
 
 func NewVictoryState(ebitenMonsterTeam *ebiten_monster.EbitenMonsterTeam, completedLevel int) *VictoryState {
-	constants.GlobalContext.Player.LevelCompleted(completedLevel)
+	constants.GlobalContext.Session.CompleteLevel(completedLevel - 1)
 	return &VictoryState{
 		ebitenMonsterTeam: ebitenMonsterTeam,
 	}

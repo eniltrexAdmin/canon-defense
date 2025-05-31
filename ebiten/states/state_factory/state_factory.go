@@ -4,7 +4,6 @@ import (
 	"canon-tower-defense/ebiten/states"
 	"canon-tower-defense/ebiten/states/battle_state"
 	"canon-tower-defense/ebiten/states/level_selection"
-	"canon-tower-defense/game"
 	"fmt"
 )
 
@@ -37,5 +36,5 @@ func (sgs CanonTowerDefenseStaticStateFactory) battleState(level int) states.Sta
 }
 
 func (sgs CanonTowerDefenseStaticStateFactory) levelSelection() states.State {
-	return level_selection.NewLevelSelection(game.LevelSelector{})
+	return level_selection.NewLevelSelection()
 }

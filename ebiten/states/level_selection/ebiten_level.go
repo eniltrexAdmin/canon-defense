@@ -1,7 +1,6 @@
 package level_selection
 
 import (
-	"canon-tower-defense/game"
 	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
@@ -23,20 +22,21 @@ type Level struct {
 	strokeWidth float32
 	enabled     bool
 	hover       bool
+	completed   bool
 }
 
-func NewLevelSet(l game.Levels) []*Level {
+func NewLevelSet(completedLevels []bool) []*Level {
 	var levels []*Level
-	for levelNumber, enabled := range l {
-		levels = append(levels, NewEbitenLevel(levelNumber+1, enabled))
+	for levelNumber, completed := range completedLevels {
+		levels = append(levels, NewEbitenLevel(levelNumber+1, completed))
 	}
 	return levels
 }
 
-func NewEbitenLevel(levelNumber int, enabled bool) *Level {
-	c := enabledColor
-	if !enabled {
-		c = disabledColor
+func NewEbitenLevel(levelNumber int, completed bool) *Level {
+	c := completedColor
+	if !completed {
+		c = enabledColor
 	}
 	column := 1
 	if levelNumber > 10 {
@@ -57,8 +57,9 @@ func NewEbitenLevel(levelNumber int, enabled bool) *Level {
 		height:      levelHeight,
 		color:       c,
 		strokeWidth: 3,
-		enabled:     enabled,
+		enabled:     true, // leaving enabled maybe for the future...yeah I know yagni.
 		hover:       false,
+		completed:   completed,
 	}
 }
 
@@ -73,6 +74,13 @@ var disabledColor = color.RGBA{
 	R: uint8(100),
 	G: uint8(100),
 	B: uint8(100),
+	A: 0,
+}
+
+var completedColor = color.RGBA{
+	R: uint8(0),
+	G: uint8(255),
+	B: uint8(0),
 	A: 0,
 }
 
