@@ -1,6 +1,8 @@
 package battle_state
 
 import (
+	"canon-tower-defense/ebiten/assets"
+	"canon-tower-defense/ebiten/ebiten_sound"
 	"canon-tower-defense/ebiten/states"
 	"canon-tower-defense/ebiten/states/battle_state/ebiten_canon"
 	"canon-tower-defense/ebiten/states/battle_state/ebiten_monster"
@@ -21,6 +23,8 @@ func NewFireCannonState(
 ) *FireCannonsState {
 	ebitenCanonDeck.FireCanons(game)
 	ebitenMonsterTeam.DeckFiring(ebitenCanonDeck.CurrentBullets())
+	fireSound := ebiten_sound.MustNewPlayer(assets.FireCanon)
+	fireSound.Play()
 	fcs := FireCannonsState{
 		ebitenCanonDeck:   ebitenCanonDeck,
 		ebitenMonsterTeam: ebitenMonsterTeam,

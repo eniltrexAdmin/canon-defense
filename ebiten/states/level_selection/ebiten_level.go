@@ -3,6 +3,7 @@ package level_selection
 import (
 	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/text"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"golang.org/x/image/font/basicfont"
@@ -23,17 +24,18 @@ type Level struct {
 	enabled     bool
 	hover       bool
 	completed   bool
+	hoverSound  *audio.Player
 }
 
-func NewLevelSet(completedLevels []bool) []*Level {
+func NewLevelSet(completedLevels []bool, hoverSound *audio.Player) []*Level {
 	var levels []*Level
 	for levelNumber, completed := range completedLevels {
-		levels = append(levels, NewEbitenLevel(levelNumber+1, completed))
+		levels = append(levels, NewEbitenLevel(levelNumber+1, completed, hoverSound))
 	}
 	return levels
 }
 
-func NewEbitenLevel(levelNumber int, completed bool) *Level {
+func NewEbitenLevel(levelNumber int, completed bool, hoverSound *audio.Player) *Level {
 	c := completedColor
 	if !completed {
 		c = enabledColor
@@ -60,6 +62,7 @@ func NewEbitenLevel(levelNumber int, completed bool) *Level {
 		enabled:     true, // leaving enabled maybe for the future...yeah I know yagni.
 		hover:       false,
 		completed:   completed,
+		hoverSound:  hoverSound,
 	}
 }
 
@@ -94,6 +97,12 @@ func (l *Level) Update(x, y int) {
 	if !l.enabled {
 		return
 	}
+
+	if l.InBounds(x, y) && !l.hover {
+		l.hoverSound.Rewind()
+		l.hoverSound.Play()
+	}
+
 	if l.InBounds(x, y) {
 		l.hover = true
 		l.strokeWidth = 15

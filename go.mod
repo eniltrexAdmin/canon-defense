@@ -5,6 +5,7 @@ go 1.21.0
 require github.com/hajimehoshi/ebiten/v2 v2.6.3
 
 require (
+	github.com/ebitengine/oto/v3 v3.1.0 // indirect
 	github.com/ebitengine/purego v0.5.1 // indirect
 	github.com/ebitenui/ebitenui v0.5.5 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect

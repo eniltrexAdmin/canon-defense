@@ -200,3 +200,12 @@ var TenguDie []byte
 
 //go:embed "monsters/Tengu_attack.png"
 var TenguAttack []byte
+
+//go:embed "ui/select_level.wav"
+var SelectSound []byte
+
+//go:embed "ui/hover_level.wav"
+var LevelHoverSound []byte
+
+//go:embed "canon_deck/fire_canon.wav"
+var FireCanon []byte

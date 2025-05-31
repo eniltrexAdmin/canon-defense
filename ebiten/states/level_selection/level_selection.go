@@ -1,21 +1,30 @@
 package level_selection
 
 import (
+	"canon-tower-defense/ebiten/assets"
 	"canon-tower-defense/ebiten/constants"
+	"canon-tower-defense/ebiten/ebiten_sound"
 	"canon-tower-defense/ebiten/states"
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
 type LevelSelection struct {
-	levels   []*Level
-	touchIDs []ebiten.TouchID
+	levels           []*Level
+	touchIDs         []ebiten.TouchID
+	selectLevelSound *audio.Player
 }
 
 func NewLevelSelection() LevelSelection {
 	pl := constants.GlobalContext.Session
+
+	selectLevelSound := ebiten_sound.MustNewPlayer(assets.SelectSound)
+	hoverLevelSound := ebiten_sound.MustNewPlayer(assets.LevelHoverSound)
+
 	state := LevelSelection{
-		levels: NewLevelSet(pl.CompletedLevels),
+		levels:           NewLevelSet(pl.CompletedLevels, hoverLevelSound),
+		selectLevelSound: selectLevelSound,
 	}
 
 	return state
@@ -42,6 +51,11 @@ func (p LevelSelection) Update(stack *states.StateStack, keys []ebiten.Key) erro
 		selectedLevel = p.GetSelectedLevel(ebiten.TouchPosition(id))
 	}
 	if selectedLevel != nil {
+		err := p.selectLevelSound.Rewind()
+		if err != nil {
+			return err
+		}
+		p.selectLevelSound.Play()
 		GoBattle(stack, selectedLevel.LevelNumber)
 	}
 
