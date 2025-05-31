@@ -201,6 +201,12 @@ var TenguDie []byte
 //go:embed "monsters/Tengu_attack.png"
 var TenguAttack []byte
 
+//go:embed "game_over.wav"
+var GameOverSound []byte
+
+//go:embed "victory.wav"
+var VictorySound []byte
+
 //go:embed "ui/select_level.wav"
 var SelectSound []byte
 
@@ -209,3 +215,15 @@ var LevelHoverSound []byte
 
 //go:embed "canon_deck/fire_canon.wav"
 var FireCanon []byte
+
+//go:embed "monsters/sounds/monster_hit.wav"
+var MonsterHitSound []byte
+
+//go:embed "monsters/sounds/monster_die.wav"
+var MonsterDieSound []byte
+
+//go:embed "monsters/sounds/boss_death.wav"
+var BossDieSound []byte
+
+//go:embed "monsters/sounds/ice_monster_death.wav"
+var IceMonsterDeath []byte

@@ -10,8 +10,10 @@ func (lg HardcodedLevelGenerator) Generate(level int) (
 	game.MonsterTeam,
 ) {
 	switch level {
-	case 15:
-		return Level15()
+	case 12:
+		return Level12()
+	case 11:
+		return Level11()
 	case 10:
 		return Level10()
 	case 9:

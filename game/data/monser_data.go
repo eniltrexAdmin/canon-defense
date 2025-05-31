@@ -109,20 +109,20 @@ func FrostGianTemplate() game.MonsterTemplate {
 	}
 }
 
-func OniTemplate() game.MonsterTemplate {
+func OniTemplate(m *game.ZigZagMovement) game.MonsterTemplate {
 	return game.MonsterTemplate{
 		Name:            Oni,
-		HealthPoints:    game.CanonDamage(20),
-		LateralMovement: game.NoLateralMovement{},
+		HealthPoints:    game.CanonDamage(35),
+		LateralMovement: m,
 		RowMovement:     1,
 	}
 }
 
-func OwlBearTemplate() game.MonsterTemplate {
+func OwlBearTemplate(m *game.ZigZagMovement) game.MonsterTemplate {
 	return game.MonsterTemplate{
 		Name:            OwlBear,
-		HealthPoints:    game.CanonDamage(20),
-		LateralMovement: game.NoLateralMovement{},
+		HealthPoints:    game.CanonDamage(15),
+		LateralMovement: m,
 		RowMovement:     1,
 	}
 }
@@ -145,20 +145,20 @@ func TenguTemplate(m *game.ZigZagMovement) game.MonsterTemplate {
 	}
 }
 
-func SlimeBossTemplate() game.MonsterTemplate {
+func FastSlime() game.MonsterTemplate {
 	return game.MonsterTemplate{
 		Name:            SlimeBoss,
-		HealthPoints:    game.CanonDamage(100),
+		HealthPoints:    game.CanonDamage(1),
 		LateralMovement: game.NoLateralMovement{},
-		RowMovement:     1,
+		RowMovement:     2,
 	}
 }
 
 func AncientDragonTemplate() game.MonsterTemplate {
 	return game.MonsterTemplate{
 		Name:            AncientDragon,
-		HealthPoints:    game.CanonDamage(50),
+		HealthPoints:    game.CanonDamage(100),
 		LateralMovement: game.NoLateralMovement{},
-		RowMovement:     2,
+		RowMovement:     1,
 	}
 }

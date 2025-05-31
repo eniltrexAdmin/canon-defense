@@ -157,50 +157,6 @@ func Level7() (
 	game.CanonDeck,
 	game.MonsterTeam,
 ) {
-	bg := game.NewBattleGround(5, 20, 5)
-	cd := game.NewCanonDeck(bg)
-	mt := game.NewMonsterTeam(bg)
-
-	mt.AddMonster(10, 2, DragonTemplate())
-	mt.AddMonster(15, 0, DragonTemplate())
-	mt.AddMonster(15, 4, DragonTemplate())
-	mt.AddMonster(20, 0, DragonTemplate())
-	mt.AddMonster(20, 1, DragonTemplate())
-	mt.AddMonster(20, 2, DragonTemplate())
-	mt.AddMonster(20, 3, DragonTemplate())
-	mt.AddMonster(20, 4, DragonTemplate())
-
-	return bg, cd, mt
-}
-
-func Level8() (
-	game.Battleground,
-	game.CanonDeck,
-	game.MonsterTeam,
-) {
-	bg := game.NewBattleGround(5, 31, 5)
-	cd := game.NewCanonDeck(bg)
-	mt := game.NewMonsterTeam(bg)
-
-	mt.AddMonster(10, 2, DragonTemplate())
-	mt.AddMonster(15, 0, DragonTemplate())
-	mt.AddMonster(15, 4, DragonTemplate())
-	mt.AddMonster(20, 0, DragonTemplate())
-	mt.AddMonster(20, 1, DragonTemplate())
-	mt.AddMonster(20, 2, DragonTemplate())
-	mt.AddMonster(20, 3, DragonTemplate())
-	mt.AddMonster(20, 4, DragonTemplate())
-
-	mt.AddMonster(30, 2, SlimeBossTemplate())
-
-	return bg, cd, mt
-}
-
-func Level9() (
-	game.Battleground,
-	game.CanonDeck,
-	game.MonsterTeam,
-) {
 	bg := game.NewBattleGround(5, 31, 7)
 	cd := game.NewCanonDeck(bg)
 	mt := game.NewMonsterTeam(bg)
@@ -236,12 +192,118 @@ func Level9() (
 	return bg, cd, mt
 }
 
+func Level8() (
+	game.Battleground,
+	game.CanonDeck,
+	game.MonsterTeam,
+) {
+	bg := game.NewBattleGround(5, 21, 5)
+	cd := game.NewCanonDeck(bg)
+	mt := game.NewMonsterTeam(bg)
+
+	mt.AddMonster(10, 2, DragonTemplate())
+	mt.AddMonster(15, 0, DragonTemplate())
+	mt.AddMonster(15, 4, DragonTemplate())
+	mt.AddMonster(20, 0, DragonTemplate())
+	mt.AddMonster(20, 1, DragonTemplate())
+	mt.AddMonster(20, 2, DragonTemplate())
+	mt.AddMonster(20, 3, DragonTemplate())
+	mt.AddMonster(20, 4, DragonTemplate())
+
+	return bg, cd, mt
+}
+
+func Level9() (
+	game.Battleground,
+	game.CanonDeck,
+	game.MonsterTeam,
+) {
+	bg := game.NewBattleGround(6, 40, 7)
+	cd := game.NewCanonDeck(bg)
+	mt := game.NewMonsterTeam(bg)
+
+	mt.AddMonster(1, 0, SlimeTemplate())
+	mt.AddMonster(2, 2, SlimeTemplate())
+	mt.AddMonster(3, 4, SlimeTemplate())
+	mt.AddMonster(4, 5, SlimeTemplate())
+	mt.AddMonster(7, 0, BeholderTemplate())
+	mt.AddMonster(7, 1, BeholderTemplate())
+	mt.AddMonster(7, 2, BeholderTemplate())
+	mt.AddMonster(20, 0, SamuraiTemplate())
+	mt.AddMonster(20, 2, SamuraiTemplate())
+	mt.AddMonster(20, 4, SamuraiTemplate())
+	mt.AddMonster(22, 1, SamuraiTemplate())
+	mt.AddMonster(22, 3, SamuraiTemplate())
+	mt.AddMonster(22, 5, SamuraiTemplate())
+	mt.AddMonster(23, 1, SamuraiTemplate())
+	mt.AddMonster(23, 3, SamuraiTemplate())
+	mt.AddMonster(23, 5, SamuraiTemplate())
+	mt.AddMonster(25, 3, DeathKnightTemplate())
+	mt.AddMonster(26, 3, DeathKnightTemplate())
+	mt.AddMonster(26, 4, DeathKnightTemplate())
+	mt.AddMonster(27, 3, DeathKnightTemplate())
+	mt.AddMonster(27, 2, DeathKnightTemplate())
+	mt.AddMonster(28, 2, DeathKnightTemplate())
+	mt.AddMonster(28, 3, DeathKnightTemplate())
+	mt.AddMonster(28, 4, DeathKnightTemplate())
+	mt.AddMonster(29, 2, DeathKnightTemplate())
+	mt.AddMonster(29, 3, DeathKnightTemplate())
+	mt.AddMonster(29, 4, DeathKnightTemplate())
+	mt.AddMonster(29, 5, DeathKnightTemplate())
+	mt.AddMonster(30, 1, DeathKnightTemplate())
+	mt.AddMonster(30, 2, DeathKnightTemplate())
+	mt.AddMonster(30, 3, DeathKnightTemplate())
+	mt.AddMonster(30, 4, DeathKnightTemplate())
+	mt.AddMonster(31, 1, DeathKnightTemplate())
+	mt.AddMonster(31, 2, DeathKnightTemplate())
+	mt.AddMonster(31, 3, DeathKnightTemplate())
+	mt.AddMonster(31, 4, DeathKnightTemplate())
+	mt.AddMonster(31, 5, DeathKnightTemplate())
+	mt.AddMonster(32, 0, DeathKnightTemplate())
+	mt.AddMonster(32, 1, DeathKnightTemplate())
+	mt.AddMonster(32, 2, DeathKnightTemplate())
+	mt.AddMonster(32, 3, DeathKnightTemplate())
+	mt.AddMonster(32, 4, DeathKnightTemplate())
+	mt.AddMonster(32, 5, DeathKnightTemplate())
+
+	return bg, cd, mt
+}
+
 func Level10() (
 	game.Battleground,
 	game.CanonDeck,
 	game.MonsterTeam,
 ) {
-	bg := game.NewBattleGround(6, 21, 8)
+	bg := game.NewBattleGround(7, 51, 7)
+	cd := game.NewCanonDeck(bg)
+	mt := game.NewMonsterTeam(bg)
+
+	mt.AddMonster(7, 3, DragonTemplate())
+
+	mt.AddMonster(15, 4, DragonTemplate())
+	mt.AddMonster(15, 2, DragonTemplate())
+
+	mt.AddMonster(23, 0, DragonTemplate())
+	mt.AddMonster(23, 2, DragonTemplate())
+	mt.AddMonster(23, 4, DragonTemplate())
+
+	mt.AddMonster(31, 1, DragonTemplate())
+	mt.AddMonster(31, 2, DragonTemplate())
+	mt.AddMonster(31, 3, DragonTemplate())
+	mt.AddMonster(31, 5, DragonTemplate())
+	mt.AddMonster(31, 6, DragonTemplate())
+
+	mt.AddMonster(40, 3, AncientDragonTemplate())
+
+	return bg, cd, mt
+}
+
+func Level11() (
+	game.Battleground,
+	game.CanonDeck,
+	game.MonsterTeam,
+) {
+	bg := game.NewBattleGround(6, 21, 5)
 	cd := game.NewCanonDeck(bg)
 	mt := game.NewMonsterTeam(bg)
 
@@ -269,16 +331,49 @@ func Level10() (
 	return bg, cd, mt
 }
 
-func Level15() (
+func Level12() (
 	game.Battleground,
 	game.CanonDeck,
 	game.MonsterTeam,
 ) {
-	bg := game.NewBattleGround(5, 31, 8)
+	bg := game.NewBattleGround(6, 21, 9)
 	cd := game.NewCanonDeck(bg)
 	mt := game.NewMonsterTeam(bg)
 
-	mt.AddMonster(30, 2, AncientDragonTemplate())
+	mt.AddMonster(7, 5, FastSlime())
+	mt.AddMonster(7, 2, FastSlime())
+	mt.AddMonster(7, 1, FastSlime())
+	mt.AddMonster(7, 4, TenguTemplate(game.NewZigZagMovement(
+		"right",
+		game.BattleGroundColumn(3),
+		game.BattleGroundColumn(4), bg,
+	)))
+	mt.AddMonster(11, 3, FastSlime())
+	mt.AddMonster(11, 4, FastSlime())
+	mt.AddMonster(11, 2, TenguTemplate(game.NewZigZagMovement(
+		"right",
+		game.BattleGroundColumn(2),
+		game.BattleGroundColumn(3), bg,
+	)))
+	mt.AddMonster(12, 5, FastSlime())
+	mt.AddMonster(12, 0, FastSlime())
+
+	mt.AddMonster(14, 5, PurpleWormTemplate())
+	mt.AddMonster(15, 0, PurpleWormTemplate())
+	mt.AddMonster(16, 5, PurpleWormTemplate())
+	mt.AddMonster(17, 0, PurpleWormTemplate())
+
+	mt.AddMonster(19, 0, OwlBearTemplate(game.NewZigZagMovement(
+		"right",
+		game.BattleGroundColumn(0),
+		game.BattleGroundColumn(6), bg,
+	)))
+
+	mt.AddMonster(19, 5, OwlBearTemplate(game.NewZigZagMovement(
+		"left",
+		game.BattleGroundColumn(0),
+		game.BattleGroundColumn(6), bg,
+	)))
 
 	return bg, cd, mt
 }

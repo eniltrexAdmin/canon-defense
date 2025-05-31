@@ -3,6 +3,7 @@ package ebiten_monster
 import (
 	"bytes"
 	"canon-tower-defense/ebiten/assets"
+	"canon-tower-defense/ebiten/ebiten_sound"
 	"canon-tower-defense/ebiten/ebiten_sprite"
 	"canon-tower-defense/game"
 	"canon-tower-defense/game/data"
@@ -11,6 +12,38 @@ import (
 	"image"
 	"log"
 )
+
+func LoadMonsterSounds(m *game.Monster) EbitenMonsterSoundEffects {
+	switch m.Name {
+	case data.AncientDragon:
+		return ancientDragonSounds()
+	case data.FrostGiant:
+		return iceMonsterSounds()
+	default:
+		return genericMonsterSounds()
+	}
+}
+
+func iceMonsterSounds() EbitenMonsterSoundEffects {
+	return EbitenMonsterSoundEffects{
+		Hit:  ebiten_sound.MustNewPlayer(assets.MonsterHitSound),
+		Dead: ebiten_sound.MustNewPlayer(assets.IceMonsterDeath),
+	}
+}
+
+func ancientDragonSounds() EbitenMonsterSoundEffects {
+	return EbitenMonsterSoundEffects{
+		Hit:  ebiten_sound.MustNewPlayer(assets.MonsterHitSound),
+		Dead: ebiten_sound.MustNewPlayer(assets.BossDieSound),
+	}
+}
+
+func genericMonsterSounds() EbitenMonsterSoundEffects {
+	return EbitenMonsterSoundEffects{
+		Hit:  ebiten_sound.MustNewPlayer(assets.MonsterHitSound),
+		Dead: ebiten_sound.MustNewPlayer(assets.MonsterDieSound),
+	}
+}
 
 func LoadMonsterImages(m *game.Monster) EbitenMonsterAnimationsSprites {
 	switch m.Name {

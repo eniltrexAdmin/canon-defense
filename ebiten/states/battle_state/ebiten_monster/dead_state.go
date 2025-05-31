@@ -20,6 +20,10 @@ func NewMonsterDeadState(context *EbitenMonster) *MonsterDeadState {
 		1.1,
 		0.1)
 	context.sprite = &sprite
+
+	context.soundEffects.Dead.Rewind()
+	context.soundEffects.Dead.Play()
+
 	return &MonsterDeadState{
 		context: context,
 		fadeOut: 1,

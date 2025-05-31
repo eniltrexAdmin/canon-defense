@@ -1,7 +1,9 @@
 package victory_state
 
 import (
+	"canon-tower-defense/ebiten/assets"
 	"canon-tower-defense/ebiten/constants"
+	"canon-tower-defense/ebiten/ebiten_sound"
 	"canon-tower-defense/ebiten/states"
 	"canon-tower-defense/ebiten/states/battle_state/ebiten_monster"
 	"fmt"
@@ -18,6 +20,8 @@ type VictoryState struct {
 
 func NewVictoryState(ebitenMonsterTeam *ebiten_monster.EbitenMonsterTeam, completedLevel int) *VictoryState {
 	constants.GlobalContext.Session.CompleteLevel(completedLevel - 1)
+	VictorySound := ebiten_sound.MustNewPlayer(assets.VictorySound)
+	VictorySound.Play()
 	return &VictoryState{
 		ebitenMonsterTeam: ebitenMonsterTeam,
 	}

@@ -23,6 +23,10 @@ func NewMonsterHitState(
 		0.1)
 	context.sprite = &sprite
 	context.lifeLine.SetCurrentLife(int(context.monster.HealthPoints))
+
+	context.soundEffects.Hit.Rewind()
+	context.soundEffects.Hit.Play()
+
 	return &MonsterHitState{
 		context:       context,
 		hittingBullet: bullet,

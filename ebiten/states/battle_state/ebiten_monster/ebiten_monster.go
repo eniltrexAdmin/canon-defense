@@ -6,6 +6,7 @@ import (
 	"canon-tower-defense/game"
 	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
 )
 
 type EbitenMonsterHitEvent struct {
@@ -20,6 +21,11 @@ type EbitenMonsterAnimationsSprites struct {
 	Attack ebiten_sprite.AnimatedSprite
 }
 
+type EbitenMonsterSoundEffects struct {
+	Hit  *audio.Player
+	Dead *audio.Player
+}
+
 type EbitenMonsterState interface {
 	draw(screen *ebiten.Image)
 	update()
@@ -31,6 +37,7 @@ type EbitenMonster struct {
 	monster           *game.Monster
 	sprite            *ebiten_sprite.EbitenAnimatedSprite
 	animationsSprites EbitenMonsterAnimationsSprites
+	soundEffects      EbitenMonsterSoundEffects
 	lifeLine          *LifeLine
 	bulletsInField    []*ebiten_canon.EbitenCanonBullet // not convinced if it should be here or only idle state
 	hitTrigger        func(event EbitenMonsterHitEvent)
@@ -44,6 +51,7 @@ func NewEbitenMonster(monster *game.Monster, posX, posY float64, HitTrigger func
 		monster:           monster,
 		hitTrigger:        HitTrigger,
 		animationsSprites: LoadMonsterImages(monster),
+		soundEffects:      LoadMonsterSounds(monster),
 	}
 
 	c.state = NewIdleState(c, coordinate)
